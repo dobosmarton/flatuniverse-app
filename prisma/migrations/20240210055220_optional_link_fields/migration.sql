@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "link" ALTER COLUMN "rel" DROP NOT NULL,
+ALTER COLUMN "type" DROP NOT NULL;

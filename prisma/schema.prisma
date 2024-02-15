@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters", "postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+model author {
+  id   String @id @default(uuid())
+  name String @unique
+
+  article_metadata_list article_metadata_to_author[]
+}
+
+model link {
+  id         String   @id @default(uuid())
+  title      String?
+  href       String   @unique
+  rel        String?
+  type       String?
+  created_at DateTime @default(now())
+
+  article_metadata_list article_metadata_to_link[]
+}
+
+model category {
+  id         String @id @default(uuid())
+  short_name String @unique
+  full_name  String
+  group_name String
+
+  article_metadata_list article_metadata_to_category[]
+}
+
+model article_metadata {
+  id                String   @id @default(uuid())
+  external_id       String   @unique
+  updated           DateTime
+  published         DateTime
+  title             String
+  slug              String   @default("")
+  summary           String
+  comment           String?
+  generated_summary String?
+  created_at        DateTime @default(now())
+
+  authors    article_metadata_to_author[]
+  categories article_metadata_to_category[]
+  links      article_metadata_to_link[]
+  embeddings research_article_embedding[]
+}
+
+model article_metadata_to_author {
+  id                  String           @id @default(uuid())
+  article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
+  article_metadata_id String
+  author              author           @relation(fields: [author_id], references: [id])
+  author_id           String
+  created_at          DateTime         @default(now())
+}
+
+model article_metadata_to_category {
+  id                  String           @id @default(uuid())
+  article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
+  article_metadata_id String
+  category            category         @relation(fields: [category_id], references: [id])
+  category_id         String
+  primary             Boolean
+  created_at          DateTime         @default(now())
+}
+
+model article_metadata_to_link {
+  id                  String           @id @default(uuid())
+  article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
+  article_metadata_id String
+  link                link             @relation(fields: [link_id], references: [id])
+  link_id             String
+  created_at          DateTime         @default(now())
+}
+
+model research_article_embedding {
+  id                String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  embedding         Unsupported("vector(1536)")?
+  doucment_metadata Json                         @default("{}")
+  created_at        DateTime                     @default(now())
+  metadata_id       String
+
+  metadata article_metadata @relation(fields: [metadata_id], references: [id])
+}
