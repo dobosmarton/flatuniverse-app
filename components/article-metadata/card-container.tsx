@@ -37,6 +37,7 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
         className={cn('flex ', {
           'md:w-6/12': !!selectedSimilarItem,
           'md:w-8/12': !selectedSimilarItem,
+          'w-full': !aiEnabled,
         })}>
         <ArticleMetadataCard
           key={article.id}

@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { fetcher } from '@/lib/api-client/fetch';
-import { Loader2Icon } from 'lucide-react';
 import useSWRMutation from 'swr/mutation';
 import { LoadingButton } from '../loading-button';
 
