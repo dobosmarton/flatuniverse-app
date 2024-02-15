@@ -18,6 +18,8 @@ const searchArticles: NextRouteFunction<{}> = async (request) => {
     pageSize,
   });
 
+  console.info('New search request', parsedParams);
+
   const products = await articleMetadataService.searchArticleMetadata(parsedParams);
 
   return Response.json({ data: products });
