@@ -16,7 +16,7 @@ type Props = {
   id: string;
   slug: string;
   title: string;
-  summary: string;
+  abstract: string;
   published: string;
   authors: string[];
   categories: { short_name: string; full_name: string; group_name: string }[];
@@ -29,7 +29,7 @@ export const SimilarArticleCard: React.FC<Props> = ({
   id,
   slug,
   title,
-  summary,
+  abstract,
   published,
   authors,
   categories,
@@ -85,7 +85,7 @@ export const SimilarArticleCard: React.FC<Props> = ({
           ) : null}
         </div>
 
-        <div>
+        <div className="space-x-1">
           {categoryGroups.map((group) => (
             <Badge variant={'default'} key={group}>
               {group}
@@ -103,7 +103,7 @@ export const SimilarArticleCard: React.FC<Props> = ({
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <Latex>{summary}</Latex>
+              <Latex>{abstract}</Latex>
             </CollapsibleContent>
           </Collapsible>
 
@@ -119,7 +119,7 @@ export const SimilarArticleCard: React.FC<Props> = ({
             articleId={id}
             articleSlug={slug}
             articleTitle={title}
-            articleText={summary.slice(0, 120)}
+            articleText={abstract.slice(0, 120)}
             articleUrl={pdfLink}
           />
         </CardFooter>

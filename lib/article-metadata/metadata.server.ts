@@ -14,9 +14,9 @@ export const addArticleMetadata = async (entries: ArticleMetadata['entries']): P
       data: {
         external_id: entry.id,
         title: entry.title,
-        summary: entry.summary,
+        abstract: entry.abstract,
         published: entry.published,
-        updated: entry.updated,
+        updated: entry.updated || entry.published,
         comment: entry.comment,
         slug: slugify(entry.title),
         authors: {
@@ -37,9 +37,9 @@ export const addArticleMetadata = async (entries: ArticleMetadata['entries']): P
               primary: category.isPrimary,
               category: {
                 connectOrCreate: {
-                  where: { short_name: category.term },
+                  where: { short_name: category.shortName },
                   create: {
-                    short_name: category.term,
+                    short_name: category.shortName,
                     full_name: category.fullName,
                     group_name: category.groupName,
                   },
@@ -81,7 +81,7 @@ export const findLatestMetadataByExternalIds = async (params: { id: string; upda
   return savedRecords
     .filter((saved) => {
       const param = params.find((param) => param.id === saved.external_id);
-      return param && saved.updated >= param.updated;
+      return param && saved.updated <= param.updated;
     })
     .map((item) => item.external_id);
 };
@@ -96,7 +96,11 @@ export const addNewArticleMetadata = async (metadataEntries: ArticleMetadataEntr
 
     const filteredMetadata = metadataEntries.filter((entry) => !existingIds.includes(entry.id));
 
-    return addArticleMetadata(filteredMetadata);
+    const uniqueFilteredMetadata = filteredMetadata.filter(
+      (metadata, index, self) => index === self.findIndex((m) => m.id === metadata.id)
+    );
+
+    return addArticleMetadata(uniqueFilteredMetadata);
   } catch (error) {
     console.log('Error adding new metadata', error);
   }
@@ -129,7 +133,7 @@ export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
   const articles = await prismaClient.article_metadata.findMany({
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: { updated: 'desc' },
+    orderBy: { published: 'desc' },
     include: {
       authors: { select: { author: { select: { name: true } } } },
       categories: {
@@ -196,10 +200,10 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
         search
           ? {
               OR: [
-                { title: { contains: search } },
-                { summary: { contains: search } },
-                { authors: { some: { author: { name: { contains: search } } } } },
-                { categories: { some: { category: { short_name: { contains: search } } } } },
+                { title: { contains: search, mode: 'insensitive' } },
+                { abstract: { contains: search, mode: 'insensitive' } },
+                { authors: { some: { author: { name: { contains: search, mode: 'insensitive' } } } } },
+                { categories: { some: { category: { short_name: { contains: search, mode: 'insensitive' } } } } },
               ],
             }
           : {},
@@ -221,7 +225,7 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
     },
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: { updated: 'desc' },
+    orderBy: { published: 'desc' },
     include: {
       authors: { select: { author: { select: { name: true } } } },
       categories: {

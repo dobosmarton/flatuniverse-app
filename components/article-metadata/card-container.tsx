@@ -35,8 +35,8 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
     <div className="flex flex-col gap-4 w-full md:flex-row md:justify-between">
       <div
         className={cn('flex ', {
-          'md:w-6/12': !!selectedSimilarItem,
-          'md:w-8/12': !selectedSimilarItem,
+          'md:w-6/12': aiEnabled && !!selectedSimilarItem,
+          'md:w-8/12': aiEnabled && !selectedSimilarItem,
           'w-full': !aiEnabled,
         })}>
         <ArticleMetadataCard
@@ -45,7 +45,7 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
           title={article.title}
           slug={article.slug}
           published={new Date(article.published).toDateString()}
-          summary={article.summary}
+          abstract={article.abstract}
           authors={article.authors.map((connection) => connection.author.name)}
           categories={article.categories.map((connection) => connection.category)}
           links={article.links.map((connection) => connection.link)}
@@ -74,7 +74,7 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
                   id={metadata.id}
                   title={metadata.title}
                   published={metadata.published}
-                  summary={metadata.summary}
+                  abstract={metadata.abstract}
                   authors={metadata.authors.map((connection) => connection.author.name)}
                   categories={metadata.categories.map((connection) => connection.category)}
                   links={metadata.links.map((connection) => connection.link)}

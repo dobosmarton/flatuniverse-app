@@ -39,7 +39,7 @@ const categorySchema = z
 const entrySchema = z
   .object({
     id: z.string().regex(/^http:\/\/arxiv\.org\/abs/),
-    updated: z.string().datetime(),
+    updated: z.string().datetime().optional(),
     published: z.string().datetime(),
     title: z.string(),
     summary: z.string(),
@@ -59,6 +59,7 @@ const entrySchema = z
       link,
       updated,
       published,
+      summary,
       ...rest
     }) => {
       const subCategories = Array.isArray(category) ? category : [category];
@@ -68,7 +69,8 @@ const entrySchema = z
         ...rest,
         id: id.replace('http://arxiv.org/abs/', '').trim(),
         comment,
-        updated: new Date(updated),
+        abstract: summary,
+        updated: updated ? new Date(updated) : new Date(published),
         published: new Date(published),
         links: Array.isArray(link) ? link : [link],
         authors: Array.isArray(author) ? author : [author],
@@ -81,9 +83,10 @@ const entrySchema = z
     categories: entry.categories
       .filter((category) => !!categoriesGroupedByShortName[category.term])
       .map((category) => ({
-        ...category,
-        fullName: categoriesGroupedByShortName[category.term]?.longName ?? category.term,
-        groupName: categoriesGroupedByShortName[category.term]?.group ?? ungroupedCategories,
+        isPrimary: category.isPrimary,
+        shortName: category.term,
+        fullName: categoriesGroupedByShortName[category.term].longName,
+        groupName: categoriesGroupedByShortName[category.term].group,
       })),
   }));
 

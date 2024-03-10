@@ -4,8 +4,7 @@ import { getArticleMetadataBySlug } from '@/lib/article-metadata/metadata.server
 import { SummaryPanel } from '@/components/article-metadata/summary-panel';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { CalendarDaysIcon, CalendarIcon, NotebookTextIcon, User2Icon, UserIcon } from 'lucide-react';
-import Link from 'next/link';
+import { CalendarDaysIcon, NotebookTextIcon, User2Icon, UserIcon } from 'lucide-react';
 import { ActionBar } from '../components/action-bar';
 import { ActionBarContainer } from './components/action-bar-container';
 
@@ -56,7 +55,7 @@ export default async function ArticleDetails({ params }: Props) {
         ))}
       </div>
 
-      <span className="text-base text-slate-600">{article.summary}</span>
+      <span className="text-base text-slate-600">{article.abstract}</span>
 
       {link ? (
         <a href={link} target="_blank" rel="noopener noreferrer">
@@ -76,7 +75,7 @@ export default async function ArticleDetails({ params }: Props) {
           size="large"
           articleId={article.id}
           articleTitle={article.title}
-          articleText={article.summary.slice(0, 120)}
+          articleText={article.abstract.slice(0, 120)}
           articleSlug={article.slug}
         />
       </ActionBarContainer>

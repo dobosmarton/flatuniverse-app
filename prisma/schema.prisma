@@ -47,7 +47,7 @@ model article_metadata {
   published         DateTime
   title             String
   slug              String   @default("")
-  summary           String
+  abstract          String
   comment           String?
   generated_summary String?
   created_at        DateTime @default(now())

@@ -20,7 +20,7 @@ type Props = {
   id: string;
   slug: string;
   title: string;
-  summary: string;
+  abstract: string;
   published: string;
   authors: string[];
   categories: { short_name: string; full_name: string; group_name: string }[];
@@ -33,7 +33,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   id,
   slug,
   title,
-  summary,
+  abstract,
   published,
   authors,
   categories,
@@ -54,7 +54,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   );
 
   const renderShowMoreButton = () => {
-    if (!isOpen && summary.length <= shortCharacters) return;
+    if (!isOpen && abstract.length <= shortCharacters) return;
 
     return (
       <Button variant={'link'} className="flex gap-2 px-0" onClick={() => setOpen((prev) => !prev)}>
@@ -109,7 +109,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div>
-          <Latex>{isOpen ? summary : `${summary.slice(0, shortCharacters)}...`}</Latex>
+          <Latex>{isOpen ? abstract : `${abstract.slice(0, shortCharacters)}...`}</Latex>
           <div>{renderShowMoreButton()}</div>
         </div>
         {aiEnabled ? <SummaryPanel isLoading={isSummaryLoading}>{generatedSummary}</SummaryPanel> : null}
@@ -119,7 +119,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
           articleId={id}
           articleSlug={slug}
           articleTitle={title}
-          articleText={summary.slice(0, shortCharacters)}
+          articleText={abstract.slice(0, shortCharacters)}
           articleUrl={pdfLink}
           hasEmbeddingsButton={aiEnabled && !isEmbeddingsLoading && !hasEmbeddings}
         />
