@@ -19,7 +19,7 @@ const loadAllArticles = async (): Promise<ArticleMetadataEntry[]> => {
   while (true) {
     console.log('Loading articles from', start);
     const metadata = await loadArticles(start);
-    if (!metadata) {
+    if (!metadata?.entries.length) {
       console.log('No more articles to load');
       break;
     }
@@ -38,7 +38,7 @@ const loadAllArticles = async (): Promise<ArticleMetadataEntry[]> => {
 };
 
 const loadArticles = async (start = 0, maxResults = 10): Promise<ArticleMetadata | null> => {
-  const search_query = 'all';
+  const search_query = '';
   const sortBy = 'submittedDate';
   const sortOrder = 'descending';
 

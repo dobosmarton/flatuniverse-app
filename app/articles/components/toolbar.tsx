@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { useBoundStore } from '@/stores';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { AIToggle } from './ai-toggle';
-import { ArticleLoadButton } from '@/components/article-metadata/article-load-button';
 
 type Props = {
   categoryTree: {
@@ -98,7 +97,7 @@ export const Toolbar: React.FC<Props> = ({ categoryTree }) => {
       </div>
       <div className="flex items-center space-x-2 gap-2">
         <AIToggle />
-        <ArticleLoadButton />
+        {/*  <ArticleLoadButton /> */}
       </div>
     </div>
   );

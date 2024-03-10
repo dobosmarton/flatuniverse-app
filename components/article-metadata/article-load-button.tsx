@@ -1,12 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { fetcher } from '@/lib/api-client/fetch';
 import useSWRMutation from 'swr/mutation';
 import { LoadingButton } from '../loading-button';
+import { post } from '@/lib/api-client/post';
 
 export const ArticleLoadButton = () => {
-  const { trigger, isMutating } = useSWRMutation<null>(`/api/articles/remote`, fetcher);
+  const { trigger, isMutating } = useSWRMutation<null>(`/api/cron`, post);
 
   if (isMutating) {
     return <LoadingButton />;
