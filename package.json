@@ -7,7 +7,8 @@
     "build": "pnpm prisma:generate & next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "npx prisma generate"
+    "prisma:generate": "npx prisma generate",
+    "trigger:dev:start": "npx @trigger.dev/cli@latest dev"
   },
   "dependencies": {
     "@langchain/core": "^0.1.25",
@@ -48,7 +49,10 @@
     "tailwindcss-animate": "^1.0.7",
     "undici": "^6.6.2",
     "zod": "^3.22.4",
-    "zustand": "^4.5.0"
+    "zustand": "^4.5.0",
+    "@trigger.dev/sdk": "^2.3.18",
+    "@trigger.dev/nextjs": "^2.3.18",
+    "@trigger.dev/react": "^2.3.18"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
@@ -63,5 +67,8 @@
     "tailwindcss": "^3.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "trigger.dev": {
+    "endpointId": "research-app-WJkC"
   }
 }
