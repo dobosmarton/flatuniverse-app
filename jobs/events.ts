@@ -9,7 +9,10 @@ export enum Events {
 
 export const researchSyncPayloadSchema = z.object({
   startDate: z.string().regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/),
-  untilDate: z.string().regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/),
+  untilDate: z
+    .string()
+    .regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
+    .optional(),
   resumptionToken: z.string().optional(),
 });
 
