@@ -19,6 +19,16 @@ const resumptionTokenSchema = z
     token: resumptionToken['#text'],
   }));
 
+const errorSchema = z
+  .object({
+    '@_code': z.string(),
+    '#text': z.string().optional(),
+  })
+  .transform((error) => ({
+    code: error['@_code'],
+    message: error['#text'],
+  }));
+
 /*
 
 {
@@ -55,7 +65,7 @@ const resumptionTokenSchema = z
 
 */
 
-const metadataSchema = z
+export const metadataSchema = z
   .object({
     arXiv: z.object({
       id: z.string().or(z.number()),
@@ -67,7 +77,7 @@ const metadataSchema = z
       title: z.string(),
       categories: z.string(),
       comments: z.string().or(z.number()).optional(),
-      'journal-ref': z.string().optional(),
+      'journal-ref': z.string().or(z.number()).optional(),
       doi: z.string().optional(),
       abstract: z.string(),
     }),
@@ -118,6 +128,7 @@ export const articleMetadataSchema = z
   .object({
     responseDate: z.string(),
     updated: z.string().optional(),
+    error: errorSchema.optional(),
     ListRecords: z
       .object({
         record: z.array(listRecordsSchema).or(listRecordsSchema),
@@ -131,6 +142,7 @@ export const articleMetadataSchema = z
       return {
         records: [],
         resumptionToken: undefined,
+        error: props?.error ?? undefined,
       };
     }
 

@@ -1,75 +1,200 @@
 'use server';
 
-import { Prisma, article_metadata } from '@prisma/client';
-import { prismaClient } from '../prisma';
-import { ArticleMetadata, ArticleMetadataEntry } from './schema';
+import { randomUUID } from 'crypto';
+import { Prisma } from '@prisma/client';
 import { ArticleMetadataSearch } from '@/app/api/articles/search/schema';
+import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
+import { Metadata } from '../oai-pmh/schema';
 
-export const addArticleMetadata = async (entries: ArticleMetadata['entries']): Promise<article_metadata[]> => {
-  let articleMetadataList: article_metadata[] = [];
-  for await (const entry of entries) {
-    console.log('Adding metadata', entry.id, ', ', articleMetadataList.length + 1, 'of', entries.length);
-    const metadata = await prismaClient.article_metadata.create({
-      data: {
-        external_id: entry.id,
-        title: entry.title,
-        abstract: entry.abstract,
-        published: entry.published,
-        updated: entry.updated || entry.published,
-        comment: entry.comment,
-        slug: slugify(entry.title),
-        authors: {
-          create: entry.authors.map<Prisma.article_metadata_to_authorCreateWithoutArticle_metadataInput>((author) => ({
-            author: {
-              connectOrCreate: {
-                where: { name: author.name },
-                create: {
-                  name: author.name,
-                },
-              },
-            },
-          })),
-        },
-        categories: {
-          create: entry.categories.map<Prisma.article_metadata_to_categoryCreateWithoutArticle_metadataInput>(
-            (category) => ({
+export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => {
+  console.log('   ');
+  console.log('-------------------------------------------------');
+  console.log('Adding metadata', entries.length, ' start: ', new Date().toISOString());
+  const data = entries.map((entry) => ({
+    ...entry,
+    externalId: entry.id,
+    id: randomUUID(),
+    authors: entry.authors.map((author) => ({
+      ...author,
+      id: randomUUID(),
+    })),
+    categories: entry.categories.map((category) => ({
+      ...category,
+      id: randomUUID(),
+    })),
+    links: entry.links.map((link) => ({
+      ...link,
+      id: randomUUID(),
+    })),
+  }));
+
+  const authors = data.flatMap<Prisma.authorCreateManyInput>((entry) => entry.authors);
+
+  const categories = data
+    .flatMap((entry) => entry.categories)
+    .map<Prisma.categoryCreateManyInput>((category) => ({
+      id: category.id,
+      short_name: category.shortName,
+      full_name: category.fullName,
+      group_name: category.groupName,
+    }));
+
+  const links = data.flatMap<Prisma.linkCreateManyInput>((entry) => entry.links);
+
+  console.log('Adding metadata start transaction', new Date().toISOString());
+
+  await prismaClient.$transaction(
+    async (tx) => {
+      const authorCount = await tx.author.createMany({
+        data: authors,
+        skipDuplicates: true,
+      });
+
+      const existingAuthors = await tx.author.findMany({
+        where: { name: { in: authors.map((author) => author.name) } },
+        select: { id: true, name: true },
+      });
+
+      console.log('Authors count', authors.length, authorCount.count, existingAuthors.length, new Date().toISOString());
+
+      const categoryCount = await tx.category.createMany({
+        data: categories,
+        skipDuplicates: true,
+      });
+
+      const existingCategories = await tx.category.findMany({
+        where: { short_name: { in: categories.map((category) => category.short_name) } },
+        select: { id: true, short_name: true },
+      });
+
+      console.log(
+        'Categories count',
+        categories.length,
+        categoryCount.count,
+        existingCategories.length,
+        new Date().toISOString()
+      );
+
+      const linkCount = await tx.link.createMany({
+        data: links,
+        skipDuplicates: true,
+      });
+
+      const existingLinks = await tx.link.findMany({
+        where: { href: { in: links.map((link) => link.href) } },
+        select: { id: true, href: true },
+      });
+
+      console.log(
+        'Links count mismatch',
+        links.length,
+        linkCount.count,
+        existingLinks.length,
+        new Date().toISOString()
+      );
+
+      const metadataCount = await tx.article_metadata.createMany({
+        data: data.map<Prisma.article_metadataCreateManyInput>((entry) => ({
+          id: entry.id,
+          external_id: entry.externalId,
+          title: entry.title,
+          abstract: entry.abstract,
+          published: entry.published,
+          updated: entry.updated || entry.published,
+          comment: entry.comment,
+          slug: slugify(entry.title),
+        })),
+        skipDuplicates: true,
+      });
+
+      console.log('Metadata count mismatch', metadataCount.count, data.length, new Date().toISOString());
+
+      const existingMetadata = await tx.article_metadata.findMany({
+        where: { external_id: { in: data.map((entry) => entry.externalId) } },
+        select: { id: true, external_id: true },
+      });
+
+      const connectedFileds = data.reduce<{
+        authors: Prisma.article_metadata_to_authorCreateManyInput[];
+        links: Prisma.article_metadata_to_linkCreateManyInput[];
+        categories: Prisma.article_metadata_to_categoryCreateManyInput[];
+      }>(
+        (acc, entry) => {
+          const savedMetadata = existingMetadata.find(
+            (existingMetadata) => existingMetadata.external_id === entry.externalId
+          );
+
+          const authors = entry.authors.map<Prisma.article_metadata_to_authorCreateManyInput>((author) => {
+            const savedAuthor = existingAuthors.find((existingAuthor) => existingAuthor.name === author.name);
+
+            return {
+              author_id: savedAuthor?.id ?? author.id,
+              article_metadata_id: savedMetadata?.id ?? entry.id,
+            };
+          });
+
+          const categories = entry.categories.map<Prisma.article_metadata_to_categoryCreateManyInput>((category) => {
+            const savedCategory = existingCategories.find(
+              (existingCategory) => existingCategory.short_name === category.shortName
+            );
+
+            return {
+              category_id: savedCategory?.id ?? category.id,
+              article_metadata_id: savedMetadata?.id ?? entry.id,
               primary: category.isPrimary,
-              category: {
-                connectOrCreate: {
-                  where: { short_name: category.shortName },
-                  create: {
-                    short_name: category.shortName,
-                    full_name: category.fullName,
-                    group_name: category.groupName,
-                  },
-                },
-              },
-            })
-          ),
-        },
-        links: {
-          create: entry.links.map<Prisma.article_metadata_to_linkCreateWithoutArticle_metadataInput>((link) => ({
-            link: {
-              connectOrCreate: {
-                where: { href: link.href },
-                create: {
-                  href: link.href,
-                  rel: link.rel,
-                  type: link.type,
-                  title: link.title,
-                },
-              },
-            },
-          })),
-        },
-      },
-    });
+            };
+          });
 
-    articleMetadataList.push(metadata);
-  }
+          const links = entry.links.map<Prisma.article_metadata_to_linkCreateManyInput>((link) => {
+            const savedLink = existingLinks.find((existingLink) => existingLink.href === link.href);
+            return {
+              link_id: savedLink?.id ?? link.id,
+              article_metadata_id: savedMetadata?.id ?? entry.id,
+            };
+          });
 
-  return articleMetadataList;
+          acc.authors.push(...authors);
+          acc.categories.push(...categories);
+          acc.links.push(...links);
+
+          return acc;
+        },
+        { authors: [], links: [], categories: [] }
+      );
+
+      console.log(
+        'Metadata count after filtering',
+        connectedFileds.authors.length,
+        connectedFileds.categories.length,
+        connectedFileds.links.length,
+        new Date().toISOString()
+      );
+
+      await tx.article_metadata_to_author.createMany({
+        data: connectedFileds.authors,
+        skipDuplicates: true,
+      });
+
+      await tx.article_metadata_to_category.createMany({
+        data: connectedFileds.categories,
+        skipDuplicates: true,
+      });
+
+      await tx.article_metadata_to_link.createMany({
+        data: connectedFileds.links,
+        skipDuplicates: true,
+      });
+    },
+    {
+      maxWait: 5000,
+      timeout: 10000,
+    }
+  );
+
+  console.log('Adding metadata end transaction', new Date().toISOString());
+  console.log('-------------------------------------------------');
+  console.log('   ');
 };
 
 export const findLatestMetadataByExternalIds = async (params: { id: string; updated: Date }[]): Promise<string[]> => {
@@ -86,7 +211,7 @@ export const findLatestMetadataByExternalIds = async (params: { id: string; upda
     .map((item) => item.external_id);
 };
 
-export const addNewArticleMetadata = async (metadataEntries: ArticleMetadataEntry[]) => {
+export const addNewArticleMetadata = async (metadataEntries: Metadata[]) => {
   try {
     const existingIds = await findLatestMetadataByExternalIds(metadataEntries);
 
@@ -100,9 +225,10 @@ export const addNewArticleMetadata = async (metadataEntries: ArticleMetadataEntr
       (metadata, index, self) => index === self.findIndex((m) => m.id === metadata.id)
     );
 
-    return addArticleMetadata(uniqueFilteredMetadata);
+    await addArticleMetadata(uniqueFilteredMetadata);
   } catch (error) {
     console.log('Error adding new metadata', error);
+    throw error;
   }
 };
 
@@ -123,11 +249,6 @@ export const getGeneratedSummary = async (id: string) => {
 
   return metadata;
 };
-
-export const getLatestArticleMetadata = async () =>
-  prismaClient.article_metadata.findFirst({
-    orderBy: { updated: 'desc' },
-  });
 
 export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
   const articles = await prismaClient.article_metadata.findMany({
