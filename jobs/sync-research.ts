@@ -3,7 +3,7 @@ import { eventTrigger } from '@trigger.dev/sdk';
 import { getRequestUrl, getResumptionToken } from '@/lib/oai-pmh';
 import { xmlParser } from '@/lib/xml-parser';
 import { articleMetadataSchema } from '@/lib/oai-pmh/schema';
-import { Events, researchSyncPayloadSchema } from './events';
+import { AddArticleMetadaBatch, Events, researchSyncPayloadSchema } from './events';
 
 const batchSize = 100;
 const minimumDate = '2024-01-01';
@@ -44,12 +44,8 @@ client.defineJob({
       return null;
     });
 
-    await io.logger.info(`Fetch response: ${responseTextData ? 'success' : 'failure'}`, {
-      time: new Date().toISOString(),
-    });
-
     if (!responseTextData) {
-      return;
+      throw new Error('Error fetching data');
     }
 
     const parser = xmlParser();
@@ -57,14 +53,13 @@ client.defineJob({
     let jsonData = parser.parse(responseTextData);
 
     if (!jsonData) {
-      return;
+      throw new Error('Error parsing XML!');
     }
 
     const parsedData = articleMetadataSchema.parse(jsonData['OAI-PMH']);
 
     if (parsedData.error) {
-      await io.logger.error(`Error parsing data: ${parsedData.error.message}`, { time: new Date().toISOString() });
-      return;
+      throw new Error(`Error parsing data: ${parsedData.error.message}`);
     }
 
     const startDateObj = new Date(minimumDate).getTime();
@@ -83,10 +78,21 @@ client.defineJob({
       { time: new Date().toISOString() }
     );
 
+    let batches: AddArticleMetadaBatch[] = [];
     for (let i = 0; i < filteredItems.length; ) {
       const batch = filteredItems.slice(i, i + batchSize);
+      batches.push({
+        name: Events.add_article_metadata_batch,
+        context: {
+          jobId: ctx.event.context?.jobId,
+        },
+        payload: {
+          batchIndex: i,
+          batch,
+        },
+      });
 
-      await io.logger.info(`Adding new article metadata batch #${i} with length ${batch.length}`, {
+      /* await io.logger.info(`Adding new article metadata batch #${i} with length ${batch.length}`, {
         time: new Date().toISOString(),
       });
 
@@ -101,10 +107,12 @@ client.defineJob({
           batchIndex: i,
           batch,
         },
-      });
+      }); */
 
       i += batchSize;
     }
+
+    io.sendEvents(`${Events.add_article_metadata_batch}-${ctx.job.id}`, batches);
 
     const token = getResumptionToken(parsedData.resumptionToken, parsedData.records.length);
 

@@ -71,4 +71,14 @@ export const addArticleMetadaBatchPayloadSchema = z.object({
   batch: z.array(metadataBatchSchema),
 });
 
+export const addArticleMetadaBatchSchema = z.object({
+  name: z.literal(Events.add_article_metadata_batch),
+  context: z.object({
+    jobId: z.string().optional(),
+  }),
+  payload: addArticleMetadaBatchPayloadSchema,
+});
+
 export type MetadataBatch = z.infer<typeof metadataBatchSchema>;
+
+export type AddArticleMetadaBatch = z.infer<typeof addArticleMetadaBatchSchema>;
