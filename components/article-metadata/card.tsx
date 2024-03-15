@@ -70,7 +70,9 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   return (
     <Card className="flex flex-col">
       <CardHeader className="gap-2">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <Latex>{title}</Latex>
+        </CardTitle>
 
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 ">
