@@ -78,10 +78,10 @@ client.defineJob({
       { time: new Date().toISOString() }
     );
 
-    let batches: AddArticleMetadaBatch[] = [];
+    //let batches: AddArticleMetadaBatch[] = [];
     for (let i = 0; i < filteredItems.length; ) {
       const batch = filteredItems.slice(i, i + batchSize);
-      batches.push({
+      /* batches.push({
         name: Events.add_article_metadata_batch,
         context: {
           jobId: ctx.event.context?.jobId,
@@ -90,9 +90,9 @@ client.defineJob({
           batchIndex: i,
           batch,
         },
-      });
+      }); */
 
-      /* await io.logger.info(`Adding new article metadata batch #${i} with length ${batch.length}`, {
+      await io.logger.info(`Adding new article metadata batch #${i} with length ${batch.length}`, {
         time: new Date().toISOString(),
       });
 
@@ -107,12 +107,12 @@ client.defineJob({
           batchIndex: i,
           batch,
         },
-      }); */
+      });
 
       i += batchSize;
     }
 
-    io.sendEvents(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}`, batches);
+    // io.sendEvents(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}`, batches);
 
     const token = getResumptionToken(parsedData.resumptionToken, parsedData.records.length);
 
