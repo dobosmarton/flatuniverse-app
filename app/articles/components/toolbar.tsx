@@ -97,7 +97,6 @@ export const Toolbar: React.FC<Props> = ({ categoryTree }) => {
       </div>
       <div className="flex items-center space-x-2 gap-2">
         <AIToggle />
-        {/*  <ArticleLoadButton /> */}
       </div>
     </div>
   );
