@@ -17,7 +17,7 @@ client.defineJob({
     schema: researchSyncPayloadSchema,
   }),
   run: async (payload, io, ctx) => {
-    const responseTextData = await io.runTask(`fetch-research-data-${ctx.job.id}`, async (task, io) => {
+    const responseTextData = await io.runTask(`fetch-research-data-${ctx.event.context.jobId}`, async (task, io) => {
       const initialRequestUrl = getRequestUrl(payload.startDate, payload.untilDate, payload.resumptionToken);
 
       await io.logger.info(`Fetch response ${initialRequestUrl}`, { time: new Date().toISOString() });
@@ -29,7 +29,7 @@ client.defineJob({
 
       const retryAfter = response.headers.get('retry-after');
       const retryCount = (ctx.event.context?.retryCount ?? 0) + 1;
-      await io.sendEvent(`${Events.research_sync_retry}-${ctx.job.id}-${retryCount}`, {
+      await io.sendEvent(`${Events.research_sync_retry}-${ctx.event.context.jobId}-${retryCount}`, {
         name: Events.research_sync_retry,
         context: {
           jobId: ctx.event.context?.jobId,
@@ -98,7 +98,7 @@ client.defineJob({
 
       // send the batch to the add_article_metadata_batch event
       // no need to wait for the result
-      io.sendEvent(`${Events.add_article_metadata_batch}-${ctx.job.id}-${i}`, {
+      io.sendEvent(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}-${i}`, {
         name: Events.add_article_metadata_batch,
         context: {
           jobId: ctx.event.context?.jobId,
@@ -112,7 +112,7 @@ client.defineJob({
       i += batchSize;
     }
 
-    io.sendEvents(`${Events.add_article_metadata_batch}-${ctx.job.id}`, batches);
+    io.sendEvents(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}`, batches);
 
     const token = getResumptionToken(parsedData.resumptionToken, parsedData.records.length);
 
@@ -121,7 +121,7 @@ client.defineJob({
     if (token) {
       // send the resumption token to the same event
       // no need to wait for the result
-      io.sendEvent(`${Events.research_sync}-${ctx.job.id}-${token}`, {
+      io.sendEvent(`${Events.research_sync}-${ctx.event.context.jobId}-${token}`, {
         name: Events.research_sync,
         context: {
           jobId: ctx.event.context?.jobId,
