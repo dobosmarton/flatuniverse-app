@@ -11,7 +11,8 @@ client.defineJob({
     cron: '0 */3 * * *', // At minute 0 past every 3rd hour
   }),
   run: async (payload, io, ctx) => {
-    const startDate = new Date().toISOString().split('T')[0];
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 1);
 
     const jobId = randomUUID();
     await io.sendEvent(`${Events.research_sync}-${jobId}`, {
@@ -20,7 +21,7 @@ client.defineJob({
         jobId,
       },
       payload: {
-        startDate,
+        startDate: startDate.toISOString().split('T')[0],
       },
     });
 
