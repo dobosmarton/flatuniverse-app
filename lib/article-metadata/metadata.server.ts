@@ -282,6 +282,18 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   return article;
 };
 
+export const getArticleMetadataWithoutEmbeddings = async (page = 0, pageSize = 10) => {
+  const articles = await prismaClient.article_metadata.findMany({
+    take: pageSize,
+    skip: page && pageSize ? page * pageSize : undefined,
+    orderBy: { published: 'desc' },
+    where: { embeddings: { none: {} } },
+    select: { id: true, external_id: true },
+  });
+
+  return articles;
+};
+
 export const getArticlePdfLink = async (id: string): Promise<string | undefined> => {
   const article = await prismaClient.article_metadata.findUnique({
     where: { id },

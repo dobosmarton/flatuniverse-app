@@ -1,9 +1,9 @@
 import { client } from '@/trigger';
-import { eventTrigger } from '@trigger.dev/sdk';
+import { eventTrigger, isTriggerError } from '@trigger.dev/sdk';
 import { getRequestUrl, getResumptionToken } from '@/lib/oai-pmh';
 import { xmlParser } from '@/lib/xml-parser';
 import { articleMetadataSchema } from '@/lib/oai-pmh/schema';
-import { Events, researchSyncPayloadSchema } from './events';
+import { Events, researchSyncPayloadSchema } from '../events';
 
 const batchSize = 100;
 const minimumDate = '2024-01-01';
@@ -44,43 +44,41 @@ client.defineJob({
       return null;
     });
 
-    if (!responseTextData) {
-      throw new Error('Error fetching data');
-    }
+    const parsedData = await io.runTask(`parse-research-data-${ctx.event.context.jobId}`, async (task, io) => {
+      if (!responseTextData) {
+        throw new Error('Error fetching data');
+      }
 
-    const parser = xmlParser();
+      const parser = xmlParser();
 
-    let jsonData = parser.parse(responseTextData);
+      let jsonData = parser.parse(responseTextData);
 
-    if (!jsonData) {
-      throw new Error('Error parsing XML!');
-    }
+      if (!jsonData) {
+        throw new Error('Error parsing XML!');
+      }
 
-    const parsedData = articleMetadataSchema.parse(jsonData['OAI-PMH']);
+      const parsedData = articleMetadataSchema.parse(jsonData['OAI-PMH']);
 
-    if (parsedData.error) {
-      throw new Error(`Error parsing data: ${parsedData.error.message}`);
-    }
+      if (parsedData.error) {
+        throw new Error(`Error parsing data: ${parsedData.error.message}`);
+      }
 
-    const startDateObj = new Date(minimumDate).getTime();
+      const startDateObj = new Date(minimumDate).getTime();
 
-    const filteredItems = parsedData.records
-      .filter((item) => {
-        const created = item.metadata.published.getTime();
-        const updated = item.metadata.updated ? item.metadata.updated.getTime() : null;
+      const metadata = parsedData.records
+        .filter((item) => {
+          const created = item.metadata.published.getTime();
+          const updated = item.metadata.updated ? item.metadata.updated.getTime() : null;
 
-        return created >= startDateObj || (updated && updated >= startDateObj);
-      })
-      .map((item) => item.metadata);
+          return created >= startDateObj || (updated && updated >= startDateObj);
+        })
+        .map((item) => item.metadata);
 
-    await io.logger.info(
-      `Filtered items length: ${filteredItems.length}, parsed items length: ${parsedData.records.length}`,
-      { time: new Date().toISOString() }
-    );
+      return { resumptionToken: parsedData.resumptionToken, records: metadata };
+    });
 
     //let batches: AddArticleMetadaBatch[] = [];
-    for (let i = 0; i < filteredItems.length; ) {
-      const batch = filteredItems.slice(i, i + batchSize);
+    for (let i = 0; i < parsedData.records.length; ) {
       /* batches.push({
         name: Events.add_article_metadata_batch,
         context: {
@@ -92,9 +90,6 @@ client.defineJob({
         },
       }); */
 
-      await io.logger.info(`Adding new article metadata batch #${i} with length ${batch.length}`, {
-        time: new Date().toISOString(),
-      });
       try {
         // send the batch to the add_article_metadata_batch event
         // no need to wait for the result
@@ -105,10 +100,12 @@ client.defineJob({
           },
           payload: {
             batchIndex: i,
-            batch,
+            batch: parsedData.records.slice(i, i + batchSize),
           },
         });
       } catch (error) {
+        if (isTriggerError(error)) throw error;
+
         await io.logger.error(`Error sending batch #${i}: ${(error as Error).message}`, {
           time: new Date().toISOString(),
         });

@@ -1,7 +1,7 @@
 import { client } from '@/trigger';
 import { eventTrigger } from '@trigger.dev/sdk';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
-import { Events, addArticleMetadaBatchPayloadSchema } from './events';
+import { Events, addArticleMetadaBatchPayloadSchema } from '../events';
 
 client.defineJob({
   id: 'add-article-metadata-batch',
@@ -13,7 +13,7 @@ client.defineJob({
   }),
   concurrencyLimit: 1,
   run: async (payload, io, ctx) => {
-    await io.runTask(`add-new-article-metadata-${ctx.job.id}-${payload.batchIndex}`, async () => {
+    await io.runTask(`add-new-article-metadata-${ctx.event.context.jobId}-${payload.batchIndex}`, async () => {
       await io.logger.info(`Add Article Metadata Batch - Index: ${payload.batchIndex}, size: ${payload.batch.length}`, {
         time: new Date().toISOString(),
       });

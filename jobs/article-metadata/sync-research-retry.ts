@@ -1,6 +1,6 @@
 import { client } from '@/trigger';
 import { IOLogger, eventTrigger } from '@trigger.dev/sdk';
-import { Events, researchSyncRetryPayloadSchema } from './events';
+import { Events, researchSyncRetryPayloadSchema } from '../events';
 
 const retryDefault = 10; // wait 10 seconds by default
 const retryMin = 5; // wait at least 5 seconds
@@ -45,9 +45,12 @@ client.defineJob({
     schema: researchSyncRetryPayloadSchema,
   }),
   run: async (payload, io, ctx) => {
-    await io.wait(`research-sync-retry-wait-${ctx.job.id}`, getRetrySeconds(io.logger, payload.retryAfter));
+    await io.wait(
+      `research-sync-retry-wait-${ctx.event.context.jobId}`,
+      getRetrySeconds(io.logger, payload.retryAfter)
+    );
 
-    await io.sendEvent(`${Events.research_sync}-${ctx.job.id}-${payload.retryCount}`, {
+    await io.sendEvent(`${Events.research_sync}-${ctx.event.context.jobId}-${payload.retryCount}`, {
       name: Events.research_sync,
       context: {
         jobId: ctx.event.context?.jobId,
