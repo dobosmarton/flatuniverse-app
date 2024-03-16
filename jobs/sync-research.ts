@@ -3,7 +3,7 @@ import { eventTrigger } from '@trigger.dev/sdk';
 import { getRequestUrl, getResumptionToken } from '@/lib/oai-pmh';
 import { xmlParser } from '@/lib/xml-parser';
 import { articleMetadataSchema } from '@/lib/oai-pmh/schema';
-import { AddArticleMetadaBatch, Events, researchSyncPayloadSchema } from './events';
+import { Events, researchSyncPayloadSchema } from './events';
 
 const batchSize = 100;
 const minimumDate = '2024-01-01';
@@ -95,19 +95,25 @@ client.defineJob({
       await io.logger.info(`Adding new article metadata batch #${i} with length ${batch.length}`, {
         time: new Date().toISOString(),
       });
-
-      // send the batch to the add_article_metadata_batch event
-      // no need to wait for the result
-      io.sendEvent(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}-${i}`, {
-        name: Events.add_article_metadata_batch,
-        context: {
-          jobId: ctx.event.context?.jobId,
-        },
-        payload: {
-          batchIndex: i,
-          batch,
-        },
-      });
+      try {
+        // send the batch to the add_article_metadata_batch event
+        // no need to wait for the result
+        await io.sendEvent(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}-${i}`, {
+          name: Events.add_article_metadata_batch,
+          context: {
+            jobId: ctx.event.context?.jobId,
+          },
+          payload: {
+            batchIndex: i,
+            batch,
+          },
+        });
+      } catch (error) {
+        await io.logger.error(`Error sending batch #${i}: ${(error as Error).message}`, {
+          time: new Date().toISOString(),
+        });
+        // no need to throw the error, just continue with the next batch
+      }
 
       i += batchSize;
     }
@@ -121,7 +127,7 @@ client.defineJob({
     if (token) {
       // send the resumption token to the same event
       // no need to wait for the result
-      io.sendEvent(`${Events.research_sync}-${ctx.event.context.jobId}-${token}`, {
+      await io.sendEvent(`${Events.research_sync}-${ctx.event.context.jobId}-${token}`, {
         name: Events.research_sync,
         context: {
           jobId: ctx.event.context?.jobId,
