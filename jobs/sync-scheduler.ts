@@ -8,7 +8,7 @@ client.defineJob({
   name: 'Research Sync Scheduler',
   version: '0.0.1',
   trigger: cronTrigger({
-    cron: '0 */3 * * *', // At minute 0 past every 3rd hour
+    cron: '0 */6 * * *', // At minute 0 past every 6th hour
   }),
   run: async (payload, io, ctx) => {
     const startDate = new Date();
