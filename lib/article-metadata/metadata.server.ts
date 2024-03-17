@@ -282,12 +282,21 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   return article;
 };
 
-export const getArticleMetadataWithoutEmbeddings = async (page = 0, pageSize = 10) => {
+export const getArticleMetadataIdsWithZeroEmbeddingsByIds = async (externalIds: string[]) => {
   const articles = await prismaClient.article_metadata.findMany({
+    where: { external_id: { in: externalIds }, embeddings: { none: {} } },
+    select: { id: true, external_id: true },
+  });
+
+  return articles;
+};
+
+export const getArticleMetadataIdsWithZeroEmbeddings = async (page = 0, pageSize = 10) => {
+  const articles = await prismaClient.article_metadata.findMany({
+    where: { embeddings: { none: {} } },
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
     orderBy: { published: 'desc' },
-    where: { embeddings: { none: {} } },
     select: { id: true, external_id: true },
   });
 
