@@ -1,6 +1,7 @@
 import { client } from '@/trigger';
 import { IOLogger, eventTrigger } from '@trigger.dev/sdk';
-import { Events, researchSyncRetryPayloadSchema } from '../events';
+import { Events } from '../events';
+import { researchSyncRetryPayloadSchema } from '../event-schema';
 
 const retryDefault = 10; // wait 10 seconds by default
 const retryMin = 5; // wait at least 5 seconds

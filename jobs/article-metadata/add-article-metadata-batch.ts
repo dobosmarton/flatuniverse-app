@@ -1,7 +1,8 @@
 import { client } from '@/trigger';
 import { eventTrigger } from '@trigger.dev/sdk';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
-import { Events, addArticleMetadaBatchPayloadSchema } from '../events';
+import { Events } from '../events';
+import { addArticleMetadaBatchPayloadSchema } from '../event-schema';
 
 client.defineJob({
   id: 'add-article-metadata-batch',
@@ -19,6 +20,14 @@ client.defineJob({
       });
 
       await articleMetadataService.addNewArticleMetadata(payload.batch);
+
+      await io.sendEvent(`${Events.generate_ai_content}-${ctx.event.context.jobId}-${payload.batchIndex}`, {
+        name: Events.generate_ai_content,
+        context: {
+          jobId: ctx.event.context.jobId,
+        },
+        payload,
+      });
 
       await io.logger.info(`Add Article Metadata Batch - Done`, {
         time: new Date().toISOString(),

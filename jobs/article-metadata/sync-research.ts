@@ -3,7 +3,8 @@ import { eventTrigger, isTriggerError } from '@trigger.dev/sdk';
 import { getRequestUrl, getResumptionToken } from '@/lib/oai-pmh';
 import { xmlParser } from '@/lib/xml-parser';
 import { articleMetadataSchema } from '@/lib/oai-pmh/schema';
-import { Events, researchSyncPayloadSchema } from '../events';
+import { Events } from '../events';
+import { researchSyncPayloadSchema } from '../event-schema';
 
 const batchSize = 100;
 const minimumDate = '2024-01-01';
