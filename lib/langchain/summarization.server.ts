@@ -6,6 +6,8 @@ import { PDFMetadata } from './types';
 
 const model = new OpenAI({ temperature: 0 });
 
+const hasText = (res: ChainValues): res is { text: string } => 'text' in res;
+
 export const getSummaryByDocuments = async (docs: Document<PDFMetadata<{ metadata_id: string }>>[]) => {
   const chain = loadSummarizationChain(model, { type: 'map_reduce' });
   const res: ChainValues = await chain.invoke({
@@ -14,9 +16,9 @@ export const getSummaryByDocuments = async (docs: Document<PDFMetadata<{ metadat
 
   console.log('Summarization chain was invoked! 💰');
 
-  if (!('text' in res)) {
+  if (!hasText(res)) {
     console.log('No text in response!');
-    return res;
+    return null;
   }
 
   return res.text;

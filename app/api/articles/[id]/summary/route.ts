@@ -26,6 +26,10 @@ const getSummary: NextRouteFunction<Params> = async (_, { params }) => {
 
   console.log('Summary generated successfully!', generatedSummary);
 
+  if (!generatedSummary) {
+    return Response.json('Summary not generated', { status: 404 });
+  }
+
   await articleService.addGeneratedSummary(params.id, generatedSummary);
 
   console.log('Summary added to metadata successfully!');
