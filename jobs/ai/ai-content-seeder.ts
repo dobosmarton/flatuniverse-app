@@ -1,7 +1,7 @@
 import { client } from '@/trigger';
 import { invokeTrigger } from '@trigger.dev/sdk';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
-import * as tasks from './tasks/generate-embedding';
+import * as tasks from './tasks';
 
 const batchSize = 50;
 
@@ -23,7 +23,15 @@ client.defineJob({
 
     for (const item of metadataList) {
       try {
-        await tasks.generateContent(`seed-ai-content-${item.id}`, io, item);
+        const pdfJson = await tasks.loadPdf(`seed-ai-content-${item.id}`, io, item);
+
+        if (!pdfJson) {
+          throw new Error(`PDF not found for metadata id: ${item.id}`);
+        }
+
+        await tasks.generateEmbedding(`seed-ai-content-${item.id}`, io, item.id, pdfJson);
+
+        await tasks.generateSummary(`seed-ai-content-${item.id}`, io, item.id, pdfJson);
       } catch (error) {
         const errorMessage = (error as Error).message ?? error;
         await io.logger.error(

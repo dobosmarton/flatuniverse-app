@@ -1,9 +1,9 @@
 import { client } from '@/trigger';
 import { eventTrigger } from '@trigger.dev/sdk';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
-import * as tasks from './tasks/generate-embedding';
 import { Events } from '../events';
 import { generateAiContentSchema } from '../event-schema';
+import * as tasks from './tasks';
 
 client.defineJob({
   id: 'generate-ai-content',
@@ -28,7 +28,20 @@ client.defineJob({
 
     for (const item of result) {
       try {
-        await tasks.generateContent(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item);
+        const pdfJson = await tasks.loadPdf(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item);
+
+        if (!pdfJson) {
+          throw new Error(`PDF not found for metadata id: ${item.id}`);
+        }
+
+        await tasks.generateEmbedding(
+          `generate-ai-content-${ctx.event.context.jobId}-${item.id}`,
+          io,
+          item.id,
+          pdfJson
+        );
+
+        await tasks.generateSummary(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item.id, pdfJson);
       } catch (error) {
         const errorMessage = (error as Error).message ?? error;
         await io.logger.error(
