@@ -26,7 +26,7 @@ client.defineJob({
         context: {
           jobId: ctx.event.context.jobId,
         },
-        payload,
+        payload: payload.batch.map((item) => ({ externalId: item.id })),
       });
 
       await io.logger.info(`Add Article Metadata Batch - Done`, {

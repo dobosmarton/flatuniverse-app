@@ -16,7 +16,7 @@ client.defineJob({
   run: async (payload, io, ctx) => {
     const result = await io.runTask(`fetch-metadata-with-zero-embeddings-${ctx.event.context.jobId}`, async () => {
       const metadataList = await articleMetadataService.getArticleMetadataIdsWithZeroEmbeddingsByIds(
-        payload.map((item) => item.externalId)
+        payload.map((payloadItem) => payloadItem.externalId)
       );
 
       await io.logger.info(`Fetched metadata count: ${metadataList.length} - Done`, {
