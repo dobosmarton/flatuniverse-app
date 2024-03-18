@@ -35,7 +35,7 @@ export const generateContent = async (
 
       const pdfDocs = await loadPDF(pdfLink, { metadata_id: item.id });
 
-      await io.logger.info(`PDF file loaded successfully!`, {
+      await io.logger.info(`PDF file loaded successfully! Length: ${pdfDocs.length}`, {
         time: new Date().toISOString(),
       });
 
@@ -55,6 +55,8 @@ export const generateContent = async (
       await io.logger.info(`Add Embeddings - Done`, {
         time: new Date().toISOString(),
       });
+
+      return task;
     });
 
     const generatedSummary = await io.runTask(`${cacheKey}-generate-summary`, async (task) => {
@@ -62,7 +64,7 @@ export const generateContent = async (
 
       const summary = await getSummaryByDocuments(pdfDocs);
 
-      await io.logger.info(`Summary generated successfully! Length: ${summary}`, {
+      await io.logger.info(`Summary generated successfully! Length: ${summary?.length}`, {
         time: new Date().toISOString(),
       });
 
@@ -82,10 +84,14 @@ export const generateContent = async (
       await io.logger.info(`Generate AI Content - Added`, {
         time: new Date().toISOString(),
       });
+
+      return task;
     });
 
     await io.logger.info(`Generate AI Content - Done`, {
       time: new Date().toISOString(),
     });
+
+    return { item };
   });
 };

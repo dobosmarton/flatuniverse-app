@@ -30,10 +30,14 @@ client.defineJob({
       try {
         await tasks.generateContent(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item);
       } catch (error) {
-        await io.logger.error(`Error in generating AI content for metadata id: ${item.id}`, {
-          time: new Date().toISOString(),
-          error: (error as Error).message,
-        });
+        const errorMessage = (error as Error).message ?? error;
+        await io.logger.error(
+          `Error in generating AI content for metadata id: ${item.id}, error: ${JSON.stringify(errorMessage)}`,
+          {
+            time: new Date().toISOString(),
+            error,
+          }
+        );
       }
     }
 

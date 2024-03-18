@@ -8,7 +8,7 @@ const batchSize = 50;
 client.defineJob({
   id: 'ai-content-seeder',
   name: 'AI Content Seeder',
-  version: '0.0.1',
+  version: '0.0.2',
   trigger: invokeTrigger(),
   run: async (_, io) => {
     const metadataList = await io.runTask('fetch-article-metadata', async () => {
@@ -25,10 +25,14 @@ client.defineJob({
       try {
         await tasks.generateContent(`seed-ai-content-${item.id}`, io, item);
       } catch (error) {
-        await io.logger.error(`Error in generating AI content for metadata id: ${item.id}`, {
-          time: new Date().toISOString(),
-          error: (error as Error).message,
-        });
+        const error = (error as Error).message ?? error;
+        await io.logger.error(
+          `Error in generating AI content for metadata id: ${item.id}, error: ${JSON.stringify(errorMessage)}`,
+          {
+            time: new Date().toISOString(),
+            error,
+          }
+        );
       }
     }
   },
