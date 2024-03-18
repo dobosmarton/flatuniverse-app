@@ -25,7 +25,7 @@ client.defineJob({
       try {
         await tasks.generateContent(`seed-ai-content-${item.id}`, io, item);
       } catch (error) {
-        const error = (error as Error).message ?? error;
+        const errorMessage = (error as Error).message ?? error;
         await io.logger.error(
           `Error in generating AI content for metadata id: ${item.id}, error: ${JSON.stringify(errorMessage)}`,
           {
