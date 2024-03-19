@@ -21,13 +21,13 @@ client.defineJob({
 
       await articleMetadataService.addNewArticleMetadata(payload.batch);
 
-      await io.sendEvent(`${Events.generate_ai_content}-${ctx.event.context.jobId}-${payload.batchIndex}`, {
+      /*    await io.sendEvent(`${Events.generate_ai_content}-${ctx.event.context.jobId}-${payload.batchIndex}`, {
         name: Events.generate_ai_content,
         context: {
           jobId: ctx.event.context.jobId,
         },
         payload: payload.batch.map((item) => ({ externalId: item.id })),
-      });
+      }); */
 
       await io.logger.info(`Add Article Metadata Batch - Done`, {
         time: new Date().toISOString(),
