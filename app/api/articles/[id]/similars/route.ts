@@ -5,7 +5,7 @@ import * as redis from '@/lib/redis';
 
 type Params = { params: { id: string } };
 
-export const generateEmbeddingAsync = redis.cacheableFunction<string, { id: string }>(
+const generateEmbeddingAsync = redis.cacheableFunction<string, { id: string }>(
   (metadataId) => redis.keys.generateEmbeddingForItem(metadataId),
   redis.asyncEmbeddingGenerationSchema,
   { ex: 60 * 60 }
