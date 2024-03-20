@@ -28,7 +28,7 @@ client.defineJob({
 
     for (const item of result) {
       try {
-        const pdfJson = await tasks.loadPdf(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item);
+        const pdfJson = await tasks.loadPdf(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item.id);
 
         if (!pdfJson) {
           throw new Error(`PDF not found for metadata id: ${item.id}`);
