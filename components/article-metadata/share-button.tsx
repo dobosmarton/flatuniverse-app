@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { ShareIcon } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import * as logger from '@/lib/logger';
+import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
-import { cn } from '@/lib/utils';
 
 type Props = {
   title: string;
@@ -35,7 +35,7 @@ export const ShareButton: React.FC<Props> = ({ title, text, slug, size }) => {
         });
       }
     } catch (error) {
-      console.error('Error sharing:', error);
+      logger.error('Error sharing:', error);
     }
   };
 

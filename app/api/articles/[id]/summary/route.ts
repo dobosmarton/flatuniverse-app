@@ -2,6 +2,7 @@ import { NextRouteFunction } from '@/lib/route-validator.server';
 import { loadPDF } from '@/lib/langchain/file-reader.server';
 import { getSummaryByDocuments } from '@/lib/langchain/summarization.server';
 import * as articleService from '@/lib/article-metadata/metadata.server';
+import * as logger from '@/lib/logger';
 
 type Params = { params: { id: string } };
 
@@ -20,11 +21,11 @@ const getSummary: NextRouteFunction<Params> = async (_, { params }) => {
 
   const pdfDocs = await loadPDF(pdfLink, { metadata_id: params.id });
 
-  console.log('PDF file loaded successfully!');
+  logger.log('PDF file loaded successfully!');
 
   const generatedSummary = await getSummaryByDocuments(pdfDocs);
 
-  console.log('Summary generated successfully!', generatedSummary);
+  logger.log('Summary generated successfully!', generatedSummary);
 
   if (!generatedSummary) {
     return Response.json('Summary not generated', { status: 404 });
@@ -32,7 +33,7 @@ const getSummary: NextRouteFunction<Params> = async (_, { params }) => {
 
   await articleService.addGeneratedSummary(params.id, generatedSummary);
 
-  console.log('Summary added to metadata successfully!');
+  logger.log('Summary added to metadata successfully!');
 
   return Response.json({ data: generatedSummary }, { status: 200 });
 };

@@ -1,5 +1,6 @@
 import { NextRouteFunction } from '@/lib/route-validator.server';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
+import * as logger from '@/lib/logger';
 import { articleMetadataSearchSchema } from './schema';
 
 const searchArticles: NextRouteFunction<{}> = async (request) => {
@@ -18,7 +19,7 @@ const searchArticles: NextRouteFunction<{}> = async (request) => {
     pageSize,
   });
 
-  console.info('New search request', parsedParams);
+  logger.log('New search request', parsedParams);
 
   const products = await articleMetadataService.searchArticleMetadata(parsedParams);
 

@@ -3,14 +3,15 @@
 import { randomUUID } from 'crypto';
 import { Prisma } from '@prisma/client';
 import { ArticleMetadataSearch } from '@/app/api/articles/search/schema';
+import * as logger from '@/lib/logger';
 import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
 import { Metadata } from '../oai-pmh/schema';
 
 export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => {
-  console.log('   ');
-  console.log('-------------------------------------------------');
-  console.log('Adding metadata', entries.length, ' start: ', new Date().toISOString());
+  logger.log('   ');
+  logger.log('-------------------------------------------------');
+  logger.log('Adding metadata', entries.length, ' start: ', new Date().toISOString());
   const data = entries.map((entry) => ({
     ...entry,
     externalId: entry.id,
@@ -42,7 +43,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
 
   const links = data.flatMap<Prisma.linkCreateManyInput>((entry) => entry.links);
 
-  console.log('Adding metadata start transaction', new Date().toISOString());
+  logger.log('Adding metadata start transaction', new Date().toISOString());
 
   await prismaClient.$transaction(
     async (tx) => {
@@ -56,7 +57,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
         select: { id: true, name: true },
       });
 
-      console.log('Authors count', authors.length, authorCount.count, existingAuthors.length, new Date().toISOString());
+      logger.log('Authors count', authors.length, authorCount.count, existingAuthors.length, new Date().toISOString());
 
       const categoryCount = await tx.category.createMany({
         data: categories,
@@ -68,7 +69,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
         select: { id: true, short_name: true },
       });
 
-      console.log(
+      logger.log(
         'Categories count',
         categories.length,
         categoryCount.count,
@@ -86,13 +87,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
         select: { id: true, href: true },
       });
 
-      console.log(
-        'Links count mismatch',
-        links.length,
-        linkCount.count,
-        existingLinks.length,
-        new Date().toISOString()
-      );
+      logger.log('Links count mismatch', links.length, linkCount.count, existingLinks.length, new Date().toISOString());
 
       const metadataCount = await tx.article_metadata.createMany({
         data: data.map<Prisma.article_metadataCreateManyInput>((entry) => ({
@@ -108,7 +103,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
         skipDuplicates: true,
       });
 
-      console.log('Metadata count mismatch', metadataCount.count, data.length, new Date().toISOString());
+      logger.log('Metadata count mismatch', metadataCount.count, data.length, new Date().toISOString());
 
       const existingMetadata = await tx.article_metadata.findMany({
         where: { external_id: { in: data.map((entry) => entry.externalId) } },
@@ -163,7 +158,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
         { authors: [], links: [], categories: [] }
       );
 
-      console.log(
+      logger.log(
         'Metadata count after filtering',
         connectedFileds.authors.length,
         connectedFileds.categories.length,
@@ -192,9 +187,9 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
     }
   );
 
-  console.log('Adding metadata end transaction', new Date().toISOString());
-  console.log('-------------------------------------------------');
-  console.log('   ');
+  logger.log('Adding metadata end transaction', new Date().toISOString());
+  logger.log('-------------------------------------------------');
+  logger.log('   ');
 };
 
 export const findLatestMetadataByExternalIds = async (params: { id: string; updated: Date }[]): Promise<string[]> => {
@@ -227,7 +222,7 @@ export const addNewArticleMetadata = async (metadataEntries: Metadata[]) => {
 
     await addArticleMetadata(uniqueFilteredMetadata);
   } catch (error) {
-    console.log('Error adding new metadata', error);
+    logger.log('Error adding new metadata', error);
     throw error;
   }
 };
