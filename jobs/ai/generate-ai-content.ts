@@ -41,7 +41,7 @@ client.defineJob({
           pdfJson
         );
 
-        await tasks.generateSummary(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item.id, pdfJson);
+        // await tasks.generateSummary(`generate-ai-content-${ctx.event.context.jobId}-${item.id}`, io, item.id, pdfJson);
       } catch (error) {
         const errorMessage = (error as Error).message ?? error;
         await io.logger.error(
