@@ -9,7 +9,7 @@ export default async function Dashboard() {
   const categoryTree = await getCategoryTree([]);
 
   return (
-    <div className="flex flex-col px-8 py-12 sm:py-16  gap-4">
+    <div className="flex flex-col px-8 py-12 sm:py-16 gap-4">
       <Toolbar categoryTree={categoryTree} />
 
       <NewsletterSection closable />

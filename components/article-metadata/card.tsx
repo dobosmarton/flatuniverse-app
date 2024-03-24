@@ -86,7 +86,9 @@ export const ArticleMetadataCard: React.FC<Props> = ({
             <div>
               <User2Icon size={18} className="text-muted-foreground" />
             </div>
-            <CardDescription> {`${authors.join(', ')}`}</CardDescription>
+            <CardDescription>
+              <Latex>{`${authors.join(', ')}`}</Latex>
+            </CardDescription>
           </div>
         </div>
 

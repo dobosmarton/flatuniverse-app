@@ -249,7 +249,7 @@ export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
   const articles = await prismaClient.article_metadata.findMany({
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: { published: 'desc' },
+    orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
     include: {
       authors: { select: { author: { select: { name: true } } } },
       categories: {
@@ -291,7 +291,7 @@ export const getArticleMetadataIdsWithZeroEmbeddings = async (page = 0, pageSize
     where: { embeddings: { none: {} } },
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: { published: 'desc' },
+    orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
     select: { id: true, external_id: true },
   });
 
@@ -362,7 +362,7 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
     },
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: { published: 'desc' },
+    orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
     include: {
       authors: { select: { author: { select: { name: true } } } },
       categories: {
