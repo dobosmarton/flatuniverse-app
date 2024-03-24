@@ -1,5 +1,6 @@
 import { Document } from '@langchain/core/documents';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { PDFMetadata } from './types';
 
 export const loadPDF = async <T extends Record<string, any>>(
@@ -10,18 +11,23 @@ export const loadPDF = async <T extends Record<string, any>>(
 
   const blobFile = await response.blob();
 
-  const loader = new PDFLoader(blobFile, {
-    splitPages: true,
-  });
+  const loader = new PDFLoader(blobFile);
 
   const docs = await loader.load();
 
-  docs.forEach((doc) => {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
+
+  const splitDocs = await splitter.splitDocuments(docs);
+
+  splitDocs.forEach((doc) => {
     doc.metadata = {
-      ...doc.metadata,
+      ...(doc.metadata ?? {}),
       article: metadata,
     };
   });
 
-  return docs as Document<PDFMetadata<T>>[];
+  return splitDocs as Document<PDFMetadata<T>>[];
 };
