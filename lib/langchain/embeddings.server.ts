@@ -5,11 +5,16 @@ import { OpenAIEmbeddings } from '@langchain/openai';
 import { Document } from '@langchain/core/documents';
 import { prismaClient } from '../prisma';
 import { PDFMetadata } from './types';
+import * as redis from '../redis';
+import * as logger from '../logger';
 
 const openAIEmbeddings = new OpenAIEmbeddings();
 
-const addVectors = async (vectors: number[][], documents: Document<PDFMetadata<{ metadata_id: string }>>[]) => {
-  return prismaClient.$transaction(
+const addVectors = async (
+  vectors: number[][],
+  documents: Document<PDFMetadata<{ metadata_id: string }>>[]
+): Promise<number[]> =>
+  prismaClient.$transaction(
     vectors.map((vector, idx) => {
       const embedding = pgvector.toSql(vector);
       const documentMetadata = documents[idx].metadata;
@@ -24,14 +29,20 @@ const addVectors = async (vectors: number[][], documents: Document<PDFMetadata<{
       `;
     })
   );
-};
 
-export const addNewEmbeddings = async (docs: Document<PDFMetadata<{ metadata_id: string }>>[]) => {
-  console.log('Adding embeddings to vector store', docs.length);
+export const addNewEmbeddings = async (metadataId: string, docs: Document<PDFMetadata<{ metadata_id: string }>>[]) => {
+  try {
+    logger.log('Adding embeddings to vector store', docs.length);
 
-  const vectors = await openAIEmbeddings.embedDocuments(docs.map((doc) => doc.pageContent));
+    const vectors = await openAIEmbeddings.embedDocuments(docs.map((doc) => doc.pageContent));
 
-  console.log('Embed documents was invoked! 💰');
+    logger.log('Embed documents was invoked! 💰');
 
-  await addVectors(vectors, docs);
+    await addVectors(vectors, docs);
+
+    await redis.revalidateKey(redis.keys.metadataEmbeddingItems(metadataId));
+  } catch (error) {
+    logger.error('Error in embeddings chain:', error);
+    throw error;
+  }
 };

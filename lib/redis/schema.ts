@@ -8,7 +8,7 @@ export const embeddingCacheSchema = z.array(
   })
 );
 
-export const similarItemsCacheSchema = z.array(z.string());
+export const similarIdsCacheSchema = z.array(z.string());
 
 export const asyncEmbeddingGenerationSchema = z.object({
   id: z.string(),

@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { client } from './client';
 import { SetCommandOptions } from '@upstash/redis';
+import * as logger from '@/lib/logger';
+import { client } from './client';
 
 const isJsonString = (str: string) => {
   try {
@@ -24,7 +25,8 @@ const isJsonString = (str: string) => {
 export const cacheableFunction = <T, R>(
   keyExtractor: (params: T) => string,
   schema: z.Schema,
-  options?: SetCommandOptions
+  options?: SetCommandOptions,
+  skipCache?: (result: R) => boolean
 ) => {
   return (fn: (props: T) => Promise<R>) => {
     return async (props: T): Promise<R> => {
@@ -37,12 +39,17 @@ export const cacheableFunction = <T, R>(
 
         const parsed = schema.safeParse(parsedValue);
         if (parsed.success) {
+          logger.log(`Cache hit key: ${key}`);
           return parsed.data;
         }
-        console.error(parsed.error);
+        logger.error(parsed.error);
       }
 
       const result = await fn(props);
+
+      if (skipCache && skipCache(result)) {
+        return result;
+      }
 
       await client.set(key, JSON.stringify(result), options);
       return result;

@@ -10,7 +10,7 @@ export const generateEmbedding = async (cacheKey: string, io: IO, itemId: string
 
     const pdfDocs = JSON.parse(pdfJson).doc;
 
-    await addNewEmbeddings(pdfDocs);
+    await addNewEmbeddings(itemId, pdfDocs);
 
     await io.logger.info(`Add Embeddings - Done`, {
       time: new Date().toISOString(),

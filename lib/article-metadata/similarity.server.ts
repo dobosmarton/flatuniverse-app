@@ -71,9 +71,10 @@ const _getSimilarIdsByEmbeddingVector = async (props: GetSimilarIdsByEmbeddingVe
 };
 
 export const getSimilarIdsByEmbeddingVector = redis.cacheableFunction<GetSimilarIdsByEmbeddingVectorParams, string[]>(
-  ({ metadataId }) => redis.keys.metadataSimilarItems(metadataId),
-  redis.similarItemsCacheSchema,
-  { ex: 60 }
+  ({ metadataId }) => redis.keys.metadataSimilarIds(metadataId),
+  redis.similarIdsCacheSchema,
+  { ex: 60 },
+  (result) => result.length === 0
 )(_getSimilarIdsByEmbeddingVector);
 
 /**
