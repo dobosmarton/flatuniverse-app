@@ -2,11 +2,15 @@ import { StateCreator } from 'zustand';
 import { Store } from './index';
 
 export type AIModeSlice = {
-  aiEnabled: boolean;
-  setAiEnabled: (aiEnabled: boolean) => void;
+  similarArticlesEnabled: boolean;
+  summaryEnabled: boolean;
+  setSimilarArticlesEnabled: (similarArticlesEnabled: boolean) => void;
+  setSummaryEnabled: (summaryEnabled: boolean) => void;
 };
 
 export const createAIModeSlice: StateCreator<Store, [], [], AIModeSlice> = (set) => ({
-  aiEnabled: false,
-  setAiEnabled: (aiEnabled: boolean) => set({ aiEnabled }),
+  similarArticlesEnabled: false,
+  summaryEnabled: false,
+  setSimilarArticlesEnabled: (similarArticlesEnabled: boolean) => set({ similarArticlesEnabled }),
+  setSummaryEnabled: (summaryEnabled: boolean) => set({ summaryEnabled }),
 });

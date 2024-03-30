@@ -21,11 +21,11 @@ type Props = {
 };
 
 export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
-  const { aiEnabled } = useBoundStore();
+  const { similarArticlesEnabled } = useBoundStore();
   const [selectedSimilarItem, setSelectedSimilarItem] = React.useState<string | null>(null);
 
   const { data, isLoading } = useSWR(
-    aiEnabled ? `/api/articles/${article.id}/similars` : null,
+    similarArticlesEnabled ? `/api/articles/${article.id}/similars` : null,
     fetcher<SimilarArticleMetadataList>
   );
 
@@ -35,9 +35,9 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
     <div className="flex flex-col gap-4 w-full md:flex-row md:justify-between">
       <div
         className={cn('flex ', {
-          'md:w-6/12': aiEnabled && !!selectedSimilarItem,
-          'md:w-8/12': aiEnabled && !selectedSimilarItem,
-          'w-full': !aiEnabled,
+          'md:w-6/12': similarArticlesEnabled && !!selectedSimilarItem,
+          'md:w-8/12': similarArticlesEnabled && !selectedSimilarItem,
+          'w-full': !similarArticlesEnabled,
         })}>
         <ArticleMetadataCard
           key={article.id}
@@ -52,7 +52,7 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
         />
       </div>
 
-      {aiEnabled ? (
+      {similarArticlesEnabled ? (
         <div
           className={cn('flex flex-col gap-2 w-full', {
             'md:w-6/12': !!selectedSimilarItem,

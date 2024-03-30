@@ -2,6 +2,7 @@
 
 import React from 'react';
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
+import { DateRange } from 'react-day-picker';
 import { ArticleMetadataCardContainer } from '@/components/article-metadata/card-container';
 import { useBoundStore } from '@/stores';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -32,6 +33,8 @@ const constructQueryParams = (
   searchTerm: string,
   categoryGroups: string[] | undefined,
   categories: string[] | undefined,
+  authors: string[] | undefined,
+  date: DateRange | undefined,
   page = 0,
   pageSize = PAGE_SIZE
 ) => {
@@ -45,6 +48,15 @@ const constructQueryParams = (
   if (categories) {
     params.categories = categories.join(',');
   }
+  if (authors) {
+    params.authors = authors.join(',');
+  }
+  if (date?.from) {
+    params.from = date.from.toDateString();
+  }
+  if (date?.to) {
+    params.to = date.to.toDateString();
+  }
   if (searchTerm) {
     params.search = searchTerm;
   }
@@ -53,17 +65,26 @@ const constructQueryParams = (
 };
 
 export const ArticleList: React.FC<Props> = ({ initialArticles, categoryTree }) => {
-  const { categoryGroups, categories, searchTerm } = useBoundStore();
+  const { categoryGroups, categories, date, searchTerm, authors } = useBoundStore();
 
   const debouncedCategoryGroups = useDebounce(categoryGroups, 200);
   const debouncedCategories = useDebounce(categories, 200);
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
+  const debouncedAuthors = useDebounce(authors, 200);
+  const debouncedDate = useDebounce(date, 200);
 
   const getKey: SWRInfiniteKeyLoader<Article[], string | null> = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.length) return null; // reached the end
     return (
       '/api/articles/search?' +
-      constructQueryParams(debouncedSearchTerm, debouncedCategoryGroups, debouncedCategories, pageIndex)
+      constructQueryParams(
+        debouncedSearchTerm,
+        debouncedCategoryGroups,
+        debouncedCategories,
+        debouncedAuthors,
+        debouncedDate,
+        pageIndex
+      )
     );
   };
 
@@ -105,7 +126,8 @@ export const ArticleList: React.FC<Props> = ({ initialArticles, categoryTree }) 
   const articleList = clientSideFilteredArticles ?? articleMetadataList;
 
   const isLoadingMore =
-    isLoading || (size > 0 && articleMetadataList && typeof articleMetadataList[size - 1] === 'undefined');
+    (isLoading && size === 0) ||
+    (size > 0 && articleMetadataList && typeof articleMetadataList[size - 1] === 'undefined');
   const isEmpty = articleMetadataList?.[0]?.length === 0;
   const isReachingEnd =
     isEmpty || (articleMetadataList && (articleMetadataList[articleMetadataList.length - 1]?.length ?? 0) < PAGE_SIZE);

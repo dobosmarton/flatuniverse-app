@@ -21,22 +21,28 @@ type DataTableFacetedFilterProps = {
     label: string;
     value: string;
   }[];
+  inputValue?: string;
   selectedValues?: string[];
   setFilterValue: (value: string[] | undefined) => void;
+  shouldFilter?: boolean | undefined;
+  onInputValueChange?: (value: string) => void;
 };
 
 export const FacetFilter: React.FC<DataTableFacetedFilterProps> = ({
   title,
   selectedValues,
   options,
+  inputValue,
   setFilterValue,
+  shouldFilter,
+  onInputValueChange,
 }) => {
   const uniqueSelectedValues = new Set(selectedValues);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button variant="outline" size="sm" className="h-8 border-dashed font-normal">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           {title}
           {uniqueSelectedValues?.size > 0 && (
@@ -65,8 +71,8 @@ export const FacetFilter: React.FC<DataTableFacetedFilterProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
-        <Command>
-          <CommandInput placeholder={title} />
+        <Command shouldFilter={shouldFilter}>
+          <CommandInput placeholder={title} value={inputValue} onValueChange={onInputValueChange} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>

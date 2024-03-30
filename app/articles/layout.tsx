@@ -1,3 +1,3 @@
-export default async function DashboardLayout(props: { children: React.ReactNode }) {
+export default async function ArticlesLayout(props: { children: React.ReactNode }) {
   return <>{props.children}</>;
 }
