@@ -319,7 +319,7 @@ export const getArticlePdfLink = async (id: string): Promise<string | undefined>
  * @returns A promise that resolves to an array of article metadata.
  */
 export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
-  const { categoryGroups, categories, search, page, pageSize } = params;
+  const { categoryGroups, categories, authors, from, to, search, page, pageSize } = params;
 
   // Get group names for the filter categories
   const groupWithCategories = categories
@@ -358,6 +358,8 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
               },
             }
           : {},
+        authors ? { authors: { some: { author: { name: { in: authors, mode: 'insensitive' } } } } } : {},
+        from || to ? { published: { gte: from, lte: to } } : {},
       ],
     },
     take: pageSize,

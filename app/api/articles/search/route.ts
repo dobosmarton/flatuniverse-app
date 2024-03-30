@@ -7,6 +7,9 @@ const searchArticles: NextRouteFunction<{}> = async (request) => {
   const searchParams = request.nextUrl.searchParams;
   const groups = searchParams.get('groups');
   const categories = searchParams.get('categories');
+  const authors = searchParams.get('authors');
+  const from = searchParams.get('from');
+  const to = searchParams.get('to');
   const search = searchParams.get('search');
   const page = searchParams.get('page');
   const pageSize = searchParams.get('pageSize');
@@ -14,6 +17,9 @@ const searchArticles: NextRouteFunction<{}> = async (request) => {
   const parsedParams = articleMetadataSearchSchema.parse({
     groups,
     categories,
+    authors,
+    from,
+    to,
     search,
     page,
     pageSize,
