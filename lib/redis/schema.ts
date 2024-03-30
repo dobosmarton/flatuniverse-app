@@ -13,3 +13,11 @@ export const similarIdsCacheSchema = z.array(z.string());
 export const asyncEmbeddingGenerationSchema = z.object({
   id: z.string(),
 });
+
+export const authorsByArticleCacheSchema = z.array(
+  z.object({
+    id: z.string(),
+    name: z.string(),
+    count: z.number(),
+  })
+);
