@@ -30,7 +30,7 @@ export const cacheableFunction = <T, R>(
   keyExtractor: (params: T) => string,
   schema: z.Schema,
   options?: SetCommandOptions,
-  skipCache?: (result: R) => boolean
+  skipCache?: (result: R, props: T) => boolean
 ) => {
   return (fn: (props: T) => Promise<R>) => {
     return async (props: T): Promise<R> => {
@@ -51,7 +51,7 @@ export const cacheableFunction = <T, R>(
 
       const result = await fn(props);
 
-      if (skipCache && skipCache(result)) {
+      if (skipCache && skipCache(result, props)) {
         return result;
       }
 
