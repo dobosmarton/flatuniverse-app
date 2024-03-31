@@ -10,8 +10,9 @@ import { Footer } from '@/components/footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Research App',
-  description: 'Research News',
+  title: 'Flat universe',
+  description:
+    'The Earth is not flat, but the universe is still may be. Follow the latest research papers and articles on the flat universe.',
 };
 
 export default function RootLayout({

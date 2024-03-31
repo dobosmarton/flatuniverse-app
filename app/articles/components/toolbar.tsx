@@ -119,9 +119,9 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors }) => {
               </Button>
             )}
           </div>
-          <div className="flex items-center space-x-2 gap-2">
+          {/* <div className="flex items-center space-x-2 gap-2">
             <AIToggle />
-          </div>
+          </div> */}
         </div>
       ) : null}
     </div>

@@ -5,7 +5,7 @@ export const Footer = () => {
     <footer className="flex items-center h-20 gap-1 font-medium border-t px-8 py-12">
       <div className="flex flex-col">
         <div>
-          Research News
+          Flat universe
           <span className="text-sm">© 2024</span>
         </div>
         <span className="text-sm font-normal">Thank you to arXiv for use of its open access interoperability. 🙏</span>

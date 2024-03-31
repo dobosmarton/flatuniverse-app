@@ -12,14 +12,11 @@ export const Navbar: React.FunctionComponent = () => {
         <NavigationMenuList className="flex gap-6">
           <NavigationMenuItem>
             <Link href="/">
-              <span className="font-bold">Research news</span>
+              <span className="font-bold">Flat universe</span>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/about">About</Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/pricing">Pricing</Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
