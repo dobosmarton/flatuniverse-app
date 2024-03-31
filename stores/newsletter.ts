@@ -1,5 +1,4 @@
 import { StateCreator } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import { Store } from './index';
 
 export type NewsletterSlice = {
@@ -8,6 +7,6 @@ export type NewsletterSlice = {
 };
 
 export const createNewsletterSlice: StateCreator<Store, [], [], NewsletterSlice> = (set) => ({
-  isBannerVisible: true,
+  isBannerVisible: false,
   setBannerVisible: (isBannerVisible: boolean) => set({ isBannerVisible }),
 });
