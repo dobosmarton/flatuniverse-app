@@ -2,11 +2,11 @@
 
 import { randomUUID } from 'crypto';
 import { Prisma } from '@prisma/client';
-import { ArticleMetadataSearch } from '@/app/api/articles/search/schema';
 import * as logger from '@/lib/logger';
 import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
 import { Metadata } from '../oai-pmh/schema';
+import { ArticleMetadataSearch } from './schema';
 
 export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => {
   logger.log('   ');
@@ -245,7 +245,10 @@ export const getGeneratedSummary = async (id: string) => {
   return metadata;
 };
 
-export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
+/**
+ * @deprecated Use `searchArticleMetadata` instead.
+ */
+/* export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
   const articles = await prismaClient.article_metadata.findMany({
     take: pageSize,
     skip: page && pageSize ? page * pageSize : undefined,
@@ -260,7 +263,7 @@ export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
   });
 
   return articles;
-};
+}; */
 
 export const getArticleMetadataBySlug = async (slug: string) => {
   const article = await prismaClient.article_metadata.findFirst({
@@ -324,7 +327,10 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
   // Get group names for the filter categories
   const groupWithCategories = categories
     ? await prismaClient.category.findMany({
-        where: { group_name: { in: categoryGroups }, short_name: { in: categories } },
+        where: {
+          group_name: { in: categoryGroups, mode: 'insensitive' },
+          short_name: { in: categories, mode: 'insensitive' },
+        },
         select: { group_name: true },
       })
     : [];
@@ -350,8 +356,11 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
                 some: {
                   category: {
                     OR: [
-                      { group_name: { notIn: groupNamesWithCategories, in: categoryGroups } },
-                      { group_name: { in: groupNamesWithCategories }, short_name: { in: categories } },
+                      { group_name: { notIn: groupNamesWithCategories, in: categoryGroups, mode: 'insensitive' } },
+                      {
+                        group_name: { in: groupNamesWithCategories, mode: 'insensitive' },
+                        short_name: { in: categories, mode: 'insensitive' },
+                      },
                     ],
                   },
                 },
