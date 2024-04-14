@@ -1,15 +1,18 @@
-import { getArticleMetadataList } from '@/lib/article-metadata/metadata.server';
 import React from 'react';
+import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
+import { ArticleMetadataSearch } from '@/lib/article-metadata/schema';
 import { ArticleList } from './article-list';
 
 type Props = {
-  categoryTree: {
-    [groupName: string]: { key: string; value: string }[];
-  };
+  searchParams: ArticleMetadataSearch;
 };
 
-export const ArticleListLoader: React.FC<Props> = async ({ categoryTree }) => {
-  const defaultArticleList = await getArticleMetadataList();
+export const ArticleListLoader: React.FC<Props> = async ({ searchParams }) => {
+  const articleList = await articleMetadataService.searchArticleMetadata({
+    ...searchParams,
+    // Next.js pages are 1-indexed, but the API is 0-indexed
+    page: searchParams.page - 1,
+  });
 
-  return <ArticleList initialArticles={defaultArticleList} categoryTree={categoryTree} />;
+  return <ArticleList articles={articleList} searchParams={searchParams} />;
 };

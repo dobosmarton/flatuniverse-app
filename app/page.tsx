@@ -5,18 +5,27 @@ import { ArticleListLoader } from './articles/components/article-list-loader';
 import { FallbackLoader } from '@/components/fallback-loader';
 import { getCategoryTree } from '@/lib/categories/categories.server';
 import { sarchAuthorsByName } from '@/lib/authors';
+import { articleMetadataSearchSchema } from '@/lib/article-metadata/schema';
 
-export default async function Home() {
+type Props = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default async function Home({ searchParams }: Props) {
   const categoryTree = await getCategoryTree([]);
   const authorList = await sarchAuthorsByName({ pageSize: 100 });
+  const parsedSearchParams = articleMetadataSearchSchema.parse(searchParams);
+
   return (
     <main className="flex flex-col px-4 py-4 sm:py-16 md:px-20 gap-4">
-      <Toolbar categoryTree={categoryTree} authors={authorList} />
+      <Suspense>
+        <Toolbar categoryTree={categoryTree} authors={authorList} searchParams={parsedSearchParams} />
+      </Suspense>
 
       <NewsletterSection closable />
 
       <Suspense fallback={<FallbackLoader />}>
-        <ArticleListLoader categoryTree={categoryTree} />
+        <ArticleListLoader searchParams={parsedSearchParams} />
       </Suspense>
     </main>
   );

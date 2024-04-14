@@ -1,7 +1,7 @@
 'use client';
 
 import 'katex/dist/katex.min.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Latex from 'react-latex-next';
 import {
   CalendarDaysIcon,
@@ -11,17 +11,18 @@ import {
   ChevronUpIcon,
   User2Icon,
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import useSWR from 'swr';
 
 import { useBoundStore } from '@/stores';
-import useSWR from 'swr';
 import { fetcher } from '@/lib/api-client/fetch';
 import { HasEmbeddingsForArticle } from '@/lib/embeddings/embeddings.server';
-import { Badge } from '../ui/badge';
-import { SummaryPanel } from './summary-panel';
 import { cn } from '@/lib/utils';
 import { ActionBar } from '@/app/articles/components/action-bar';
+import { Badge } from '../ui/badge';
+import { SummaryPanel } from './summary-panel';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
 
 type Props = {
   id: string;
@@ -48,16 +49,15 @@ export const ArticleMetadataCard: React.FC<Props> = ({
 }) => {
   const [isAbstractOpen, setAbstractOpen] = useState(false);
   const [isCardOpen, setCardOpen] = useState(false);
-  const {
-    authors: selectedAuthors,
-    similarArticlesEnabled,
-    summaryEnabled,
-    categories: selectedCategories,
-    toggleCategoryGroup,
-    toggleCategory,
-    toggleAuthor,
-    isCompactMode,
-  } = useBoundStore();
+  const queryString = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const selectedAuthors = queryString.get('authors')?.split(',') ?? [];
+  const selectedCategories = queryString.get('categories')?.split(',') ?? [];
+  const selectedCategoryGroups = queryString.get('groups')?.split(',') ?? [];
+
+  const { similarArticlesEnabled, summaryEnabled, isCompactMode } = useBoundStore();
 
   useEffect(() => {
     if (!isCompactMode) {
@@ -75,6 +75,66 @@ export const ArticleMetadataCard: React.FC<Props> = ({
     fetcher<String>,
     { revalidateOnFocus: false }
   );
+
+  const toggleAuthor = (author: string) => {
+    const newAuthors = selectedAuthors.includes(author)
+      ? selectedAuthors.filter((selectedAuthor) => selectedAuthor !== author)
+      : [...selectedAuthors, author];
+
+    const authorsParam = newAuthors.length ? newAuthors.join(',') : undefined;
+    const params = new URLSearchParams(queryString.toString());
+    if (authorsParam) {
+      params.set('authors', authorsParam);
+    } else {
+      params.delete('authors');
+    }
+
+    replace(`${pathname}?${params}`);
+  };
+
+  const toggleCategoryGroup = (categoryGroup: string) => {
+    const newCategoryGroups = selectedCategoryGroups.includes(categoryGroup)
+      ? selectedCategoryGroups.filter((selectedGroup) => selectedGroup !== categoryGroup)
+      : [...selectedCategoryGroups, categoryGroup];
+
+    const categoriesParam = newCategoryGroups.length ? newCategoryGroups.join(',') : undefined;
+    const params = new URLSearchParams(queryString.toString());
+    if (categoriesParam) {
+      params.set('groups', categoriesParam);
+    } else {
+      params.delete('groups');
+    }
+
+    replace(`${pathname}?${params}`);
+  };
+
+  const toggleCategory = (categoryGroup: string, category: string) => {
+    const _categoryGroup = selectedCategoryGroups.includes(categoryGroup);
+
+    // If the category group is not selected, select it and add the category
+    if (!_categoryGroup) {
+      const params = new URLSearchParams(queryString.toString());
+      params.set('groups', categoryGroup);
+      params.set('categories', category);
+
+      replace(`${pathname}?${params}`);
+      return;
+    }
+
+    const newCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter((selectedCategory) => selectedCategory !== category)
+      : [...selectedCategories, category];
+
+    const categoriesParam = newCategories.length ? newCategories.join(',') : undefined;
+    const params = new URLSearchParams(queryString.toString());
+    if (categoriesParam) {
+      params.set('categories', categoriesParam);
+    } else {
+      params.delete('categories');
+    }
+
+    replace(`${pathname}?${params}`);
+  };
 
   const renderShowMoreButton = () => {
     if (!isAbstractOpen && abstract.length <= shortCharacters) return;
@@ -124,12 +184,11 @@ export const ArticleMetadataCard: React.FC<Props> = ({
                   <User2Icon size={18} className="text-muted-foreground" />
                 </div>
                 <CardDescription>
-                  {authors.map((author, index) => {
-                    const isSelected = selectedAuthors?.includes(author);
+                  {authors.slice(0, 10).map((author, index) => {
+                    const isSelected = selectedAuthors.includes(author);
                     return (
-                      <>
+                      <React.Fragment key={author}>
                         <Button
-                          key={author}
                           variant={'link'}
                           size={'sm'}
                           className={cn('px-1 h-6 text-muted-foreground font-normal', {
@@ -139,9 +198,10 @@ export const ArticleMetadataCard: React.FC<Props> = ({
                           <Latex>{author}</Latex>
                         </Button>
                         {index !== authors.length - 1 && ' | '}
-                      </>
+                      </React.Fragment>
                     );
                   })}
+                  {authors.length > 10 ? 'and others' : null}
                 </CardDescription>
               </div>
             ) : null}
