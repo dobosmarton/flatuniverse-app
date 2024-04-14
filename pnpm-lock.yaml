@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@hookform/resolvers':
+    specifier: ^3.3.4
+    version: 3.3.4(react-hook-form@7.51.2)
   '@langchain/core':
     specifier: ^0.1.25
     version: 0.1.25
@@ -104,6 +107,9 @@ dependencies:
   pgvector:
     specifier: ^0.1.7
     version: 0.1.7
+  postmark:
+    specifier: ^4.0.2
+    version: 4.0.2
   react:
     specifier: ^18
     version: 18.0.0
@@ -113,6 +119,9 @@ dependencies:
   react-dom:
     specifier: ^18
     version: 18.0.0(react@18.0.0)
+  react-hook-form:
+    specifier: ^7.51.2
+    version: 7.51.2(react@18.0.0)
   react-latex-next:
     specifier: ^2.2.0
     version: 2.2.0(prop-types@15.8.1)(react-dom@18.0.0)(react@18.0.0)
@@ -134,6 +143,9 @@ dependencies:
   undici:
     specifier: ^6.6.2
     version: 6.6.2
+  use-debounce:
+    specifier: ^10.0.0
+    version: 10.0.0(react@18.0.0)
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -604,6 +616,14 @@ packages:
 
   /@floating-ui/utils@0.2.1:
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
+    dev: false
+
+  /@hookform/resolvers@3.3.4(react-hook-form@7.51.2):
+    resolution: {integrity: sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.51.2(react@18.0.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
@@ -2950,6 +2970,16 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /axios@1.6.8:
+    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
+    dependencies:
+      follow-redirects: 1.15.6
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query@3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
     dependencies:
@@ -4024,6 +4054,16 @@ packages:
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
+
+  /follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
 
   /for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -6085,6 +6125,14 @@ packages:
       xtend: 4.0.2
     dev: false
 
+  /postmark@4.0.2:
+    resolution: {integrity: sha512-2zlCv+KVVQ0KoamXZHE7d+gXzLlr8tPE+PxQmtUaIZhbHzZAq4D6yH2b+ykhA8wYCc5ISodcx8U1aNLenXBs9g==}
+    dependencies:
+      axios: 1.6.8
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -6122,6 +6170,10 @@ packages:
       object-assign: 4.1.1
       react-is: 16.13.1
 
+  /proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: false
+
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
@@ -6156,6 +6208,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.0.0
       scheduler: 0.21.0
+    dev: false
+
+  /react-hook-form@7.51.2(react@18.0.0):
+    resolution: {integrity: sha512-y++lwaWjtzDt/XNnyGDQy6goHskFualmDlf+jzEZvjvz6KWDf7EboL7pUvRCzPTJd0EOPpdekYaQLEvvG6m6HA==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.0.0
     dev: false
 
   /react-is@16.13.1:
@@ -6977,6 +7038,15 @@ packages:
       '@types/react': 18.2.55
       react: 18.0.0
       tslib: 2.6.2
+    dev: false
+
+  /use-debounce@10.0.0(react@18.0.0):
+    resolution: {integrity: sha512-XRjvlvCB46bah9IBXVnq/ACP2lxqXyZj0D9hj4K5OzNroMDpTEBg8Anuh1/UfRTRs7pLhQ+RiNxxwZu9+MVl1A==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.0.0
     dev: false
 
   /use-sidecar@1.1.2(@types/react@18.2.55)(react@18.0.0):
