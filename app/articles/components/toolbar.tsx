@@ -1,6 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ChevronsDownUpIcon, ChevronsUpDownIcon, Settings2Icon } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useDebounce } from 'use-debounce';
 import { FacetFilter } from '@/components/facet-filter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,39 +12,79 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import { AIToggle } from './ai-toggle';
 import { Author } from '@/lib/authors';
 import { AuthorFacetFilter } from '@/components/author-facet-filter';
-import { ChevronsDownUpIcon, ChevronsUpDownIcon, Settings2Icon } from 'lucide-react';
 import { DatePickerWithRange } from '@/components/date-range-picker';
+import { ArticleMetadataSearch } from '@/lib/article-metadata/schema';
+import { constructQueryParams } from '@/lib/query-params';
 
 type Props = {
   categoryTree: {
     [groupName: string]: { key: string; value: string }[];
   };
   authors: Author[];
+  searchParams: ArticleMetadataSearch;
 };
 
-export const Toolbar: React.FC<Props> = ({ categoryTree, authors }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const {
-    categoryGroups: selectedGroups,
-    categories: selectedCategories,
-    searchTerm,
-    setCategoryGroups: setSelectedGroups,
-    setCategories: setSelectedCategories,
-    setSearchTerm,
-    isFiltered,
-    resetFilters,
-    isCompactMode,
-    toggleCompactMode,
-  } = useBoundStore();
+const isFiltered = (searchParams: ArticleMetadataSearch): boolean => {
+  return Boolean(
+    searchParams.categoryGroups?.length ||
+      searchParams.categories?.length ||
+      searchParams.authors?.length ||
+      searchParams.search ||
+      searchParams.from ||
+      searchParams.to
+  );
+};
+
+export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }) => {
+  const [isFilterOpen, setIsFilterOpen] = useState(isFiltered(searchParams));
+  const { isCompactMode, toggleCompactMode } = useBoundStore();
+
+  const pathname = usePathname();
+  const { replace } = useRouter();
+  const [searchState, setSearchState] = useState<ArticleMetadataSearch>(searchParams);
+
+  const [queryParams] = useDebounce(
+    constructQueryParams(
+      searchState.search,
+      searchState.categoryGroups,
+      searchState.categories,
+      searchState.authors,
+      searchState.from,
+      searchState.to
+    ).toString(),
+    300
+  );
+
+  useEffect(() => {
+    setSearchState(searchParams);
+    if (!isFilterOpen && isFiltered(searchParams)) {
+      setIsFilterOpen(true);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    replace(`${pathname}?${queryParams}`);
+  }, [queryParams]);
+
+  const resetFilters = () =>
+    setSearchState((state) => ({
+      ...state,
+      categoryGroups: undefined,
+      categories: undefined,
+      authors: undefined,
+      from: undefined,
+      to: undefined,
+      search: '',
+    }));
 
   const categoryGroups = Object.keys(categoryTree).map((groupName) => ({
     label: groupName,
     value: groupName,
   }));
 
-  const categoryList = selectedGroups?.length
+  const categoryList = searchState.categoryGroups?.length
     ? Object.entries(categoryTree).reduce<{ label: string; value: string }[]>((acc, [groupName, categories]) => {
-        if (selectedGroups?.includes(groupName)) {
+        if (searchState.categoryGroups?.includes(groupName)) {
           acc.push(...categories.map((category) => ({ label: category.value, value: category.key })));
         }
         return acc;
@@ -49,18 +92,19 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors }) => {
     : undefined;
 
   const onSelectedGroupsChange = (groups: string[] | undefined) => {
-    setSelectedGroups(groups);
     // Clear selected categories if the selected groups change
     // This is to prevent the selected categories from being out of sync with the selected groups
-    setSelectedCategories(
-      selectedCategories?.filter((category) =>
+    setSearchState((state) => ({
+      ...state,
+      categoryGroups: groups,
+      categories: state.categories?.filter((category) =>
         Object.entries(categoryTree).some(([groupName, categories]) => {
           if (categories.some((cat) => cat.key === category)) {
             return groups?.includes(groupName);
           }
         })
-      )
-    );
+      ),
+    }));
   };
 
   return (
@@ -68,8 +112,8 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors }) => {
       <div className="flex items-center gap-2">
         <Input
           placeholder="Filter articles..."
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
+          value={searchState.search}
+          onChange={(event) => setSearchState((state) => ({ ...state, search: event.target.value }))}
           className="h-8 w-full md:w-[360px]"
         />
         <Button
@@ -92,7 +136,7 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors }) => {
           <div className="flex flex-col gap-2 md:flex-row md:flex-1 md:items-center">
             <div className="flex flex-col gap-2 md:flex-row">
               <FacetFilter
-                selectedValues={selectedGroups}
+                selectedValues={searchState.categoryGroups}
                 setFilterValue={onSelectedGroupsChange}
                 title="Category Groups"
                 options={categoryGroups}
@@ -100,19 +144,27 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors }) => {
 
               {categoryList?.length ? (
                 <FacetFilter
-                  selectedValues={selectedCategories}
-                  setFilterValue={setSelectedCategories}
+                  selectedValues={searchState.categories}
+                  setFilterValue={(categories) => setSearchState((state) => ({ ...state, categories }))} //setSelectedCategories(categories)}
                   title="Categories"
                   options={categoryList}
                 />
               ) : null}
             </div>
 
-            <AuthorFacetFilter authors={authors} />
+            <AuthorFacetFilter
+              authors={authors}
+              selectedAuthors={searchState.authors}
+              setSelectedAuthors={(authors) => setSearchState((state) => ({ ...state, authors }))}
+            />
 
-            <DatePickerWithRange />
+            <DatePickerWithRange
+              from={searchState.from}
+              to={searchState.to}
+              setDate={(date) => setSearchState((state) => ({ ...state, from: date?.from, to: date?.to }))}
+            />
 
-            {isFiltered() && (
+            {isFiltered(searchState) && (
               <Button variant="ghost" onClick={resetFilters} className="h-8 px-2 lg:px-3">
                 Reset
                 <Cross2Icon className="ml-2 h-4 w-4" />

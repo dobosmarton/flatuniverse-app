@@ -1,6 +1,8 @@
-import { StateCreator } from 'zustand';
+/* import { StateCreator } from 'zustand';
 import { DateRange } from 'react-day-picker';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 import { Store } from './index';
+import * as articleMetadataSchema from '@/lib/article-metadata/schema';
 
 export type ArticleFilters = {
   categoryGroups: string[] | undefined;
@@ -8,6 +10,7 @@ export type ArticleFilters = {
   authors: string[] | undefined;
   date: DateRange | undefined;
   searchTerm: string;
+  page: number;
   setCategoryGroups: (categoryGroups: string[] | undefined) => void;
   toggleCategoryGroup: (categoryGroup: string) => void;
   setCategories: (categories: string[] | undefined) => void;
@@ -16,6 +19,7 @@ export type ArticleFilters = {
   toggleAuthor: (author: string) => void;
   setDate: (date: DateRange | undefined) => void;
   setSearchTerm: (searchTerm: string) => void;
+  setPage: (page: number) => void;
   isFiltered: () => boolean;
   resetFilters: () => void;
 };
@@ -26,6 +30,7 @@ export const createArticleFiltersSlice: StateCreator<Store, [], [], ArticleFilte
   authors: undefined,
   date: undefined,
   searchTerm: '',
+  page: 1,
   setCategoryGroups: (categoryGroups: string[] | undefined) => set({ categoryGroups }),
   toggleCategoryGroup: (categoryGroup: string) =>
     set((state) => {
@@ -62,6 +67,7 @@ export const createArticleFiltersSlice: StateCreator<Store, [], [], ArticleFilte
     }),
   setDate: (date: DateRange | undefined) => set({ date }),
   setSearchTerm: (searchTerm: string) => set({ searchTerm }),
+  setPage: (page: number) => set({ page }),
   isFiltered: () => {
     const state = get();
     return (
@@ -70,3 +76,4 @@ export const createArticleFiltersSlice: StateCreator<Store, [], [], ArticleFilte
   },
   resetFilters: () => set({ categoryGroups: undefined, categories: undefined, authors: undefined, searchTerm: '' }),
 });
+ */

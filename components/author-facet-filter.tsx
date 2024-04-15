@@ -2,14 +2,15 @@
 
 import React from 'react';
 import useSWR from 'swr';
+import { useDebounce } from 'use-debounce';
 import { Author } from '@/lib/authors';
-import { useBoundStore } from '@/stores';
-import { useDebounce } from '@/hooks/useDebounce';
 import { fetcher } from '@/lib/api-client/fetch';
 import { FacetFilter } from './facet-filter';
 
 type Props = {
   authors: Author[];
+  selectedAuthors: string[] | undefined;
+  setSelectedAuthors: (authors: string[] | undefined) => void;
 };
 
 const constructQueryParams = (searchTerm: string, page = 0) => {
@@ -23,11 +24,10 @@ const constructQueryParams = (searchTerm: string, page = 0) => {
   return new URLSearchParams(params);
 };
 
-export const AuthorFacetFilter: React.FC<Props> = ({ authors }) => {
-  const { authors: selectedAuthors, setAuthors: setSelectedAuthors } = useBoundStore();
+export const AuthorFacetFilter: React.FC<Props> = ({ authors, selectedAuthors, setSelectedAuthors }) => {
   const [authorSearchTerm, setAuthorSearchTerm] = React.useState('');
 
-  const debouncedAuthorSearch = useDebounce(authorSearchTerm, 200);
+  const [debouncedAuthorSearch] = useDebounce(authorSearchTerm, 200);
 
   const { data, isLoading } = useSWR<Author[] | null>(
     '/api/authors/search?' + constructQueryParams(debouncedAuthorSearch),
