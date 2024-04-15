@@ -57,6 +57,9 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
 
   useEffect(() => {
     setSearchState(searchParams);
+    if (!isFilterOpen && isFiltered(searchParams)) {
+      setIsFilterOpen(true);
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -89,12 +92,11 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
     : undefined;
 
   const onSelectedGroupsChange = (groups: string[] | undefined) => {
-    setSearchState((state) => ({ ...state, categoryGroups: groups }));
-
     // Clear selected categories if the selected groups change
     // This is to prevent the selected categories from being out of sync with the selected groups
     setSearchState((state) => ({
       ...state,
+      categoryGroups: groups,
       categories: state.categories?.filter((category) =>
         Object.entries(categoryTree).some(([groupName, categories]) => {
           if (categories.some((cat) => cat.key === category)) {
