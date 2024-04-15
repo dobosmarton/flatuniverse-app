@@ -44,14 +44,14 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
   const [searchState, setSearchState] = useState<ArticleMetadataSearch>(searchParams);
 
   const [queryParams] = useDebounce(
-    constructQueryParams(
-      searchState.search,
-      searchState.categoryGroups,
-      searchState.categories,
-      searchState.authors,
-      searchState.from,
-      searchState.to
-    ).toString(),
+    constructQueryParams({
+      searchTerm: searchState.search,
+      categoryGroups: searchState.categoryGroups,
+      categories: searchState.categories,
+      authors: searchState.authors,
+      from: searchState.from,
+      to: searchState.to,
+    }).toString(),
     300
   );
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import { BookmarkIcon, NotebookTextIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { AddEmbeddingsButton } from '@/components/article-metadata/add-embeddings-button';
-import { ShareButton } from '@/components/article-metadata/share-button';
+import { NotebookTextIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { AddEmbeddingsButton } from './add-embeddings-button';
+import { ShareButton } from './share-button';
 
 type Props = {
   articleId: string;
@@ -49,7 +49,7 @@ export const ActionBar: React.FC<Props> = ({
 
         {hasEmbeddingsButton ? <AddEmbeddingsButton id={articleId} size={size} /> : null}
 
-        <Tooltip>
+        {/*  <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="icon">
               <BookmarkIcon
@@ -62,7 +62,7 @@ export const ActionBar: React.FC<Props> = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>Bookmark</TooltipContent>
-        </Tooltip>
+        </Tooltip> */}
         {articleTitle && articleSlug ? (
           <ShareButton title={articleTitle} text={articleText} slug={articleSlug} size={size} />
         ) : null}

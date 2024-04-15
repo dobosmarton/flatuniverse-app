@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
+import useSWR from 'swr';
+import Latex from 'react-latex-next';
+import { CalendarDaysIcon, ChevronDownIcon, ChevronUpIcon, Maximize2, Minimize2, User2Icon } from 'lucide-react';
+import { fetcher } from '@/lib/api-client/fetch';
+import { CollapsibleContent } from '@radix-ui/react-collapsible';
+import { ActionBar } from '@/components/article-metadata/action-bar';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
-import Latex from 'react-latex-next';
 import { Badge } from '../ui/badge';
 import { SummaryPanel } from './summary-panel';
-import useSWR from 'swr';
-import { fetcher } from '@/lib/api-client/fetch';
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
-import { CollapsibleContent } from '@radix-ui/react-collapsible';
-import { CalendarDaysIcon, ChevronDownIcon, ChevronUpIcon, Maximize2, Minimize2, User2Icon } from 'lucide-react';
-import { ActionBar } from '@/app/articles/components/action-bar';
 
 type Props = {
   similarToTitle?: string;
