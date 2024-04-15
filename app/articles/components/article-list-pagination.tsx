@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/pagination';
 
 import { ArticleMetadataSearch } from '@/lib/article-metadata/schema';
-import { constructQueryParams } from './toolbar';
+import { constructQueryParams } from '@/lib/query-params';
 
 type Props = {
   searchParams: ArticleMetadataSearch;
