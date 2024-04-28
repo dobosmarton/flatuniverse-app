@@ -103,3 +103,18 @@ model research_article_embedding {
 
   metadata article_metadata @relation(fields: [metadata_id], references: [id])
 }
+
+enum email_list {
+  WEEKLY_SUMMARY
+}
+
+model email_subscription {
+  id         String     @id @default(uuid())
+  email      String
+  email_list email_list
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+
+  @@unique([email, email_list])
+  @@index([email, email_list])
+}

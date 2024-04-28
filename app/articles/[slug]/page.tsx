@@ -1,12 +1,15 @@
 import { notFound } from 'next/navigation';
+import { CalendarDaysIcon, NotebookTextIcon, User2Icon, UserIcon } from 'lucide-react';
 import { NewsletterSection } from '@/components/newsletter-section';
+import { ActionBar } from '@/components/article-metadata/action-bar';
 import { getArticleMetadataBySlug } from '@/lib/article-metadata/metadata.server';
-import { SummaryPanel } from '@/components/article-metadata/summary-panel';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { CalendarDaysIcon, NotebookTextIcon, User2Icon, UserIcon } from 'lucide-react';
-import { ActionBar } from '../components/action-bar';
+import { getFullMonthDate } from '@/lib/dates';
+
 import { ActionBarContainer } from './components/action-bar-container';
+import { ArticleAuthor } from './components/article-author';
+import { ArticleAbstract } from './components/article-abstract';
 
 type Props = {
   params: { slug: string };
@@ -31,14 +34,14 @@ export default async function ArticleDetails({ params }: Props) {
           <div>
             <CalendarDaysIcon size={20} />
           </div>
-          <span>{`${article.published}`}</span>
+          <span>{`${getFullMonthDate(article.published)}`}</span>
         </div>
 
         <div className="flex flex-row gap-4">
           <div>
             <User2Icon size={20} />
           </div>
-          <span>{`${article.authors.map(({ author }) => author.name).join(', ')}`}</span>
+          <ArticleAuthor authors={article.authors} />
         </div>
       </div>
 
@@ -55,7 +58,7 @@ export default async function ArticleDetails({ params }: Props) {
         ))}
       </div>
 
-      <span className="text-base text-slate-600">{article.abstract}</span>
+      <ArticleAbstract>{article.abstract}</ArticleAbstract>
 
       {link ? (
         <a href={link} target="_blank" rel="noopener noreferrer">
@@ -68,7 +71,7 @@ export default async function ArticleDetails({ params }: Props) {
         </a>
       ) : null}
 
-      <SummaryPanel>{article.generated_summary}</SummaryPanel>
+      {/* <SummaryPanel>{article.generated_summary}</SummaryPanel> */}
 
       <ActionBarContainer>
         <ActionBar

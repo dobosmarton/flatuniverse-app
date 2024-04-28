@@ -1,15 +1,26 @@
 const PAGE_SIZE = 10;
 
-export const constructQueryParams = (
-  searchTerm: string,
-  categoryGroups: string[] | undefined,
-  categories: string[] | undefined,
-  authors: string[] | undefined,
-  from: Date | undefined,
-  to: Date | undefined,
+type QueryParams = {
+  searchTerm?: string;
+  categoryGroups?: string[];
+  categories?: string[];
+  authors?: string[];
+  from?: Date;
+  to?: Date;
+  page?: number;
+  pageSize?: number;
+};
+
+export const constructQueryParams = ({
+  searchTerm,
+  categoryGroups,
+  categories,
+  authors,
+  from,
+  to,
   page = 1,
-  pageSize = PAGE_SIZE
-) => {
+  pageSize = PAGE_SIZE,
+}: QueryParams) => {
   const params: Record<string, string> = {
     page: page.toString(),
     pageSize: pageSize.toString(),

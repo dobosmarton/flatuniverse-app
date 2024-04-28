@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma, category } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prismaClient } from '../prisma';
 
 type CategoryTree = {
@@ -51,6 +51,26 @@ export const getCategoriesByGroupNames = async (groupName: string[]) => {
       group_name: { in: groupName },
     },
     distinct: ['short_name'],
+  });
+};
+
+export const getCategoriesGroupedByNames = async (startDate = new Date(), page = 0, pageSize = 10) => {
+  return prismaClient.category.findMany({
+    distinct: ['group_name'],
+    where: {
+      article_metadata_list: { some: { article_metadata: { published: { gte: startDate } } } },
+    },
+    select: {
+      group_name: true,
+      article_metadata_list: {
+        where: { article_metadata: { published: { gte: startDate } } },
+        take: pageSize,
+        skip: page && pageSize ? page * pageSize : undefined,
+        select: {
+          article_metadata: { select: { title: true, slug: true } },
+        },
+      },
+    },
   });
 };
 

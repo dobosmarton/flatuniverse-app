@@ -18,7 +18,8 @@ import { useBoundStore } from '@/stores';
 import { fetcher } from '@/lib/api-client/fetch';
 import { HasEmbeddingsForArticle } from '@/lib/embeddings/embeddings.server';
 import { cn } from '@/lib/utils';
-import { ActionBar } from '@/app/articles/components/action-bar';
+import { getFullMonthDateFromString } from '@/lib/dates';
+import { ActionBar } from '@/components/article-metadata/action-bar';
 import { Badge } from '../ui/badge';
 import { SummaryPanel } from './summary-panel';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
@@ -175,7 +176,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
               <div>
                 <CalendarDaysIcon size={18} className="text-muted-foreground" />
               </div>
-              <CardDescription>{`${published}`}</CardDescription>
+              <CardDescription>{`${getFullMonthDateFromString(published)}`}</CardDescription>
             </div>
 
             {isOpen ? (

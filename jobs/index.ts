@@ -3,3 +3,4 @@
 export * from './sync-scheduler';
 export * from './article-metadata';
 export * from './ai';
+export * from './newsletter';

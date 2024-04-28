@@ -24,15 +24,15 @@ export const ArticleListPagination: React.FC<Props> = ({ searchParams, hasNextPa
   const page = searchParams.page ?? 1;
 
   const getNewPathname = (_page: number) => {
-    const params = constructQueryParams(
-      searchParams.search,
-      searchParams.categoryGroups,
-      searchParams.categories,
-      searchParams.authors,
-      searchParams.from,
-      searchParams.to,
-      _page
-    );
+    const params = constructQueryParams({
+      searchTerm: searchParams.search,
+      categoryGroups: searchParams.categoryGroups,
+      categories: searchParams.categories,
+      authors: searchParams.authors,
+      from: searchParams.from,
+      to: searchParams.to,
+      page: _page,
+    });
 
     return `${pathname}?${params.toString()}`;
   };

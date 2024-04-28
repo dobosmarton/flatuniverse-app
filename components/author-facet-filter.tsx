@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { useDebounce } from 'use-debounce';
 import { Author } from '@/lib/authors';
 import { fetcher } from '@/lib/api-client/fetch';
+import { constructQueryParams } from '@/lib/query-params';
 import { FacetFilter } from './facet-filter';
 
 type Props = {
@@ -13,24 +14,17 @@ type Props = {
   setSelectedAuthors: (authors: string[] | undefined) => void;
 };
 
-const constructQueryParams = (searchTerm: string, page = 0) => {
-  const params: Record<string, string> = {
-    page: page.toString(),
-  };
-  if (searchTerm) {
-    params.search = searchTerm;
-  }
-
-  return new URLSearchParams(params);
-};
-
 export const AuthorFacetFilter: React.FC<Props> = ({ authors, selectedAuthors, setSelectedAuthors }) => {
   const [authorSearchTerm, setAuthorSearchTerm] = React.useState('');
 
   const [debouncedAuthorSearch] = useDebounce(authorSearchTerm, 200);
 
   const { data, isLoading } = useSWR<Author[] | null>(
-    '/api/authors/search?' + constructQueryParams(debouncedAuthorSearch),
+    '/api/authors/search?' +
+      constructQueryParams({
+        searchTerm: debouncedAuthorSearch,
+        page: 0,
+      }),
     (url) => fetcher<Author[]>(url),
     {
       fallbackData: authors,

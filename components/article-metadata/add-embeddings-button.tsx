@@ -1,12 +1,12 @@
 'use client';
 
-import { post } from '@/lib/api-client/post';
 import React from 'react';
+import { BinaryIcon } from 'lucide-react';
 import useSWRMutation from 'swr/mutation';
+import { post } from '@/lib/api-client/post';
 import { Button } from '../ui/button';
 import { LoadingButton } from '../loading-button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { BinaryIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const AddEmbeddingsButton: React.FC<Props> = ({ id, size }) => {
-  const { trigger, isMutating } = useSWRMutation<null>(`/api/embeddings/${id}`, post);
+  const { trigger, isMutating } = useSWRMutation(`/api/embeddings/${id}`, post);
 
   if (isMutating) {
     return <LoadingButton />;
