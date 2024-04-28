@@ -1,8 +1,7 @@
 import { NextRouteFunction } from '@/lib/route-validator.server';
-import * as logger from '@/lib/logger';
 import * as newsletterService from '@/lib/newsletter';
 
-type Params = { params: { email: string } };
+type Params = {};
 
 const sendWeeklySummaryEmail: NextRouteFunction<Params> = async () => {
   const newsletter = await newsletterService.sendWeeklySummaryEmail();

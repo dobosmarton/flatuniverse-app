@@ -41,13 +41,9 @@ export const sendWeeklySummaryEmail = async () => {
     select: { email: true },
   });
 
-  console.log('getStartOfWeek', getStartOfWeek(new Date('2024-04-13')));
+  console.log('getStartOfWeek', getStartOfWeek(new Date()));
 
-  const categoryGroups = await categoryService.getCategoriesGroupedByNames(
-    getStartOfWeek(new Date('2024-04-13')),
-    0,
-    5
-  );
+  const categoryGroups = await categoryService.getCategoriesGroupedByNames(getStartOfWeek(new Date()), 0, 5);
 
   const formattedCategories = categoryGroups.map<templates.ArticleGroup>((group) => ({
     name: group.group_name,
@@ -59,9 +55,6 @@ export const sendWeeklySummaryEmail = async () => {
       url: `https://www.flatuniverse.app/articles/${metadata.article_metadata.slug}`,
     })),
   }));
-
-  console.log('categories', formattedCategories);
-  console.log('subscriptions', subscriptions);
 
   await templates.sendWeeklySummaryEmail({
     from: fromEmail,
