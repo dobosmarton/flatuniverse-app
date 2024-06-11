@@ -9,6 +9,7 @@
     "lint": "next lint",
     "postinstall": "npx prisma generate",
     "trigger:dev:start": "npx @trigger.dev/cli@latest dev",
+    "trigger:dev:start:v3": "npx trigger.dev@beta dev",
     "test": "jest"
   },
   "dependencies": {
@@ -31,9 +32,9 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@trigger.dev/nextjs": "3.0.0-beta.22",
-    "@trigger.dev/react": "3.0.0-beta.22",
-    "@trigger.dev/sdk": "3.0.0-beta.22",
+    "@trigger.dev/nextjs": "3.0.0-beta.36",
+    "@trigger.dev/react": "3.0.0-beta.36",
+    "@trigger.dev/sdk": "3.0.0-beta.36",
     "@upstash/redis": "^1.28.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

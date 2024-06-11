@@ -63,14 +63,14 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.0.0)(@types/react@18.2.55)(react-dom@18.0.0)(react@18.0.0)
   '@trigger.dev/nextjs':
-    specifier: 3.0.0-beta.22
-    version: 3.0.0-beta.22(@trigger.dev/sdk@3.0.0-beta.22)(next@14.1.0)
+    specifier: 3.0.0-beta.36
+    version: 3.0.0-beta.36(@trigger.dev/sdk@3.0.0-beta.36)(next@14.1.0)
   '@trigger.dev/react':
-    specifier: 3.0.0-beta.22
-    version: 3.0.0-beta.22(react-dom@18.0.0)(react@18.0.0)
+    specifier: 3.0.0-beta.36
+    version: 3.0.0-beta.36(react-dom@18.0.0)(react@18.0.0)
   '@trigger.dev/sdk':
-    specifier: 3.0.0-beta.22
-    version: 3.0.0-beta.22(typescript@5.4.2)
+    specifier: 3.0.0-beta.36
+    version: 3.0.0-beta.36(typescript@5.4.2)
   '@upstash/redis':
     specifier: ^1.28.4
     version: 1.28.4
@@ -2983,15 +2983,15 @@ packages:
       react-dom: 18.0.0(react@18.0.0)
     dev: false
 
-  /@trigger.dev/core-backend@3.0.0-beta.22:
-    resolution: {integrity: sha512-0N/HDBtkinrOUp1tInJ/spI5j3vSTxooqRZ++sgnzGPy9x17wWSRgmtIzOGsV65w14ZSWecvIHwKJndgMLIAhw==}
+  /@trigger.dev/core-backend@3.0.0-beta.36:
+    resolution: {integrity: sha512-v/DpxIVMqjXCSIPoTvoO41ZWzY6csl8B0vQokgAvUimbPT3XPMH3cQZJi4WkTXnf0pd/D4OAfRbRVdJJdWcR0w==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@opentelemetry/api': 1.8.0
     dev: false
 
-  /@trigger.dev/core@3.0.0-beta.22:
-    resolution: {integrity: sha512-/n6R/o66Fx1p5TviLDbQFublMQ4arxyBTlTYm0QPnC5MKVeYGnL6EvrNa3o0f3vSxCNWbdYZylKCtnHMfhTjKw==}
+  /@trigger.dev/core@3.0.0-beta.36:
+    resolution: {integrity: sha512-hXKKHTlEVEb/7uOoVkOqdGynfeFVF9IZJFwPlbMw5r2MDIWUVBsvR0j4CafMwuif4hmknmDOwfYFz414bDVo9A==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@google-cloud/precise-date': 4.0.0
@@ -3006,6 +3006,7 @@ packages:
       '@opentelemetry/sdk-trace-base': 1.24.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-node': 1.24.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/semantic-conventions': 1.24.0
+      form-data-encoder: 4.0.2
       humanize-duration: 3.32.0
       socket.io-client: 4.7.4
       superjson: 2.2.1
@@ -3019,27 +3020,27 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trigger.dev/nextjs@3.0.0-beta.22(@trigger.dev/sdk@3.0.0-beta.22)(next@14.1.0):
-    resolution: {integrity: sha512-NWkQGhnTjE2gsv8fsvB/z3VCbsMh2NLPUQpLrwv9gOtlgXrn8qC44zwqNOjiYvHsje5fUlXkHpTvluEDtdDjcQ==}
+  /@trigger.dev/nextjs@3.0.0-beta.36(@trigger.dev/sdk@3.0.0-beta.36)(next@14.1.0):
+    resolution: {integrity: sha512-jEwcUGNbf6L2Z+SYjCba1Uz/gwlkK9HaRwqa7BX3KCBTRDM0goUVmlYHS7qRTAQG4d1LEXDQfoiS3gK8xLR1Wg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@trigger.dev/sdk': ^3.0.0-beta.22
+      '@trigger.dev/sdk': ^3.0.0-beta.36
       next: '>=12.0.0'
     dependencies:
-      '@trigger.dev/sdk': 3.0.0-beta.22(typescript@5.4.2)
+      '@trigger.dev/sdk': 3.0.0-beta.36(typescript@5.4.2)
       debug: 4.3.4
       next: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.0.0)(react@18.0.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@trigger.dev/react@3.0.0-beta.22(react-dom@18.0.0)(react@18.0.0):
-    resolution: {integrity: sha512-XWIX5YdY+YJuALwcDnkh3TPB8fDPzHam/kMZ9Mvc/FEKfcNJDtBxTx90PiQepsWJFdTD3A06jpwvtRcb8gq7lA==}
+  /@trigger.dev/react@3.0.0-beta.36(react-dom@18.0.0)(react@18.0.0):
+    resolution: {integrity: sha512-8w62EGxuma9E6N0dwSG1yt1aUe9YdPBA2iY0fu61F7ExjvxE4if7Wcg6mEAVh/V6QRinAndHs7Rb5wbWdD0ZXg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18
     dependencies:
       '@tanstack/react-query': 5.0.0-beta.2(react-dom@18.0.0)(react@18.0.0)
-      '@trigger.dev/core': 3.0.0-beta.22
+      '@trigger.dev/core': 3.0.0-beta.36
       debug: 4.3.4
       react: 18.0.0
       zod: 3.22.3
@@ -3051,15 +3052,15 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trigger.dev/sdk@3.0.0-beta.22(typescript@5.4.2):
-    resolution: {integrity: sha512-83d+VBS/UbEVPpLqF9bYYAd4zIyUnk0KS/O+0bbY7d2VdB+KIib288UhyaTF/VXsJD1eihao6Id2jzBElRdCBg==}
+  /@trigger.dev/sdk@3.0.0-beta.36(typescript@5.4.2):
+    resolution: {integrity: sha512-RsI2pzZK7+FKazVxdw7YsXXxkEkUZH5g8ets8KHKYbq241eXs1ZUNTmcZzcvSlsXhJkj2L/RJkKjFLM/1r3BgA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@opentelemetry/api': 1.8.0
       '@opentelemetry/api-logs': 0.48.0
       '@opentelemetry/semantic-conventions': 1.24.0
-      '@trigger.dev/core': 3.0.0-beta.22
-      '@trigger.dev/core-backend': 3.0.0-beta.22
+      '@trigger.dev/core': 3.0.0-beta.36
+      '@trigger.dev/core-backend': 3.0.0-beta.36
       chalk: 5.3.0
       cronstrue: 2.48.0
       debug: 4.3.4
@@ -4731,6 +4732,11 @@ packages:
 
   /form-data-encoder@1.7.2:
     resolution: {integrity: sha512-qfqtYan3rxrnCk1VYaA4H+Ms9xdpPqvLZa6xmMgFvhO32x7/3J/ExcTd6qpxM0vH2GdMI+poehyBZvqfMTto8A==}
+    dev: false
+
+  /form-data-encoder@4.0.2:
+    resolution: {integrity: sha512-KQVhvhK8ZkWzxKxOr56CPulAhH3dobtuQ4+hNQ+HekH/Wp5gSOafqRAeTphQUJAIk0GBvHZgJ2ZGRWd5kphMuw==}
+    engines: {node: '>= 18'}
     dev: false
 
   /form-data@4.0.0:
@@ -6927,7 +6933,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.11.17
+      '@types/node': 20.12.7
       long: 5.2.3
     dev: false
 
