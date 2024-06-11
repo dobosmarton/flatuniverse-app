@@ -1,7 +1,7 @@
 import { schedules } from '@trigger.dev/sdk/v3';
 import * as newsletterService from '@/lib/newsletter';
 
-export const weeklyNewsletterTask = schedules.task({
+export const weeklyNewsletter = schedules.task({
   id: 'weekly-newsletter',
   run: async (payload) => {
     await newsletterService.sendWeeklySummaryEmail();
@@ -13,7 +13,7 @@ export const weeklyNewsletterTask = schedules.task({
 });
 
 export const weeklyNewsletterSchedule = schedules.create({
-  task: weeklyNewsletterTask.id,
+  task: weeklyNewsletter.id,
   // Every Saturday at 8:00 AM
   cron: '0 8 * * 6',
 });
