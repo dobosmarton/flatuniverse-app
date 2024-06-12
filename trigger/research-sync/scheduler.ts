@@ -24,5 +24,5 @@ export const researchSync = schedules.task({
 export const researchSyncSchedule = schedules.create({
   task: researchSync.id,
   // At minute 0 past every 6th hour
-  cron: '0 */6 * * *',
+  cron: '0 */8 * * *',
 });
