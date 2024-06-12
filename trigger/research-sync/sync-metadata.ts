@@ -1,7 +1,7 @@
 import { logger, retry, task, wait } from '@trigger.dev/sdk/v3';
 
 import { getRequestUrl, getResumptionToken } from '@/lib/oai-pmh';
-import { ResearchSyncPayload } from '../schema';
+import { ResearchSyncPayload, researchSyncPayloadSchema } from '../schema';
 import { addArticleMetadaBatch } from './add-article-metadata-batch';
 import { parseMetadata } from './parse-metadata';
 
@@ -42,7 +42,9 @@ const getRetrySeconds = (retryAfter: string | null | undefined) => {
 
 export const syncMetadata = task({
   id: 'openai-task',
-  run: async (payload: ResearchSyncPayload) => {
+  run: async (_payload: ResearchSyncPayload) => {
+    const payload = researchSyncPayloadSchema.parse(_payload);
+
     const responseTextData = await retry.onThrow(
       async ({ attempt }) => {
         const initialRequestUrl = getRequestUrl(payload.startDate, payload.untilDate, payload.resumptionToken);

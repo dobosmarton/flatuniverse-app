@@ -2,11 +2,12 @@ import { logger, task } from '@trigger.dev/sdk/v3';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
 import { loadPDF } from '@/lib/langchain/file-reader.server';
 import { addNewEmbeddings } from '@/lib/langchain/embeddings.server';
-import { MetadataIdPayload } from '../schema';
+import { MetadataIdPayload, metadataIdPayloadSchema } from '../schema';
 
 export const generateEmbeddingsFromPdf = task({
   id: 'generate-embedding-from-pdf',
-  run: async (payload: MetadataIdPayload) => {
+  run: async (_payload: MetadataIdPayload) => {
+    const payload = metadataIdPayloadSchema.parse(_payload);
     logger.info(`Generate AI Content - Id: ${payload.id}`, { time: new Date().toISOString() });
 
     const pdfLink = await articleMetadataService.getArticlePdfLink(payload.id);

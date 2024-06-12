@@ -6,14 +6,14 @@ import { generateAIContent } from '../ai/generate-ai-content';
 
 export const addArticleMetadaBatch = task({
   id: 'add-article-metadata-batch',
-  run: async (payload: AddArticleMetadaBatchPayload) => {
+  run: async (_payload: AddArticleMetadaBatchPayload) => {
+    const payload = addArticleMetadaBatchPayloadSchema.parse(_payload);
+
     logger.info(`Add Article Metadata Batch - Index: ${payload.batchIndex}, size: ${payload.batch.length}`, {
       time: new Date().toISOString(),
     });
 
-    const parsedPayload = addArticleMetadaBatchPayloadSchema.parse(payload);
-
-    const newIds = await articleMetadataService.addNewArticleMetadata(parsedPayload.batch);
+    const newIds = await articleMetadataService.addNewArticleMetadata(payload.batch);
 
     if (!newIds?.length) {
       logger.info(`No new metadata found`, { time: new Date().toISOString() });
