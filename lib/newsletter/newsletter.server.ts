@@ -41,8 +41,6 @@ export const sendWeeklySummaryEmail = async () => {
     select: { email: true },
   });
 
-  console.log('getStartOfWeek', getStartOfWeek(new Date()));
-
   const categoryGroups = await categoryService.getCategoriesGroupedByNames(getStartOfWeek(new Date()), 0, 5);
 
   const formattedCategories = categoryGroups.map<templates.ArticleGroup>((group) => ({

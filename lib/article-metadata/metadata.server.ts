@@ -206,7 +206,7 @@ export const findLatestMetadataByExternalIds = async (params: { id: string; upda
     .map((item) => item.external_id);
 };
 
-export const addNewArticleMetadata = async (metadataEntries: Metadata[]) => {
+export const addNewArticleMetadata = async (metadataEntries: Metadata[]): Promise<string[] | null> => {
   try {
     const existingIds = await findLatestMetadataByExternalIds(metadataEntries);
 
@@ -221,6 +221,8 @@ export const addNewArticleMetadata = async (metadataEntries: Metadata[]) => {
     );
 
     await addArticleMetadata(uniqueFilteredMetadata);
+
+    return uniqueFilteredMetadata.map((metadata) => metadata.id);
   } catch (error) {
     logger.log('Error adding new metadata', error);
     throw error;
