@@ -11,9 +11,9 @@ client.defineJob({
     cron: '0 8 * * 6',
   }),
   run: async (payload, io, ctx) => {
-    /*     await io.runTask(`send-weekly-newsletter`, async () => {
+    await io.runTask(`send-weekly-newsletter`, async () => {
       await newsletterService.sendWeeklySummaryEmail();
-    }); */
+    });
 
     return { payload, ctx };
   },
