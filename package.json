@@ -10,6 +10,7 @@
     "postinstall": "npx prisma generate",
     "trigger:dev:start": "npx @trigger.dev/cli@latest dev",
     "trigger:dev:start:v3": "npx trigger.dev@beta dev",
+    "deploy:trigger-prod": "npx trigger.dev@3.0.0-beta.37 deploy",
     "test": "jest"
   },
   "dependencies": {
