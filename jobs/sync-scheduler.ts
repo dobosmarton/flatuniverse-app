@@ -1,16 +1,17 @@
 import { randomUUID } from 'crypto';
 import { client } from '@/trigger';
-import { cronTrigger } from '@trigger.dev/sdk';
+import { invokeTrigger } from '@trigger.dev/sdk';
 import { Events } from './events';
 
 client.defineJob({
   id: 'research-sync-scheduler',
   name: 'Research Sync Scheduler',
   version: '0.0.1',
-  trigger: cronTrigger({
-    // cron: '0 6 * * 1', // At minute 0 past every 6th hour
-    cron: '0 */6 * * *', // At minute 0 past every 6th hour
-  }),
+  trigger: invokeTrigger(),
+  //trigger: cronTrigger({
+  // cron: '0 6 * * 1', // At minute 0 past every 6th hour
+  //  cron: '0 */6 * * *', // At minute 0 past every 6th hour
+  //}),
   run: async (payload, io, ctx) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
