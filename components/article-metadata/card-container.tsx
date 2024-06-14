@@ -3,7 +3,6 @@
 import React from 'react';
 import { ArticleMetadataCard } from './card';
 import { article_metadata } from '@prisma/client';
-import { useBoundStore } from '@/stores';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/api-client/fetch';
 import { SimilarArticleMetadataList } from '@/lib/article-metadata/similarity.server';
@@ -21,13 +20,15 @@ type Props = {
 };
 
 export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
-  const { similarArticlesEnabled } = useBoundStore();
+  const [showSimilarArticles, setShowSimilarArticles] = React.useState(false);
   const [selectedSimilarItem, setSelectedSimilarItem] = React.useState<string | null>(null);
 
   const { data, isLoading } = useSWR(
-    similarArticlesEnabled ? `/api/articles/${article.id}/similars` : null,
+    showSimilarArticles ? `/api/articles/${article.id}/similars` : null,
     fetcher<SimilarArticleMetadataList>
   );
+
+  const toggleSimilarArticles = () => setShowSimilarArticles((state) => !state);
 
   const similarItemList = selectedSimilarItem ? data?.filter((metadata) => metadata.id === selectedSimilarItem) : data;
 
@@ -35,9 +36,9 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
     <div className="flex flex-col gap-4 w-full md:flex-row md:justify-between">
       <div
         className={cn('flex ', {
-          'md:w-6/12': similarArticlesEnabled && !!selectedSimilarItem,
-          'md:w-8/12': similarArticlesEnabled && !selectedSimilarItem,
-          'w-full': !similarArticlesEnabled,
+          'md:w-6/12': showSimilarArticles && !!selectedSimilarItem,
+          'md:w-8/12': showSimilarArticles && !selectedSimilarItem,
+          'w-full': !showSimilarArticles,
         })}>
         <ArticleMetadataCard
           key={article.id}
@@ -49,10 +50,11 @@ export const ArticleMetadataCardContainer: React.FC<Props> = ({ article }) => {
           authors={article.authors.map((connection) => connection.author.name)}
           categories={article.categories.map((connection) => connection.category)}
           links={article.links.map((connection) => connection.link)}
+          toggleSimilarArticles={toggleSimilarArticles}
         />
       </div>
 
-      {similarArticlesEnabled ? (
+      {showSimilarArticles ? (
         <div
           className={cn('flex flex-col gap-2 w-full', {
             'md:w-6/12': !!selectedSimilarItem,

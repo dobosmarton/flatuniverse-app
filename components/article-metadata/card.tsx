@@ -34,6 +34,7 @@ type Props = {
   authors: string[];
   categories: { short_name: string; full_name: string; group_name: string }[];
   links: { title: string | null; href: string; type: string | null }[];
+  toggleSimilarArticles: () => void;
 };
 
 const shortCharacters = 240;
@@ -47,6 +48,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   authors,
   categories,
   links,
+  toggleSimilarArticles,
 }) => {
   const [isAbstractOpen, setAbstractOpen] = useState(false);
   const [isCardOpen, setCardOpen] = useState(false);
@@ -71,12 +73,14 @@ export const ArticleMetadataCard: React.FC<Props> = ({
     fetcher<HasEmbeddingsForArticle>
   );
 
-  const { data: generatedSummary, isLoading: isSummaryLoading } = useSWR(
+  const generatedSummary = '';
+  const isSummaryLoading = false;
+  /*  const { data: generatedSummary, isLoading: isSummaryLoading } = useSWR(
     summaryEnabled ? `/api/articles/${id}/summary` : null,
     fetcher<String>,
     { revalidateOnFocus: false }
   );
-
+ */
   const toggleAuthor = (author: string) => {
     const newAuthors = selectedAuthors.includes(author)
       ? selectedAuthors.filter((selectedAuthor) => selectedAuthor !== author)
@@ -250,6 +254,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
             articleTitle={title}
             articleText={abstract.slice(0, shortCharacters)}
             articleUrl={pdfLink}
+            toggleSimilarArticles={toggleSimilarArticles}
             hasEmbeddingsButton={(similarArticlesEnabled || summaryEnabled) && !isEmbeddingsLoading && !hasEmbeddings}
           />
         </CardFooter>

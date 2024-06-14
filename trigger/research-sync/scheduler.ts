@@ -23,6 +23,7 @@ export const researchSync = schedules.task({
 
 export const researchSyncSchedule = schedules.create({
   task: researchSync.id,
+  deduplicationKey: 'research-sync-scheduler',
   // At minute 0 past every 6th hour
   cron: '0 */8 * * *',
 });

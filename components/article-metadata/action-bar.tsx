@@ -1,5 +1,5 @@
 import React from 'react';
-import { NotebookTextIcon } from 'lucide-react';
+import { NotebookTextIcon, SquareStackIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
@@ -13,6 +13,7 @@ type Props = {
   articleTitle: string;
   articleText?: string;
   hasEmbeddingsButton?: boolean;
+  toggleSimilarArticles?: () => void;
   size?: 'small' | 'large';
 };
 
@@ -23,6 +24,7 @@ export const ActionBar: React.FC<Props> = ({
   articleTitle,
   articleText,
   hasEmbeddingsButton,
+  toggleSimilarArticles,
   size = 'small',
 }) => {
   return (
@@ -48,6 +50,23 @@ export const ActionBar: React.FC<Props> = ({
         ) : null}
 
         {hasEmbeddingsButton ? <AddEmbeddingsButton id={articleId} size={size} /> : null}
+
+        {/*toggleSimilarArticles ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={toggleSimilarArticles}>
+                <SquareStackIcon
+                  size={cn({
+                    16: size === 'small',
+                    20: size === 'large',
+                  })}
+                />
+                <span className="sr-only">Show similar articles</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Show similar articles</TooltipContent>
+          </Tooltip>
+        ) : null*/}
 
         {/*  <Tooltip>
           <TooltipTrigger asChild>

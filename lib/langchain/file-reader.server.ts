@@ -1,3 +1,4 @@
+import pdfParser from 'pdf-parse';
 import { Document } from '@langchain/core/documents';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';

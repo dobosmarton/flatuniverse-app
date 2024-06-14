@@ -57,13 +57,11 @@ export const FacetFilter: React.FC<DataTableFacetedFilterProps> = ({
                     {uniqueSelectedValues.size} selected
                   </Badge>
                 ) : (
-                  options
-                    .filter((option) => uniqueSelectedValues.has(option.value))
-                    .map((option) => (
-                      <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal">
-                        {option.label}
-                      </Badge>
-                    ))
+                  Array.from(uniqueSelectedValues).map((option) => (
+                    <Badge variant="secondary" key={option} className="rounded-sm px-1 font-normal">
+                      {option}
+                    </Badge>
+                  ))
                 )}
               </div>
             </>

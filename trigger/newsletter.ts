@@ -14,6 +14,7 @@ export const weeklyNewsletter = schedules.task({
 
 export const weeklyNewsletterSchedule = schedules.create({
   task: weeklyNewsletter.id,
+  deduplicationKey: 'weekly-newsletter-scheduler',
   // Every Saturday at 8:00 AM
   cron: '0 8 * * 6',
 });

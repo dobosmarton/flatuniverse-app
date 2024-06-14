@@ -52,7 +52,6 @@ export const addArticleMetadaBatchPayloadSchema = z.object({
 
 export const metadataIdPayloadSchema = z.object({
   id: z.string(),
-  externalId: z.string(),
 });
 
 export type AddArticleMetadaBatchPayload = z.input<typeof addArticleMetadaBatchPayloadSchema>;

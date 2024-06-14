@@ -169,6 +169,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.11.17
     version: 20.11.17
+  '@types/pdf-parse':
+    specifier: ^1.1.4
+    version: 1.1.4
   '@types/react':
     specifier: ^18.2.55
     version: 18.2.55
@@ -3597,6 +3600,10 @@ packages:
     dependencies:
       undici-types: 5.26.5
     dev: false
+
+  /@types/pdf-parse@1.1.4:
+    resolution: {integrity: sha512-+gbBHbNCVGGYw1S9lAIIvrHW47UYOhMIFUsJcMkMrzy1Jf0vulBN3XQIjPgnoOXveMuHnF3b57fXROnY/Or7eg==}
+    dev: true
 
   /@types/pg@8.11.6:
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}

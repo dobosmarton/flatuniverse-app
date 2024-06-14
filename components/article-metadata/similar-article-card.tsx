@@ -39,11 +39,13 @@ export const SimilarArticleCard: React.FC<Props> = ({
   const [isOpen, setOpen] = useState(false);
   const [isAbstractOpen, setAbstractOpen] = useState(false);
 
-  const { data: generatedSummary, isLoading: isSummaryLoading } = useSWR(
+  const generatedSummary = '';
+  const isSummaryLoading = false;
+  /*  const { data: generatedSummary, isLoading: isSummaryLoading } = useSWR(
     `/api/articles/${id}/summary`,
     fetcher<String>,
     { revalidateOnFocus: false }
-  );
+  ); */
 
   const onCardSizeChange = () => {
     setSelectedSimilarItem(isOpen ? null : id);
