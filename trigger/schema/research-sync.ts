@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const researchSyncPayloadSchema = z.object({
+  jobId: z.string(),
   startDate: z.string().regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/),
   untilDate: z
     .string()

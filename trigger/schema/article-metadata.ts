@@ -46,11 +46,13 @@ const metadataBatchSchema = z
   }));
 
 export const addArticleMetadaBatchPayloadSchema = z.object({
+  jobId: z.string(),
   batchIndex: z.number(),
   batch: z.array(metadataBatchSchema),
 });
 
 export const metadataIdPayloadSchema = z.object({
+  jobId: z.string(),
   id: z.string(),
 });
 

@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { NextRouteFunction } from '@/lib/route-validator.server';
 import * as similarityService from '@/lib/article-metadata/similarity.server';
 import * as redis from '@/lib/redis';
@@ -10,7 +11,10 @@ const generateEmbeddingAsync = redis.cacheableFunction<string, { id: string }>(
   redis.asyncEmbeddingGenerationSchema,
   { ex: 60 * 60 }
 )(async (metadataId) =>
-  generateEmbeddingsFromPdf.trigger({ id: metadataId }, { idempotencyKey: `similarity-${metadataId}` })
+  generateEmbeddingsFromPdf.trigger(
+    { id: metadataId, jobId: randomUUID() },
+    { idempotencyKey: `similarity-${metadataId}` }
+  )
 );
 
 const getSimilarArticlesByMetadataId: NextRouteFunction<Params> = async (_, { params }) => {

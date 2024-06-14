@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const generateEmbeddingPayloadSchema = z.object({
+  jobId: z.string(),
   itemId: z.string(),
   // Document<PDFMetadata<{ metadata_id: string }>>[]
   doc: z.array(

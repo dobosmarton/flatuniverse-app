@@ -68,7 +68,9 @@ export const syncMetadata = task({
       throw new Error(`Error fetching data from OAI-PMH server for ${payload.startDate} - ${payload.untilDate}`);
     }
 
-    const parsedData = await parseMetadata.triggerAndWait(responseTextData);
+    const parsedData = await parseMetadata.triggerAndWait(responseTextData, {
+      idempotencyKey: `parse-metadata-${payload.jobId}-${payload.startDate}-${payload.untilDate}`,
+    });
 
     if (!parsedData.ok) {
       throw new Error('Error parsing data');
@@ -83,7 +85,7 @@ export const syncMetadata = task({
     // send the batch to the add_article_metadata_batch event
     // no need to wait for the result
     await addArticleMetadaBatch.batchTrigger(
-      batches.map((batch, index) => ({ payload: { batch, batchIndex: index } }))
+      batches.map((batch, index) => ({ payload: { batch, batchIndex: index, jobId: payload.jobId } }))
     );
 
     const token = getResumptionToken(parsedData.output.resumptionToken, parsedData.output.records.length);
@@ -93,11 +95,17 @@ export const syncMetadata = task({
     if (token) {
       // send the resumption token to the same event
       // no need to wait for the result
-      await syncMetadata.trigger({
-        startDate: payload.startDate,
-        untilDate: payload.untilDate,
-        resumptionToken: token,
-      });
+      await syncMetadata.trigger(
+        {
+          jobId: payload.jobId,
+          startDate: payload.startDate,
+          untilDate: payload.untilDate,
+          resumptionToken: token,
+        },
+        {
+          idempotencyKey: `sync-metadata-${payload.jobId}-${payload.startDate}-${payload.untilDate}`,
+        }
+      );
     }
   },
 });
