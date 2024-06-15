@@ -1,4 +1,5 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
+import pdfParser from 'pdf-parse';
 
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
 import * as fileReaderService from '@/lib/langchain/file-reader.server';
@@ -9,7 +10,7 @@ export const loadPdf = task({
     maxAttempts: 3,
   },
   run: async (itemId: string) => {
-    logger.info(`Load PDF - start: ${itemId}`, { time: new Date().toISOString() });
+    logger.info(`Load PDF - start: ${itemId} - ${pdfParser.name}`, { time: new Date().toISOString() });
 
     const pdfLink = await articleMetadataService.getArticlePdfLink(itemId);
 
