@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
-import { siGithub, siX } from 'simple-icons';
+import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
 import { Navbar } from '@/components/navbar';
 import { Toaster } from '@/components/ui/toaster';
 import { Footer } from '@/components/footer';
+import { CookieBanner } from '@/components/cookie-banner';
+import { AnalyticsProvider } from './analytics-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,6 +16,10 @@ export const metadata: Metadata = {
   description:
     'The Earth is not flat, but the universe is still may be. Follow the latest research papers and articles on the flat universe.',
 };
+
+const PostHogPageView = dynamic(() => import('./analytics-pageview'), {
+  ssr: false,
+});
 
 export default function RootLayout({
   children,
@@ -26,7 +32,11 @@ export default function RootLayout({
         <header className="flex gap-4 p-4 border-b border-black border-solid sm:px-8 border-opacity-20">
           <Navbar />
         </header>
-        {children}
+        <AnalyticsProvider>
+          {children}
+          <PostHogPageView />
+          <CookieBanner />
+        </AnalyticsProvider>
         <Footer />
         <Toaster />
       </body>

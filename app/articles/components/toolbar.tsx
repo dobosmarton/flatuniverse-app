@@ -4,17 +4,18 @@ import React, { useEffect, useState } from 'react';
 import { ChevronsDownUpIcon, ChevronsUpDownIcon, Settings2Icon } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
+import posthog from 'posthog-js';
 import { FacetFilter } from '@/components/facet-filter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useBoundStore } from '@/stores';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { AIToggle } from './ai-toggle';
 import { Author } from '@/lib/authors';
 import { AuthorFacetFilter } from '@/components/author-facet-filter';
 import { DatePickerWithRange } from '@/components/date-range-picker';
 import { ArticleMetadataSearch } from '@/lib/article-metadata/schema';
 import { constructQueryParams } from '@/lib/query-params';
+import { events } from '@/lib/analytics';
 
 type Props = {
   categoryTree: {
@@ -26,12 +27,10 @@ type Props = {
 
 const isFiltered = (searchParams: ArticleMetadataSearch): boolean => {
   return Boolean(
-    searchParams.categoryGroups?.length ||
-      searchParams.categories?.length ||
-      searchParams.authors?.length ||
-      searchParams.search ||
-      searchParams.from ||
-      searchParams.to
+    searchParams.categoryGroups?.length ??
+      searchParams.categories?.length ??
+      searchParams.authors?.length ??
+      (searchParams.search || searchParams.from || searchParams.to)
   );
 };
 
@@ -63,6 +62,15 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
   }, [searchParams]);
 
   useEffect(() => {
+    posthog.capture(events.articlesFilter, {
+      search: searchState.search,
+      categoryGroups: searchState.categoryGroups,
+      categories: searchState.categories,
+      authors: searchState.authors,
+      from: searchState.from,
+      to: searchState.to,
+    });
+
     replace(`${pathname}?${queryParams}`);
   }, [queryParams]);
 

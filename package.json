@@ -50,6 +50,7 @@
     "next-themes": "^0.3.0",
     "pdf-parse": "^1.1.1",
     "pgvector": "^0.1.8",
+    "posthog-js": "^1.140.1",
     "postmark": "^4.0.4",
     "react": "^18",
     "react-day-picker": "^8.10.1",
