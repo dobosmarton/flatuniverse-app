@@ -41,7 +41,7 @@ const getRetrySeconds = (retryAfter: string | null | undefined) => {
 };
 
 export const syncMetadata = task({
-  id: 'openai-task',
+  id: 'metadata-sync',
   run: async (_payload: ResearchSyncPayload) => {
     const payload = researchSyncPayloadSchema.parse(_payload);
 
@@ -73,7 +73,8 @@ export const syncMetadata = task({
     });
 
     if (!parsedData.ok) {
-      throw new Error('Error parsing data');
+      logger.error(`Error parsing data: ${parsedData.error}`);
+      throw new Error(`Error parsing data: ${parsedData.error}`);
     }
 
     const batchCount = Math.ceil(parsedData.output.records.length / batchSize);
