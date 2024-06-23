@@ -7,6 +7,6 @@ export type NewsletterSlice = {
 };
 
 export const createNewsletterSlice: StateCreator<Store, [], [], NewsletterSlice> = (set) => ({
-  isBannerVisible: false,
+  isBannerVisible: true,
   setBannerVisible: (isBannerVisible: boolean) => set({ isBannerVisible }),
 });
