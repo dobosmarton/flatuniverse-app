@@ -1,32 +1,26 @@
 'use server';
 
-import pgvector from 'pgvector/utils';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { Document } from '@langchain/core/documents';
-import { prismaClient } from '../prisma';
 import { PDFMetadata } from './types';
 import * as redis from '../redis';
 import * as logger from '../logger';
+import { researchArticleIndex } from '../pinecone';
 
 const openAIEmbeddings = new OpenAIEmbeddings({ dimensions: 1536, model: 'text-embedding-3-large' });
 
 const addVectors = async (
   vectors: number[][],
   documents: Document<PDFMetadata<{ metadata_id: string }>>[]
-): Promise<number[]> =>
-  prismaClient.$transaction(
+): Promise<void> =>
+  researchArticleIndex.upsert(
     vectors.map((vector, idx) => {
-      const embedding = pgvector.toSql(vector);
       const documentMetadata = documents[idx].metadata;
 
-      // vector field can be updated only via raw SQL
-      return prismaClient.$executeRaw`
-        INSERT INTO "public"."research_article_embedding" ("embedding", "doucment_metadata", "metadata_id")
-        VALUES (${embedding}::vector, ${JSON.stringify({
-        totalPages: documentMetadata.pdf.totalPages,
-        pageNumber: documentMetadata.loc.pageNumber,
-      })}, ${documentMetadata.article.metadata_id});
-      `;
+      return {
+        id: `${documentMetadata.article.metadata_id}#${documentMetadata.loc.pageNumber}`,
+        values: vector,
+      };
     })
   );
 
