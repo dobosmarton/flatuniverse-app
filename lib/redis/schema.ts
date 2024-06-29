@@ -21,3 +21,5 @@ export const authorsByArticleCacheSchema = z.array(
     count: z.number(),
   })
 );
+
+export const hasEmbeddingsForArticleSchema = z.boolean();

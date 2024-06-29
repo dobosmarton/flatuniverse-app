@@ -48,7 +48,7 @@ const _getEmbeddingsByMetadataId = async (metadataId: string): Promise<Embedding
 export const getEmbeddingsByMetadataId = redis.cacheableFunction<string, EmbeddingData>(
   (metadataId) => redis.keys.metadataEmbeddingItems(metadataId),
   redis.embeddingCacheSchema,
-  { ex: 60 }
+  { ex: 1800 }
 )(_getEmbeddingsByMetadataId);
 
 /**
