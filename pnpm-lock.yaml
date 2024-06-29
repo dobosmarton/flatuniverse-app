@@ -69,14 +69,14 @@ dependencies:
     specifier: ^1.1.1
     version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@trigger.dev/nextjs':
-    specifier: 3.0.0-beta.40
-    version: 3.0.0-beta.40(@trigger.dev/sdk@3.0.0-beta.40)(next@14.2.4)
+    specifier: 3.0.0-beta.44
+    version: 3.0.0-beta.44(@trigger.dev/sdk@3.0.0-beta.44)(next@14.2.4)
   '@trigger.dev/react':
-    specifier: 3.0.0-beta.40
-    version: 3.0.0-beta.40(react-dom@18.3.1)(react@18.3.1)
+    specifier: 3.0.0-beta.44
+    version: 3.0.0-beta.44(react-dom@18.3.1)(react@18.3.1)
   '@trigger.dev/sdk':
-    specifier: 3.0.0-beta.40
-    version: 3.0.0-beta.40(typescript@5.5.2)
+    specifier: 3.0.0-beta.44
+    version: 3.0.0-beta.44(typescript@5.5.2)
   '@upstash/redis':
     specifier: ^1.31.6
     version: 1.31.6
@@ -3506,15 +3506,15 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /@trigger.dev/core-backend@3.0.0-beta.40:
-    resolution: {integrity: sha512-Utu2bMbK7/8XCzbqH++baYnErOEaAey3VKg2AQdl3R4x0yVVHk2M1DbfTi7eQ7WyRDhGuDi9rxzwWBbNbiodwg==}
+  /@trigger.dev/core-backend@3.0.0-beta.44:
+    resolution: {integrity: sha512-QIFsWQnvgvOySt1Pp3Bzxi6a4vHmgkPli3M/mdEFvjk+E/HbphvCDgnQJjpK13qZPX2Z/uFD+TUwsEays1J2Hw==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@opentelemetry/api': 1.9.0
     dev: false
 
-  /@trigger.dev/core@3.0.0-beta.40:
-    resolution: {integrity: sha512-ttNRbJUBjM/RR4xPwbhHuHfBBQd0hxTRiOnXGwM8R2WFZk2BzkxuzpoqF8QhRlVzRqX8kGox//CL4BpXoKVy6w==}
+  /@trigger.dev/core@3.0.0-beta.44:
+    resolution: {integrity: sha512-V0v1nRRGxxeD4U3Rvb4Rjg6ENgFl+MF5b4VYmFYhcyRgqeAz8+fcgMvl07/rVv3j/dCbUkPLzIwyO12iR34ZwA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@google-cloud/precise-date': 4.0.0
@@ -3542,27 +3542,27 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trigger.dev/nextjs@3.0.0-beta.40(@trigger.dev/sdk@3.0.0-beta.40)(next@14.2.4):
-    resolution: {integrity: sha512-ezXHMQJJy1XuCfD2KawsIw2xDJ4YWilfJAz1vhcJm1hai3bi51HnVY3zf13Oy76NetlThnRkq5xZv9e79JzOFw==}
+  /@trigger.dev/nextjs@3.0.0-beta.44(@trigger.dev/sdk@3.0.0-beta.44)(next@14.2.4):
+    resolution: {integrity: sha512-UGZjb9/R5gen4j3Q1tFqRSl9da/sRS6d0+s6jt62lUePxYDqp50NTqbVN/j+IFy7avGgWnrPj09mzyfGg4O/Eg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@trigger.dev/sdk': ^3.0.0-beta.40
+      '@trigger.dev/sdk': ^3.0.0-beta.44
       next: '>=12.0.0'
     dependencies:
-      '@trigger.dev/sdk': 3.0.0-beta.40(typescript@5.5.2)
+      '@trigger.dev/sdk': 3.0.0-beta.44(typescript@5.5.2)
       debug: 4.3.5
       next: 14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1)(react@18.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@trigger.dev/react@3.0.0-beta.40(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-c2cyfYAUVpF3QExNhsxSlviUhIdG1SmbKxGfG8RZ4tZ6Otu/dvTN/AIgGlG5U59fSb7wFIY1nWeeA+zwwzJ5mQ==}
+  /@trigger.dev/react@3.0.0-beta.44(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-wjnzzhgrJkpEefoFL8EyVN9ur9dqCkytOj3we7cJI4ks9IHpe5+m2Wwe/BHjnE26g6He/eDnOy3i474gdyhM6A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18
     dependencies:
       '@tanstack/react-query': 5.0.0-beta.2(react-dom@18.3.1)(react@18.3.1)
-      '@trigger.dev/core': 3.0.0-beta.40
+      '@trigger.dev/core': 3.0.0-beta.44
       debug: 4.3.5
       react: 18.3.1
       zod: 3.22.3
@@ -3574,15 +3574,15 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trigger.dev/sdk@3.0.0-beta.40(typescript@5.5.2):
-    resolution: {integrity: sha512-mRp6dh+74Am7WvpWcvKlcJ1635+UBvL7upgvYOYx6e6hcavbhWYxWJm1PCxjiyG0oGiEK8RLcqcJxEAF+cxOKw==}
+  /@trigger.dev/sdk@3.0.0-beta.44(typescript@5.5.2):
+    resolution: {integrity: sha512-t64HnWM34wg1vw+Q7afIijAaCTJGrXX7dJzQcaO7Ld2HzbPa6pUJqU0NwcjKCSeaG+2c96OKaJ+ZKfmYxNd6ZQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.48.0
       '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.0.0-beta.40
-      '@trigger.dev/core-backend': 3.0.0-beta.40
+      '@trigger.dev/core': 3.0.0-beta.44
+      '@trigger.dev/core-backend': 3.0.0-beta.44
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.5
