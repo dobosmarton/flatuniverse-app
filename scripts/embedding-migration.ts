@@ -12,7 +12,7 @@ type ResearchArticle = {
   doucment_metadata: Prisma.JsonValue;
   id: string;
   updated_at: Date;
-  embedding: number[];
+  embedding: string;
 };
 
 const migrateEmbeddings = async () => {
@@ -46,12 +46,6 @@ const migrateEmbeddings = async () => {
     console.log(`Fetched ${articles.length} articles`);
 
     articles.forEach((article) => {
-      /* console.log(
-        `Processing article ${(article.doucment_metadata as { pageNumber: number }).pageNumber}, ${
-          article.embedding.length
-        }`
-      ); */
-
       if (!(article.doucment_metadata as any).pageNumber) {
         throw new Error('Missing page number in metadata');
       }
@@ -61,12 +55,9 @@ const migrateEmbeddings = async () => {
     await researchArticleIndex.upsert(
       articles.map<PineconeRecord<RecordMetadata>>((article) => {
         const parsedMetadata = article.doucment_metadata as { pageNumber: number };
-        console.log(
-          `Processing article id: ${article.metadata_id}#${parsedMetadata.pageNumber}, ${parsedMetadata.pageNumber}, ${article.embedding.length}`
-        );
         return {
           id: `${article.metadata_id}#${parsedMetadata.pageNumber}`,
-          values: article.embedding,
+          values: JSON.parse(article.embedding),
         };
       })
     );
