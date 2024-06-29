@@ -8,7 +8,7 @@ import { PDFMetadata } from './types';
 import * as redis from '../redis';
 import * as logger from '../logger';
 
-const openAIEmbeddings = new OpenAIEmbeddings();
+const openAIEmbeddings = new OpenAIEmbeddings({ dimensions: 1536, model: 'text-embedding-3-large' });
 
 const addVectors = async (
   vectors: number[][],
