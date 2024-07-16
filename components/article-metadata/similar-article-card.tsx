@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import useSWR from 'swr';
 import Latex from 'react-latex-next';
 import { CalendarDaysIcon, ChevronDownIcon, ChevronUpIcon, Maximize2, Minimize2, User2Icon } from 'lucide-react';
-import { fetcher } from '@/lib/api-client/fetch';
 import { CollapsibleContent } from '@radix-ui/react-collapsible';
 import { ActionBar } from '@/components/article-metadata/action-bar';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { SummaryPanel } from './summary-panel';
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
 
 type Props = {
@@ -51,6 +48,8 @@ export const SimilarArticleCard: React.FC<Props> = ({
     setSelectedSimilarItem(isOpen ? null : id);
     if (isOpen) {
       setAbstractOpen(false);
+    } else {
+      setAbstractOpen(true);
     }
     setOpen((open) => !open);
   };
@@ -84,7 +83,9 @@ export const SimilarArticleCard: React.FC<Props> = ({
               <div>
                 <User2Icon size={16} className="text-muted-foreground" />
               </div>
-              <CardDescription className="text-sm"> {`${authors.join(', ')}`}</CardDescription>
+              <CardDescription className="text-sm">
+                <Latex>{`${authors.join(', ')}`}</Latex>
+              </CardDescription>
             </div>
           ) : null}
         </div>
@@ -111,9 +112,9 @@ export const SimilarArticleCard: React.FC<Props> = ({
             </CollapsibleContent>
           </Collapsible>
 
-          <SummaryPanel size="small" isLoading={isSummaryLoading}>
+          {/*      <SummaryPanel size="small" isLoading={isSummaryLoading}>
             {generatedSummary}
-          </SummaryPanel>
+          </SummaryPanel> */}
         </CardContent>
       ) : null}
 

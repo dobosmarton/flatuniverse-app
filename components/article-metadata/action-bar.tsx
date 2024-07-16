@@ -1,9 +1,8 @@
 import React from 'react';
-import { NotebookTextIcon, SquareStackIcon } from 'lucide-react';
+import { IndentIncreaseIcon, NotebookTextIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { AddEmbeddingsButton } from './add-embeddings-button';
 import { ShareButton } from './share-button';
 
 type Props = {
@@ -12,7 +11,6 @@ type Props = {
   articleSlug: string;
   articleTitle: string;
   articleText?: string;
-  hasEmbeddingsButton?: boolean;
   toggleSimilarArticles?: () => void;
   size?: 'small' | 'large';
 };
@@ -23,7 +21,6 @@ export const ActionBar: React.FC<Props> = ({
   articleSlug,
   articleTitle,
   articleText,
-  hasEmbeddingsButton,
   toggleSimilarArticles,
   size = 'small',
 }) => {
@@ -49,13 +46,11 @@ export const ActionBar: React.FC<Props> = ({
           </Tooltip>
         ) : null}
 
-        {hasEmbeddingsButton ? <AddEmbeddingsButton id={articleId} size={size} /> : null}
-
-        {/*toggleSimilarArticles ? (
+        {toggleSimilarArticles ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" onClick={toggleSimilarArticles}>
-                <SquareStackIcon
+                <IndentIncreaseIcon
                   size={cn({
                     16: size === 'small',
                     20: size === 'large',
@@ -66,7 +61,7 @@ export const ActionBar: React.FC<Props> = ({
             </TooltipTrigger>
             <TooltipContent>Show similar articles</TooltipContent>
           </Tooltip>
-        ) : null*/}
+        ) : null}
 
         {/*  <Tooltip>
           <TooltipTrigger asChild>

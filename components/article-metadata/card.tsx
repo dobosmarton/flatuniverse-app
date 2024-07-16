@@ -12,11 +12,8 @@ import {
   User2Icon,
 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import useSWR from 'swr';
 
 import { useBoundStore } from '@/stores';
-import { fetcher } from '@/lib/api-client/fetch';
-import { HasEmbeddingsForArticle } from '@/lib/embeddings/embeddings.server';
 import { cn } from '@/lib/utils';
 import { getFullMonthDateFromString } from '@/lib/dates';
 import { ActionBar } from '@/components/article-metadata/action-bar';
@@ -60,18 +57,13 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   const selectedCategories = queryString.get('categories')?.split(',') ?? [];
   const selectedCategoryGroups = queryString.get('groups')?.split(',') ?? [];
 
-  const { similarArticlesEnabled, summaryEnabled, isCompactMode } = useBoundStore();
+  const { summaryEnabled, isCompactMode } = useBoundStore();
 
   useEffect(() => {
     if (!isCompactMode) {
       setCardOpen(false);
     }
   }, [isCompactMode]);
-
-  const { data: hasEmbeddings, isLoading: isEmbeddingsLoading } = useSWR(
-    similarArticlesEnabled || summaryEnabled ? `/api/articles/${id}/has-embeddings` : null,
-    fetcher<HasEmbeddingsForArticle>
-  );
 
   const generatedSummary = '';
   const isSummaryLoading = false;
@@ -255,7 +247,6 @@ export const ArticleMetadataCard: React.FC<Props> = ({
             articleText={abstract.slice(0, shortCharacters)}
             articleUrl={pdfLink}
             toggleSimilarArticles={toggleSimilarArticles}
-            hasEmbeddingsButton={(similarArticlesEnabled || summaryEnabled) && !isEmbeddingsLoading && !hasEmbeddings}
           />
         </CardFooter>
       ) : null}
