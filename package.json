@@ -10,7 +10,7 @@
     "postinstall": "npx prisma generate",
     "trigger:dev:start": "npx @trigger.dev/cli@latest dev",
     "trigger:dev:start:v3": "npx trigger.dev@beta dev",
-    "deploy:trigger-prod": "npx trigger.dev@3.0.0-beta.44 deploy",
+    "deploy:trigger-prod": "npx trigger.dev@3.0.0-beta.48 deploy",
     "test": "jest"
   },
   "dependencies": {
@@ -35,9 +35,9 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.1",
-    "@trigger.dev/nextjs": "3.0.0-beta.44",
-    "@trigger.dev/react": "3.0.0-beta.44",
-    "@trigger.dev/sdk": "3.0.0-beta.44",
+    "@trigger.dev/nextjs": "3.0.0-beta.48",
+    "@trigger.dev/react": "3.0.0-beta.48",
+    "@trigger.dev/sdk": "3.0.0-beta.48",
     "@upstash/redis": "^1.31.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
