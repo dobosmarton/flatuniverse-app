@@ -24,21 +24,22 @@ const isJsonString = (str: string) => {
  * @param {Function} keyExtractor A function that extracts the cache key from the input parameters.
  * @param {z.Schema} schema The schema to validate the cached data against.
  * @param {SetCommandOptions} [options] Optional options for the Redis SET command.
+ * @param {Function} [skipCache] Optional function that determines whether to skip caching the result.
  * @returns {Function} The cacheable function.
  */
 export const cacheableFunction = <T, R>(
-  keyExtractor: (params: T) => string,
+  keyExtractor: (params: T) => string | Promise<string>,
   schema: z.Schema,
   options?: SetCommandOptions,
-  skipCache?: (result: R, props: T) => boolean
-) => {
+  skipCache?: (result: R, props: T) => boolean | Promise<boolean>
+): ((fn: (props: T) => Promise<R>) => (props: T) => Promise<R>) => {
   return (fn: (props: T) => Promise<R>) => {
     return async (props: T): Promise<R> => {
-      const key = keyExtractor(props);
+      const key = await keyExtractor(props);
 
       const cached = await client.get<string>(key);
 
-      if (cached) {
+      if (cached !== null) {
         const parsedValue = isJsonString(cached) ? JSON.parse(cached) : cached;
 
         const parsed = schema.safeParse(parsedValue);
@@ -51,8 +52,11 @@ export const cacheableFunction = <T, R>(
 
       const result = await fn(props);
 
-      if (skipCache && skipCache(result, props)) {
-        return result;
+      if (skipCache) {
+        const shouldSkip = await skipCache(result, props);
+        if (shouldSkip) {
+          return result;
+        }
       }
 
       const bytes = byteSize(JSON.stringify(result));

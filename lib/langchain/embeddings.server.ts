@@ -5,7 +5,7 @@ import { Document } from '@langchain/core/documents';
 import { PDFMetadata } from './types';
 import * as redis from '../redis';
 import * as logger from '../logger';
-import { researchArticleIndex } from '../pinecone';
+import { createPineconeId, researchArticleIndex } from '../pinecone';
 
 const openAIEmbeddings = new OpenAIEmbeddings({ dimensions: 1536, model: 'text-embedding-3-large' });
 
@@ -18,8 +18,11 @@ const addVectors = async (
       const documentMetadata = documents[idx].metadata;
 
       return {
-        id: `${documentMetadata.article.metadata_id}#${documentMetadata.loc.pageNumber}`,
+        id: createPineconeId(documentMetadata.article.metadata_id, documentMetadata.loc.pageNumber),
         values: vector,
+        metadata: {
+          metadataId: documentMetadata.article.metadata_id,
+        },
       };
     })
   );
@@ -36,7 +39,8 @@ export const addNewEmbeddings = async (metadataId: string, docs: Document<PDFMet
 
     await redis.revalidateKeys(
       redis.keys.hasEmbeddingsForArticle(metadataId),
-      redis.keys.metadataEmbeddingItems(metadataId)
+      redis.keys.metadataEmbeddingItems(metadataId),
+      redis.keys.metadataPineconeEmbeddingItems(metadataId)
     );
   } catch (error) {
     logger.error('Error in embeddings chain:', error);

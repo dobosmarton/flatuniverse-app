@@ -78,19 +78,7 @@ client.defineJob({
       return { resumptionToken: parsedData.resumptionToken, records: metadata };
     });
 
-    //let batches: AddArticleMetadaBatch[] = [];
     for (let i = 0; i < parsedData.records.length; ) {
-      /* batches.push({
-        name: Events.add_article_metadata_batch,
-        context: {
-          jobId: ctx.event.context?.jobId,
-        },
-        payload: {
-          batchIndex: i,
-          batch,
-        },
-      }); */
-
       try {
         // send the batch to the add_article_metadata_batch event
         // no need to wait for the result
@@ -115,8 +103,6 @@ client.defineJob({
 
       i += batchSize;
     }
-
-    // io.sendEvents(`${Events.add_article_metadata_batch}-${ctx.event.context.jobId}`, batches);
 
     const token = getResumptionToken(parsedData.resumptionToken, parsedData.records.length);
 

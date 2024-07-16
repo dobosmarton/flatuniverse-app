@@ -7,7 +7,7 @@ import { generateEmbeddingsFromPdf } from '@/trigger/ai';
 type Params = { params: { id: string } };
 
 const generateEmbeddingAsync = redis.cacheableFunction<string, { id: string }>(
-  (metadataId) => redis.keys.generateEmbeddingForItem(metadataId),
+  redis.keys.generateEmbeddingForItem,
   redis.asyncEmbeddingGenerationSchema,
   { ex: 60 * 60 }
 )(async (metadataId) =>
@@ -23,7 +23,7 @@ const getSimilarArticlesByMetadataId: NextRouteFunction<Params> = async (_, { pa
   if (!embeddingResult.length) {
     await generateEmbeddingAsync(params.id);
 
-    return Response.json({ data: [] }, { status: 404 });
+    return Response.json({ data: [] }, { headers: { 'Retry-After': '5' }, status: 200 });
   }
 
   const similarArticles = await similarityService.getSimilarByEmbedding({

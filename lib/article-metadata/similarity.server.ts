@@ -1,18 +1,13 @@
 'use server';
 
 import { Prisma } from '@prisma/client';
+import { PineconeRecord } from '@pinecone-database/pinecone';
 import { similaritySearch } from '../langchain/similarity.server';
 import { prismaClient } from '../prisma';
-import { SimilarityResult } from '../langchain/types';
-import { EmbeddingData, embeddingDataSchema } from './schema';
 import * as redis from '../redis';
 import { GetSimilarByEmbeddingParams, GetSimilarIdsByEmbeddingVectorParams } from './types';
-
-type QueryResult = {
-  id: string;
-  metadata_id: string;
-  embedding: string;
-};
+import { researchArticleIndex } from '../pinecone';
+import { SimilarityResult } from '../langchain/types';
 
 /**
  * Aggregates similar items and returns a list of unique metadata IDs.
@@ -21,34 +16,48 @@ type QueryResult = {
  * @param maxItemNum - The maximum number of items to return. Defaults to 3.
  * @returns An array of unique metadata IDs.
  */
-const aggregateSimilarItems = (similarItems: SimilarityResult[][], maxItemNum = 3) => {
-  const metadataIds = similarItems.flatMap((items) => items).map((item) => item.metadata_id);
-
-  return Array.from(new Set<string>(metadataIds)).slice(0, maxItemNum);
-};
+const aggregateSimilarItems = (similarItems: SimilarityResult[], maxItemNum = 3) =>
+  Array.from(new Set(similarItems.flatMap(({ similarItems }) => similarItems.flat(2)))).slice(0, maxItemNum);
 
 /**
  * Retrieves embeddings by metadata ID.
  * @param metadataId - The ID of the metadata.
  * @returns A promise that resolves to an array of EmbeddingResult.
  */
-const _getEmbeddingsByMetadataId = async (metadataId: string): Promise<EmbeddingData> => {
-  const results = await prismaClient.$queryRaw<QueryResult[]>`
-        SELECT id, metadata_id, embedding FROM "public"."research_article_embedding"
-        WHERE metadata_id = ${metadataId};
-  `;
+const _getEmbeddingsByMetadataId = async (metadataId: string): Promise<PineconeRecord[]> => {
+  let idList: string[] = [];
+  let paginationToken: string | undefined = undefined;
 
-  if (results.length === 0) {
+  do {
+    const { vectors, pagination } = await researchArticleIndex.listPaginated({
+      prefix: `${metadataId}#`,
+      paginationToken,
+    });
+
+    if (!vectors?.length) {
+      break;
+    }
+
+    idList = idList.concat(
+      vectors.map((vector) => vector.id).filter((vectorId): vectorId is string => Boolean(vectorId))
+    );
+    paginationToken = pagination?.next;
+  } while (paginationToken);
+
+  if (!idList.length) {
     return [];
   }
 
-  return embeddingDataSchema.parse(results);
+  const result = await researchArticleIndex.fetch(idList);
+
+  return Object.values(result.records);
 };
 
-export const getEmbeddingsByMetadataId = redis.cacheableFunction<string, EmbeddingData>(
-  (metadataId) => redis.keys.metadataEmbeddingItems(metadataId),
+export const getEmbeddingsByMetadataId = redis.cacheableFunction<string, redis.EmbeddingData>(
+  redis.keys.metadataPineconeEmbeddingItems,
   redis.embeddingCacheSchema,
-  { ex: 1800 }
+  // Cache for 1 day
+  { ex: 60 * 60 * 24 }
 )(_getEmbeddingsByMetadataId);
 
 /**
@@ -73,7 +82,7 @@ const _getSimilarIdsByEmbeddingVector = async (props: GetSimilarIdsByEmbeddingVe
 export const getSimilarIdsByEmbeddingVector = redis.cacheableFunction<GetSimilarIdsByEmbeddingVectorParams, string[]>(
   ({ metadataId }) => redis.keys.metadataSimilarIds(metadataId),
   redis.similarIdsCacheSchema,
-  { ex: 60 },
+  { ex: 60 * 60 * 24 },
   (result) => result.length === 0
 )(_getSimilarIdsByEmbeddingVector);
 
@@ -82,11 +91,12 @@ export const getSimilarIdsByEmbeddingVector = redis.cacheableFunction<GetSimilar
  * @param metadataId - The ID of the metadata to find similar articles for.
  * @param embedding - The embedding data used to find similar articles.
  * @returns A Promise that resolves to an array of similar article metadata.
+ * @todo Cache the result.
  */
 export const getSimilarByEmbedding = async (props: GetSimilarByEmbeddingParams) => {
   const similarIds = await getSimilarIdsByEmbeddingVector({
     metadataId: props.metadataId,
-    embeddingVectorList: props.embedding.map((item) => item.embedding),
+    embeddingVectorList: props.embedding.map((item) => item.values),
   });
 
   if (similarIds.length === 0) {

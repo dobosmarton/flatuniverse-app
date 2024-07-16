@@ -8,13 +8,7 @@ export type PDFMetadata<T> = {
   article: T;
 };
 
-export type SimilarityModel = {
-  _distance: number | null;
-  id: string;
-  metadata_id: string;
-};
-
 export type SimilarityResult = {
-  id: string;
-  metadata_id: string;
+  metadataId: string;
+  similarItems: string[];
 };

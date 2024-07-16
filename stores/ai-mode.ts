@@ -9,7 +9,7 @@ export type AIModeSlice = {
 };
 
 export const createAIModeSlice: StateCreator<Store, [], [], AIModeSlice> = (set) => ({
-  similarArticlesEnabled: false,
+  similarArticlesEnabled: true,
   summaryEnabled: false,
   setSimilarArticlesEnabled: (similarArticlesEnabled: boolean) => set({ similarArticlesEnabled }),
   setSummaryEnabled: (summaryEnabled: boolean) => set({ summaryEnabled }),

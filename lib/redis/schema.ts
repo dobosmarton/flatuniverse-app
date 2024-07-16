@@ -3,8 +3,7 @@ import { z } from 'zod';
 export const embeddingCacheSchema = z.array(
   z.object({
     id: z.string(),
-    metadata_id: z.string(),
-    embedding: z.array(z.number()),
+    values: z.array(z.number()),
   })
 );
 
@@ -23,3 +22,5 @@ export const authorsByArticleCacheSchema = z.array(
 );
 
 export const hasEmbeddingsForArticleSchema = z.boolean();
+
+export type EmbeddingData = z.infer<typeof embeddingCacheSchema>;

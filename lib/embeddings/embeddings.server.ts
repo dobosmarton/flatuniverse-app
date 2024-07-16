@@ -1,21 +1,20 @@
 'use server';
 
 import { Prisma } from '@prisma/client';
-import { prismaClient } from '../prisma';
 import * as redis from '../redis';
+import { researchArticleIndex } from '../pinecone';
 
 export const _hasEmbeddingsForArticle = async (articleMetadataId: string) => {
-  const result = await prismaClient.research_article_embedding.count({
-    where: {
-      metadata_id: articleMetadataId,
-    },
+  const result = await researchArticleIndex.listPaginated({
+    prefix: `${articleMetadataId}#`,
+    limit: 1,
   });
 
-  return result > 0;
+  return Boolean(result.vectors?.length);
 };
 
 export const hasEmbeddingsForArticle = redis.cacheableFunction<string, boolean>(
-  (metadataId) => redis.keys.hasEmbeddingsForArticle(metadataId),
+  redis.keys.hasEmbeddingsForArticle,
   redis.hasEmbeddingsForArticleSchema,
   { ex: 3600 }
 )(_hasEmbeddingsForArticle);
