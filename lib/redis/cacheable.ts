@@ -3,7 +3,8 @@ import { SetCommandOptions } from '@upstash/redis';
 import * as logger from '@/lib/logger';
 import { client } from './client';
 
-const cacheMaxBytes = 3000000;
+// Maximum cache size in bytes (1MB)
+const cacheMaxBytes = 1024 ** 2;
 
 const byteSize = (str: string) => new Blob([str]).size;
 
@@ -64,9 +65,14 @@ export const cacheableFunction = <T, R>(
         logger.log(`Result too large to cache key: ${key}, size: ${bytes / 1024 ** 2} bytes`);
         return result;
       }
-
-      await client.set(key, JSON.stringify(result), options);
-      return result;
+      try {
+        await client.set(key, JSON.stringify(result), options);
+        return result;
+      } catch (error) {
+        logger.error(`Error caching function: ${JSON.stringify(error, null, 2)}`);
+        // Ignore caching errors and return the result
+        return result;
+      }
     };
   };
 };
