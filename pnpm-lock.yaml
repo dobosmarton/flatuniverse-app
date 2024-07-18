@@ -72,14 +72,14 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trigger.dev/nextjs':
-        specifier: 3.0.0-beta.48
-        version: 3.0.0-beta.48(@trigger.dev/sdk@3.0.0-beta.48(typescript@5.5.2))(next@14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: 3.0.0-beta.49
+        version: 3.0.0-beta.49(@trigger.dev/sdk@3.0.0-beta.49(typescript@5.5.2))(next@14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@trigger.dev/react':
-        specifier: 3.0.0-beta.48
-        version: 3.0.0-beta.48(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 3.0.0-beta.49
+        version: 3.0.0-beta.49(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.48
-        version: 3.0.0-beta.48(typescript@5.5.2)
+        specifier: 3.0.0-beta.49
+        version: 3.0.0-beta.49(typescript@5.5.2)
       '@upstash/redis':
         specifier: ^1.31.6
         version: 1.31.6
@@ -2083,28 +2083,28 @@ packages:
       react-native:
         optional: true
 
-  '@trigger.dev/core-backend@3.0.0-beta.48':
-    resolution: {integrity: sha512-+xaB8J8pWYtyj1g9Vrzm3C+hXHiUgzs7ZVFnPgC7oXDZZFqrtLFXIgGMDzOYdcokqHTqh9al1S8LwMY+XbtNzg==}
+  '@trigger.dev/core-backend@3.0.0-beta.49':
+    resolution: {integrity: sha512-9t+53K+SAsU1yI3gVc5YXe0CxOqND4zA2+w/1IyqeOLQc5YKpAw1TvG97uwTpFxP0Sg5vP5hc7DtHcf0LMh1JQ==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core@3.0.0-beta.48':
-    resolution: {integrity: sha512-LlKMlMIvsDhFng1/wtNVokcnZxEFbI9ro4/MgEg9hZcYaqTcxrmAZAEKxEdCIvEPt64bPMYbok8DGp85IbYvQw==}
+  '@trigger.dev/core@3.0.0-beta.49':
+    resolution: {integrity: sha512-PERKKDH/338+g5wWfiE/wTEBuPL7WbBv6x38w5q6wVfoGrbVYwILcek/1GRdu2zLV2G7jQR0AxT88WcddZdTmA==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/nextjs@3.0.0-beta.48':
-    resolution: {integrity: sha512-cKv2+0aX7RYeDxs/qiVqQmZVb4WP2OpW89aDa4SLTMdZjYJXo8HY4AvxGgQwHSxiuDfmPMPmT0AfjJ0RzS0kTw==}
+  '@trigger.dev/nextjs@3.0.0-beta.49':
+    resolution: {integrity: sha512-NfTjk6pNL/ib8fTbeNvwyjIu5WDCghi9t9DHXywbvI+y0UvX7ozAt3PMmNgh1nvlcZpx7U1LKjzZIEUv3/vZQA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@trigger.dev/sdk': ^3.0.0-beta.48
+      '@trigger.dev/sdk': ^3.0.0-beta.49
       next: '>=12.0.0'
 
-  '@trigger.dev/react@3.0.0-beta.48':
-    resolution: {integrity: sha512-/hV5goVFoMdyEpPUzFiq6igvL94oj85m9/Li/0byARaY7qBxLhiA3lGVPcHscEh8XJ1UweQhnvz7q2bj7WQ6ew==}
+  '@trigger.dev/react@3.0.0-beta.49':
+    resolution: {integrity: sha512-/pjEBwjRuPAcbC9+RxRsJl9gJp5oECokK5glEp6eZmIlBcWIW73aZkLhycWZSXXKLBlghRt+19sBYmeOW5Kaww==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18
 
-  '@trigger.dev/sdk@3.0.0-beta.48':
-    resolution: {integrity: sha512-J0MfpD9KfWZsoCfM1jRS8eOB8AQ3OaQen3iWFdtU38TSUXmwcs26DLWdCm+F59BzY3bMc8udLdnHPBM9nR9+Qg==}
+  '@trigger.dev/sdk@3.0.0-beta.49':
+    resolution: {integrity: sha512-tanKLxm7YdAJMeWXoIEQ4ixtrOZfwSuNic9Oj2FQiP+Gn6JByKP/VrcaVdTETDGDWJ4oRnRIBWnH9nD8O87B5g==}
     engines: {node: '>=18.0.0'}
 
   '@tsconfig/node10@1.0.11':
@@ -6851,11 +6851,11 @@ snapshots:
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
 
-  '@trigger.dev/core-backend@3.0.0-beta.48':
+  '@trigger.dev/core-backend@3.0.0-beta.49':
     dependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@trigger.dev/core@3.0.0-beta.48':
+  '@trigger.dev/core@3.0.0-beta.49':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
       '@opentelemetry/api': 1.9.0
@@ -6881,18 +6881,18 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/nextjs@3.0.0-beta.48(@trigger.dev/sdk@3.0.0-beta.48(typescript@5.5.2))(next@14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@trigger.dev/nextjs@3.0.0-beta.49(@trigger.dev/sdk@3.0.0-beta.49(typescript@5.5.2))(next@14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@trigger.dev/sdk': 3.0.0-beta.48(typescript@5.5.2)
+      '@trigger.dev/sdk': 3.0.0-beta.49(typescript@5.5.2)
       debug: 4.3.5
       next: 14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@trigger.dev/react@3.0.0-beta.48(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@trigger.dev/react@3.0.0-beta.49(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/react-query': 5.0.0-beta.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@trigger.dev/core': 3.0.0-beta.48
+      '@trigger.dev/core': 3.0.0-beta.49
       debug: 4.3.5
       react: 18.3.1
       zod: 3.22.3
@@ -6903,13 +6903,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/sdk@3.0.0-beta.48(typescript@5.5.2)':
+  '@trigger.dev/sdk@3.0.0-beta.49(typescript@5.5.2)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.48.0
       '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.0.0-beta.48
-      '@trigger.dev/core-backend': 3.0.0-beta.48
+      '@trigger.dev/core': 3.0.0-beta.49
+      '@trigger.dev/core-backend': 3.0.0-beta.49
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.5
