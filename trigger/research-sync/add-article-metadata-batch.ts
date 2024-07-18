@@ -20,6 +20,8 @@ export const addArticleMetadaBatch = task({
       return;
     }
 
+    logger.info(`Added metadata count: ${newIds.length}`, { time: new Date().toISOString() });
+
     await generateAIContent.trigger(
       { data: newIds.map((id) => ({ externalId: id })), jobId: payload.jobId },
       { idempotencyKey: `generate-ai-content-${payload.jobId}-${payload.batchIndex}` }

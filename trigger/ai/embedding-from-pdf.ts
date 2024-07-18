@@ -17,6 +17,10 @@ export const generateEmbeddingsFromPdf = task({
       throw new Error(`PDF not found for metadata id: ${payload.id}`);
     }
 
+    logger.info(`PDF file loaded successfully! Length: ${pdfDocs.output.doc.length}, jobId: ${payload.jobId}`, {
+      time: new Date().toISOString(),
+    });
+
     await generateEmbedding.trigger(
       { itemId: payload.id, doc: pdfDocs.output.doc, jobId: payload.jobId },
       { idempotencyKey: `generate-metadata-embedding-${payload.jobId}-${payload.id}` }

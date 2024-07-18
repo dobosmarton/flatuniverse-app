@@ -16,11 +16,18 @@ export const generateAIContent = task({
       time: new Date().toISOString(),
     });
 
-    await generateEmbeddingsFromPdf.batchTrigger(
+    const result = await generateEmbeddingsFromPdf.batchTrigger(
       metadataList.map((item) => ({
         payload: { id: item.id, externalId: item.external_id, jobId: payload.jobId },
         options: { idempotencyKey: `generate-embedding-from-pdf-${payload.jobId}-${item.id}` },
       }))
+    );
+
+    logger.info(
+      `Triggered embeddings generation: ${result.batchId}, ids: ${result.runs.map((run) => run.id).join(',')} - Done`,
+      {
+        time: new Date().toISOString(),
+      }
     );
   },
 });

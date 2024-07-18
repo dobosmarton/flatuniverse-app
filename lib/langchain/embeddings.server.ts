@@ -39,8 +39,8 @@ export const addNewEmbeddings = async (metadataId: string, docs: Document<PDFMet
 
     await redis.revalidateKeys(
       redis.keys.hasEmbeddingsForArticle(metadataId),
-      redis.keys.metadataEmbeddingItems(metadataId),
-      redis.keys.metadataPineconeEmbeddingItems(metadataId)
+      redis.keys.metadataPineconeEmbeddingItems(metadataId),
+      redis.keys.metadataSimilarIds(metadataId)
     );
   } catch (error) {
     logger.error('Error in embeddings chain:', error);
