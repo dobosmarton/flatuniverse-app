@@ -32,6 +32,9 @@ importers:
       '@prisma/client':
         specifier: 5.16.1
         version: 5.16.1(prisma@5.16.1)
+      '@prisma/instrumentation':
+        specifier: ^5.20.0
+        version: 5.20.0
       '@radix-ui/react-avatar':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -71,6 +74,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@trigger.dev/build':
+        specifier: ^3.0.12
+        version: 3.0.12(typescript@5.5.2)
       '@trigger.dev/nextjs':
         specifier: 3.0.12
         version: 3.0.12(@trigger.dev/sdk@3.0.12)(next@14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -1342,6 +1348,9 @@ packages:
   '@prisma/get-platform@5.16.1':
     resolution: {integrity: sha512-R4IKnWnMkR2nUAbU5gjrPehdQYUUd7RENFD2/D+xXTNhcqczp0N+WEGQ3ViyI3+6mtVcjjNIMdnUTNyu3GxIgA==}
 
+  '@prisma/instrumentation@5.20.0':
+    resolution: {integrity: sha512-SHaI+3F4mu879fuD19qXKZGv+scgUOnFjX29/KFVwURpjz7trq3yfz91rwZaFuN4IAqUKJNcqEt4UOzoFHWklw==}
+
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
 
@@ -1987,6 +1996,10 @@ packages:
       react-native:
         optional: true
 
+  '@trigger.dev/build@3.0.12':
+    resolution: {integrity: sha512-tI0Y1bDntETHy30L3UKHWfJR2bvQ67Mvpum80kF34UwuPY/gMG5Zn9jkgWBW/vKAsYNn335KAwuEL2gDV2Z8bg==}
+    engines: {node: '>=18.20.0'}
+
   '@trigger.dev/core@3.0.12':
     resolution: {integrity: sha512-ErN70xGBLSXLEdjn/Q2BVKSqy5FMpue+7B1MT2ZCGD3jMu1vYnlDzVp847Au47cdQ5GoFSv3n1DteBLd3eDiBg==}
     engines: {node: '>=18.20.0'}
@@ -2472,6 +2485,9 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
+  confbox@0.1.8:
+    resolution: {integrity: sha512-RMtmw0iFkeR4YV+fUOSucriAQNb9g8zFR52MWCtl+cCZOFRNL6zeB395vPzFhEjjn4fMxXudmELnl/KF/WrK6w==}
+
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
@@ -2861,6 +2877,14 @@ packages:
 
   fb-watchman@2.0.2:
     resolution: {integrity: sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==}
+
+  fdir@6.4.0:
+    resolution: {integrity: sha512-3oB133prH1o4j/L5lLW7uOCF1PlD+/It2L0eL/iAqWMB91RBbqTewABqxhj0ibBd90EEmWZq7ntIWzVaWcXTGQ==}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
 
   fflate@0.4.8:
     resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
@@ -3940,6 +3964,9 @@ packages:
   ml-tree-similarity@1.0.0:
     resolution: {integrity: sha512-XJUyYqjSuUQkNQHMscr6tcjldsOoAekxADTplt40QKfwW6nd++1wHWV9AArl0Zvw/TIHgNaZZNvr8QGvE8wLRg==}
 
+  mlly@1.7.2:
+    resolution: {integrity: sha512-tN3dvVHYVz4DhSXinXIk7u9syPYaJvio118uomkovAtWBT+RdbP6Lfh/5Lvo519YMmwBafwlh20IPTXIStscpA==}
+
   module-details-from-path@1.0.3:
     resolution: {integrity: sha512-ySViT69/76t8VhE1xXHK6Ch4NcDd26gx0MzKXLO+F7NOtnqH68d9zF94nT8ZWSxXh8ELOERsnJO/sWt1xZYw5A==}
 
@@ -4173,6 +4200,9 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
+  pathe@1.1.2:
+    resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
+
   pdf-parse@1.1.1:
     resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
     engines: {node: '>=6.8.1'}
@@ -4203,6 +4233,10 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
+  picomatch@4.0.2:
+    resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
+    engines: {node: '>=12'}
+
   pify@2.3.0:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
@@ -4214,6 +4248,9 @@ packages:
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
+
+  pkg-types@1.2.1:
+    resolution: {integrity: sha512-sQoqa8alT3nHjGuTjuKgOnvjo4cljkufdtLMnO2LBP/wRwuDlo1tkaEdMxCRhyGRPacv/ztlZgDPm2b7FAmEvw==}
 
   possible-typed-array-names@1.0.0:
     resolution: {integrity: sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==}
@@ -4729,6 +4766,10 @@ packages:
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
 
+  tinyglobby@0.2.9:
+    resolution: {integrity: sha512-8or1+BGEdk1Zkkw2ii16qSS7uVrQJPre5A9o/XkWPATkk23FZh/15BKFxPnlTy6vkljZxLqYCzzBMj30ZrSvjw==}
+    engines: {node: '>=12.0.0'}
+
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
 
@@ -4768,6 +4809,16 @@ packages:
 
   tsafe@1.7.2:
     resolution: {integrity: sha512-dAPfQLhCfCRre5qs+Z5Q2a7s2CV7RxffZUmvj7puGaePYjECzWREJFd3w4XSFe/T5tbxgowfItA/JSSZ6Ma3dA==}
+
+  tsconfck@3.1.3:
+    resolution: {integrity: sha512-ulNZP1SVpRDesxeMLON/LtWM8HIgAJEIVpVVhBM6gsmvQ8+Rh+ZG7FWGvHh7Ah3pRABwVJWklWCr/BTZSv0xnQ==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
@@ -4816,6 +4867,9 @@ packages:
     resolution: {integrity: sha512-NcRtPEOsPFFWjobJEtfihkLCZCXZt/os3zf8nTxjVH3RvTSxjrCamJpbExGvYOF+tFHc3pA65qpdwPbzjohhew==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  ufo@1.5.4:
+    resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
 
   ulid@2.3.0:
     resolution: {integrity: sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw==}
@@ -5604,7 +5658,7 @@ snapshots:
       flat: 5.0.2
       js-yaml: 4.1.0
       langchain: 0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1)
-      langsmith: 0.1.32(@langchain/core@0.2.9(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
+      langsmith: 0.1.32(@langchain/core@0.2.9(langchain@0.2.6(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
       uuid: 9.0.1
       zod: 3.23.8
       zod-to-json-schema: 3.23.1(zod@3.23.8)
@@ -5632,7 +5686,7 @@ snapshots:
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.12
-      langsmith: 0.1.32(@langchain/core@0.2.9(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
+      langsmith: 0.1.32(@langchain/core@0.2.9(langchain@0.2.6(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
       ml-distance: 4.0.1
       mustache: 4.2.0
       p-queue: 6.6.2
@@ -5969,6 +6023,14 @@ snapshots:
   '@prisma/get-platform@5.16.1':
     dependencies:
       '@prisma/debug': 5.16.1
+
+  '@prisma/instrumentation@5.20.0':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/instrumentation': 0.52.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
+    transitivePeerDependencies:
+      - supports-color
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -6596,6 +6658,18 @@ snapshots:
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
 
+  '@trigger.dev/build@3.0.12(typescript@5.5.2)':
+    dependencies:
+      '@trigger.dev/core': 3.0.12
+      pkg-types: 1.2.1
+      tinyglobby: 0.2.9
+      tsconfck: 3.1.3(typescript@5.5.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+
   '@trigger.dev/core@3.0.12':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
@@ -7198,6 +7272,8 @@ snapshots:
 
   concat-map@0.0.1: {}
 
+  confbox@0.1.8: {}
+
   convert-source-map@2.0.0: {}
 
   copy-anything@3.0.5:
@@ -7777,6 +7853,10 @@ snapshots:
   fb-watchman@2.0.2:
     dependencies:
       bser: 2.1.1
+
+  fdir@6.4.0(picomatch@4.0.2):
+    optionalDependencies:
+      picomatch: 4.0.2
 
   fflate@0.4.8: {}
 
@@ -8566,7 +8646,7 @@ snapshots:
       js-yaml: 4.1.0
       jsonpointer: 5.0.1
       langchainhub: 0.0.11
-      langsmith: 0.1.32(@langchain/core@0.2.9(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
+      langsmith: 0.1.32(@langchain/core@0.2.9(langchain@0.2.6(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
       ml-distance: 4.0.1
       openapi-types: 12.1.3
       p-retry: 4.6.2
@@ -8616,7 +8696,7 @@ snapshots:
 
   langchainhub@0.0.11: {}
 
-  langsmith@0.1.32(@langchain/core@0.2.9(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)):
+  langsmith@0.1.32(@langchain/core@0.2.9(langchain@0.2.6(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)))(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13)):
     dependencies:
       '@types/uuid': 9.0.8
       commander: 10.0.1
@@ -8624,7 +8704,7 @@ snapshots:
       p-retry: 4.6.2
       uuid: 9.0.1
     optionalDependencies:
-      '@langchain/core': 0.2.9(langchain@0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
+      '@langchain/core': 0.2.9(langchain@0.2.6(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1))(openai@4.52.0(encoding@0.1.13))
       langchain: 0.2.3(@pinecone-database/pinecone@2.2.2)(axios@1.7.2)(encoding@0.1.13)(fast-xml-parser@4.4.0)(ignore@5.3.1)(openai@4.52.0(encoding@0.1.13))(pdf-parse@1.1.1)(ws@8.17.1)
       openai: 4.52.0(encoding@0.1.13)
 
@@ -8756,6 +8836,13 @@ snapshots:
     dependencies:
       binary-search: 1.3.6
       num-sort: 2.1.0
+
+  mlly@1.7.2:
+    dependencies:
+      acorn: 8.12.1
+      pathe: 1.1.2
+      pkg-types: 1.2.1
+      ufo: 1.5.4
 
   module-details-from-path@1.0.3: {}
 
@@ -8987,6 +9074,8 @@ snapshots:
 
   path-type@4.0.0: {}
 
+  pathe@1.1.2: {}
+
   pdf-parse@1.1.1:
     dependencies:
       debug: 3.2.7
@@ -9016,6 +9105,8 @@ snapshots:
 
   picomatch@2.3.1: {}
 
+  picomatch@4.0.2: {}
+
   pify@2.3.0: {}
 
   pirates@4.0.6: {}
@@ -9023,6 +9114,12 @@ snapshots:
   pkg-dir@4.2.0:
     dependencies:
       find-up: 4.1.0
+
+  pkg-types@1.2.1:
+    dependencies:
+      confbox: 0.1.8
+      mlly: 1.7.2
+      pathe: 1.1.2
 
   possible-typed-array-names@1.0.0: {}
 
@@ -9576,6 +9673,11 @@ snapshots:
     dependencies:
       any-promise: 1.3.0
 
+  tinyglobby@0.2.9:
+    dependencies:
+      fdir: 6.4.0(picomatch@4.0.2)
+      picomatch: 4.0.2
+
   tmpl@1.0.5: {}
 
   to-fast-properties@2.0.0: {}
@@ -9611,6 +9713,10 @@ snapshots:
       yn: 3.1.1
 
   tsafe@1.7.2: {}
+
+  tsconfck@3.1.3(typescript@5.5.2):
+    optionalDependencies:
+      typescript: 5.5.2
 
   tsconfig-paths@3.15.0:
     dependencies:
@@ -9671,6 +9777,8 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   typescript@5.5.2: {}
+
+  ufo@1.5.4: {}
 
   ulid@2.3.0: {}
 

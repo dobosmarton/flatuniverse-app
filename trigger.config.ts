@@ -1,4 +1,6 @@
 import type { TriggerConfig } from '@trigger.dev/sdk/v3';
+import { prismaExtension } from '@trigger.dev/build/extensions/prisma';
+// import { PrismaInstrumentation } from '@prisma/instrumentation';
 
 export const config: TriggerConfig = {
   project: 'proj_ryemeoftoazpidlndtjl',
@@ -13,9 +15,13 @@ export const config: TriggerConfig = {
       randomize: true,
     },
   },
-  triggerDirectories: ['./trigger'],
-  // using the default path
-  additionalFiles: ['./prisma/schema.prisma'],
-
-  additionalPackages: ['prisma@5.x'],
+  build: {
+    extensions: [
+      prismaExtension({
+        schema: './prisma/schema.prisma',
+      }),
+    ],
+  },
+  dirs: ['./trigger'],
+  //instrumentations: [new PrismaInstrumentation()],
 };
