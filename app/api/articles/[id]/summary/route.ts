@@ -1,6 +1,6 @@
 import { NextRouteFunction } from '@/lib/route-validator.server';
-import { loadPDF } from '@/lib/langchain/file-reader.server';
-import { getSummaryByDocuments } from '@/lib/langchain/summarization.server';
+import { loadPDF } from '@/lib/file-handlers';
+import { getSummaryByDocuments } from '@/lib/embeddings/summarization.server';
 import * as articleService from '@/lib/article-metadata/metadata.server';
 import * as logger from '@/lib/logger';
 
@@ -19,11 +19,11 @@ const getSummary: NextRouteFunction<Params> = async (_, { params }) => {
     return Response.json('Article not found', { status: 404 });
   }
 
-  const pdfDocs = await loadPDF(pdfLink, { metadata_id: params.id });
+  const pdfNodes = await loadPDF(pdfLink, { metadata_id: params.id });
 
   logger.log('PDF file loaded successfully!');
 
-  const generatedSummary = await getSummaryByDocuments(pdfDocs);
+  const generatedSummary = await getSummaryByDocuments(pdfNodes);
 
   logger.log('Summary generated successfully!', generatedSummary);
 
