@@ -14,6 +14,11 @@ const nextConfig = {
   },
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
+  experimental: {
+    outputFileTracingIncludes: {
+      '/api/**/*': ['./node_modules/**/*.wasm'],
+    },
+  },
 };
 
 export default nextConfig;
