@@ -4,14 +4,14 @@ This project is an AI-powered research assistant designed to help users efficien
 
 ## Main Technologies
 
-- **Next.js**: A React framework for building server-side rendered and statically generated web applications.
-- **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
-- **Prisma**: An open-source database toolkit for Node.js and TypeScript.
-- **LlamaIndex**: A data framework for LLM-based applications to ingest, structure, and access private or domain-specific data.
-- **Shadcn/UI**: A collection of re-usable components built with Radix UI and Tailwind CSS, providing accessible and customizable UI elements.
-- **Trigger.dev**: A platform for building and managing background jobs and workflows.
-- **Pinecone**: A vector database for storing and searching high-dimensional vectors, ideal for semantic search and AI applications.
-- **Sequin**: A tool that syncs your production database to a Postgres database, enabling real-time data access and analysis.
+- [Next.js](https://nextjs.org/): A React framework for building server-side rendered and statically generated web applications.
+- [TypeScript](https://www.typescriptlang.org/): A typed superset of JavaScript that compiles to plain JavaScript.
+- [Prisma](https://www.prisma.io/): An open-source database toolkit for Node.js and TypeScript.
+- [LlamaIndex](https://ts.llamaindex.ai/): A data framework for LLM-based applications to ingest, structure, and access private or domain-specific data.
+- [Shadcn/UI](https://ui.shadcn.com/): A collection of re-usable components built with Radix UI and Tailwind CSS, providing accessible and customizable UI elements.
+- [Trigger.dev](https://trigger.dev/): A platform for building and managing background jobs and workflows.
+- [Pinecone](https://www.pinecone.io/): A vector database for storing and searching high-dimensional vectors, ideal for semantic search and AI applications.
+- [Sequin](https://sequinstream.com/): Sequin is a tool for capturing changes and streaming data out of your Postgres database.
 
 ## Key Functionalities
 
