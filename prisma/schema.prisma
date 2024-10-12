@@ -13,6 +13,8 @@ model author {
   id                    String                       @id @default(uuid())
   name                  String                       @unique
   article_metadata_list article_metadata_to_author[]
+
+  @@index([name])
 }
 
 model link {
@@ -23,6 +25,8 @@ model link {
   type                  String?
   created_at            DateTime                   @default(now())
   article_metadata_list article_metadata_to_link[]
+
+  @@index([href])
 }
 
 model category {
@@ -31,6 +35,8 @@ model category {
   full_name             String
   group_name            String
   article_metadata_list article_metadata_to_category[]
+
+  @@index([group_name, short_name])
 }
 
 model article_metadata {
@@ -51,6 +57,8 @@ model article_metadata {
 
   @@index([slug])
   @@index([updated])
+  @@index([published])
+  @@index([title, abstract, published, external_id])
 }
 
 model article_metadata_to_author {
@@ -61,6 +69,8 @@ model article_metadata_to_author {
   updated_at          DateTime         @default(now()) @updatedAt
   article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
   author              author           @relation(fields: [author_id], references: [id])
+
+  @@index([article_metadata_id, author_id])
 }
 
 model article_metadata_to_category {
@@ -72,6 +82,8 @@ model article_metadata_to_category {
   updated_at          DateTime         @default(now()) @updatedAt
   article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
   category            category         @relation(fields: [category_id], references: [id])
+
+  @@index([article_metadata_id, category_id])
 }
 
 model article_metadata_to_link {
@@ -82,6 +94,8 @@ model article_metadata_to_link {
   updated_at          DateTime         @default(now()) @updatedAt
   article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
   link                link             @relation(fields: [link_id], references: [id])
+
+  @@index([article_metadata_id, link_id])
 }
 
 model email_subscription {
