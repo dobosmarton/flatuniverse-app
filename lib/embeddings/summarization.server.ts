@@ -1,6 +1,7 @@
 'use server';
 
-import { BaseNode, SummaryIndex, SummaryRetrieverMode } from 'llamaindex';
+import type { BaseNode } from '@llamaindex/edge';
+import { SummaryIndex, SummaryRetrieverMode } from '@llamaindex/edge/indices/summary/index';
 import * as logger from '../logger';
 
 export const getSummaryByDocuments = async (nodes: BaseNode[]): Promise<string | null> => {

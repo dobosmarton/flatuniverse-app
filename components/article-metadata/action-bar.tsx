@@ -6,7 +6,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { ShareButton } from './share-button';
 
 type Props = {
-  articleId: string;
   articleUrl?: string;
   articleSlug: string;
   articleTitle: string;
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export const ActionBar: React.FC<Props> = ({
-  articleId,
   articleUrl,
   articleSlug,
   articleTitle,

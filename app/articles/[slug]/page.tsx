@@ -76,7 +76,6 @@ export default async function ArticleDetails({ params }: Props) {
       <ActionBarContainer>
         <ActionBar
           size="large"
-          articleId={article.id}
           articleTitle={article.title}
           articleText={article.abstract.slice(0, 120)}
           articleSlug={article.slug}

@@ -1,6 +1,8 @@
 'use server';
 
-import { Metadata, OpenAIEmbedding, Settings, TextNode } from 'llamaindex';
+import type { Metadata, TextNode } from '@llamaindex/edge';
+import { OpenAIEmbedding } from '@llamaindex/edge/embeddings/index';
+import { Settings } from '@llamaindex/edge/Settings';
 import { Prisma } from '@prisma/client';
 import * as redis from '../redis';
 import * as logger from '../logger';

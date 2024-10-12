@@ -1,4 +1,4 @@
-import { Metadata, TextNode } from 'llamaindex';
+import type { Metadata, TextNode } from '@llamaindex/edge';
 import { researchArticleIndex } from './client';
 import { createPineconeId } from './utils';
 import { Index, ListResponse, RecordMetadata } from '@pinecone-database/pinecone';
