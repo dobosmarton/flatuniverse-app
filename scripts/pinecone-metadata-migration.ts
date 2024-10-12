@@ -1,5 +1,5 @@
+import { researchArticleIndex } from '@/lib/vector-store';
 import 'dotenv/config';
-import { researchArticleIndex } from '@/lib/pinecone';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
