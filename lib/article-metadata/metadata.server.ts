@@ -247,26 +247,6 @@ export const getGeneratedSummary = async (id: string) => {
   return metadata;
 };
 
-/**
- * @deprecated Use `searchArticleMetadata` instead.
- */
-/* export const getArticleMetadataList = async (page = 0, pageSize = 10) => {
-  const articles = await prismaClient.article_metadata.findMany({
-    take: pageSize,
-    skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
-    include: {
-      authors: { select: { author: { select: { name: true } } } },
-      categories: {
-        select: { category: { select: { short_name: true, full_name: true, group_name: true } } },
-      },
-      links: { select: { link: { select: { href: true, rel: true, type: true, title: true } } } },
-    },
-  });
-
-  return articles;
-}; */
-
 export const getArticleMetadataBySlug = async (slug: string) => {
   const article = await prismaClient.article_metadata.findFirst({
     where: { slug },
@@ -280,27 +260,6 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   });
 
   return article;
-};
-
-export const getArticleMetadataIdsWithZeroEmbeddingsByIds = async (externalIds: string[]) => {
-  const articles = await prismaClient.article_metadata.findMany({
-    where: { external_id: { in: externalIds }, embeddings: { none: {} } },
-    select: { id: true, external_id: true },
-  });
-
-  return articles;
-};
-
-export const getArticleMetadataIdsWithZeroEmbeddings = async (page = 0, pageSize = 10) => {
-  const articles = await prismaClient.article_metadata.findMany({
-    where: { embeddings: { none: {} } },
-    take: pageSize,
-    skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
-    select: { id: true, external_id: true },
-  });
-
-  return articles;
 };
 
 export const getArticlePdfLink = async (id: string): Promise<string | undefined> => {

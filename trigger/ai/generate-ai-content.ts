@@ -1,5 +1,5 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
-import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
+import * as embeddingService from '@/lib/embeddings/embeddings.server';
 import { GenerateAiContentPayload, generateAiContentPayloadSchema } from '../schema';
 import { generateEmbeddingsFromPdf } from './embedding-from-pdf';
 
@@ -8,9 +8,13 @@ export const generateAIContent = task({
   run: async (_payload: GenerateAiContentPayload) => {
     const payload = generateAiContentPayloadSchema.parse(_payload);
 
-    const metadataList = await articleMetadataService.getArticleMetadataIdsWithZeroEmbeddingsByIds(
-      payload.data.map((payloadItem) => payloadItem.externalId)
-    );
+    let metadataList: { id: string; external_id: string }[] = [];
+    for (const item of payload.data) {
+      const hasEmbeddings = await embeddingService.hasEmbeddingsForArticle(item.articleMetadataId);
+      if (!hasEmbeddings) {
+        metadataList.push({ id: item.articleMetadataId, external_id: item.externalId });
+      }
+    }
 
     logger.info(`Fetched metadata count: ${metadataList.length} - Done`, {
       time: new Date().toISOString(),

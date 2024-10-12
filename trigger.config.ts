@@ -1,8 +1,8 @@
-import type { TriggerConfig } from '@trigger.dev/sdk/v3';
+import { defineConfig } from '@trigger.dev/sdk/v3';
 import { prismaExtension } from '@trigger.dev/build/extensions/prisma';
 // import { PrismaInstrumentation } from '@prisma/instrumentation';
 
-export const config: TriggerConfig = {
+export default defineConfig({
   project: 'proj_ryemeoftoazpidlndtjl',
   logLevel: 'log',
   retries: {
@@ -16,6 +16,7 @@ export const config: TriggerConfig = {
     },
   },
   build: {
+    external: ['@xenova/transformers'],
     extensions: [
       prismaExtension({
         schema: './prisma/schema.prisma',
@@ -23,5 +24,6 @@ export const config: TriggerConfig = {
     ],
   },
   dirs: ['./trigger'],
+
   //instrumentations: [new PrismaInstrumentation()],
-};
+});

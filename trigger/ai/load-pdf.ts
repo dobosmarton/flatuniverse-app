@@ -1,8 +1,7 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
-import pdfParser from 'pdf-parse';
 
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
-import * as fileReaderService from '@/lib/langchain/file-reader.server';
+import * as fileHandlers from '@/lib/file-handlers';
 
 export const loadPdf = task({
   id: 'load-pdf',
@@ -10,7 +9,7 @@ export const loadPdf = task({
     maxAttempts: 3,
   },
   run: async (itemId: string) => {
-    logger.info(`Load PDF - start: ${itemId} - ${pdfParser.name}`, { time: new Date().toISOString() });
+    logger.info(`Load PDF - start: ${itemId}`, { time: new Date().toISOString() });
 
     const pdfLink = await articleMetadataService.getArticlePdfLink(itemId);
 
@@ -23,12 +22,12 @@ export const loadPdf = task({
 
     logger.info(`Load PDF - Index: ${itemId}`, { time: new Date().toISOString() });
 
-    const pdfDocs = await fileReaderService.loadPDF(pdfLink, { metadata_id: itemId });
+    const pdfNodes = await fileHandlers.loadPDF(pdfLink, { metadata_id: itemId });
 
-    logger.info(`PDF file loaded successfully! Length: ${pdfDocs.length}`, {
+    logger.info(`PDF file loaded successfully! Length: ${pdfNodes.length}`, {
       time: new Date().toISOString(),
     });
 
-    return { doc: pdfDocs };
+    return { nodes: pdfNodes };
   },
 });

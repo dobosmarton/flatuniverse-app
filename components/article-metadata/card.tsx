@@ -47,8 +47,8 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   links,
   toggleSimilarArticles,
 }) => {
-  const [isAbstractOpen, setAbstractOpen] = useState(false);
-  const [isCardOpen, setCardOpen] = useState(false);
+  const [isAbstractOpen, setIsAbstractOpen] = useState(false);
+  const [isCardOpen, setIsCardOpen] = useState(false);
   const queryString = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -61,7 +61,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
 
   useEffect(() => {
     if (!isCompactMode) {
-      setCardOpen(false);
+      setIsCardOpen(false);
     }
   }, [isCompactMode]);
 
@@ -137,7 +137,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
     if (!isAbstractOpen && abstract.length <= shortCharacters) return;
 
     return (
-      <Button variant={'link'} className="flex gap-2 px-0" onClick={() => setAbstractOpen((prev) => !prev)}>
+      <Button variant={'link'} className="flex gap-2 px-0" onClick={() => setIsAbstractOpen((prev) => !prev)}>
         {isAbstractOpen ? 'Read less' : 'Read full abstract'}
         {isAbstractOpen ? <ChevronUpIcon className="h-4 w-4" /> : <ChevronDownIcon className="h-4 w-4" />}
       </Button>
@@ -156,7 +156,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
           variant="ghost"
           size="sm"
           className="absolute top-0 right-0 font-normal"
-          onClick={() => setCardOpen((isOpen) => !isOpen)}>
+          onClick={() => setIsCardOpen((isOpen) => !isOpen)}>
           {isCardOpen ? <ChevronsDownUpIcon className="h-4 w-4" /> : <ChevronsUpDownIcon className="h-4 w-4" />}
         </Button>
       ) : null}
@@ -241,7 +241,6 @@ export const ArticleMetadataCard: React.FC<Props> = ({
       {isOpen ? (
         <CardFooter className="gap-4 grow items-end">
           <ActionBar
-            articleId={id}
             articleSlug={slug}
             articleTitle={title}
             articleText={abstract.slice(0, shortCharacters)}

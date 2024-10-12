@@ -121,7 +121,6 @@ export const SimilarArticleCard: React.FC<Props> = ({
       {isOpen ? (
         <CardFooter className="p-4">
           <ActionBar
-            articleId={id}
             articleSlug={slug}
             articleTitle={title}
             articleText={abstract.slice(0, 120)}

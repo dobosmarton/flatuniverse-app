@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['pdf-parse'],
-  },
   async rewrites() {
     return [
       {
@@ -17,6 +14,21 @@ const nextConfig = {
   },
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
+  experimental: {
+    legacyBrowsers: false,
+    outputFileTracingIgnores: ['**canvas**'],
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/@swc/**/*',
+        'node_modules/@esbuild/**/*',
+        'node_modules/terser/**/*',
+        'node_modules/webpack/**/*',
+      ],
+    },
+    outputFileTracingIncludes: {
+      '/api/**/*': ['./node_modules/tiktoken/tiktoken_bg.wasm'],
+    },
+  },
 };
 
 export default nextConfig;

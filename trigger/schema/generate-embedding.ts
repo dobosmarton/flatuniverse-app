@@ -3,20 +3,12 @@ import { z } from 'zod';
 export const generateEmbeddingPayloadSchema = z.object({
   jobId: z.string(),
   itemId: z.string(),
-  // Document<PDFMetadata<{ metadata_id: string }>>[]
-  doc: z.array(
+  // TextNode<{ metadata_id: string }>[]
+  nodes: z.array(
     z.object({
-      pageContent: z.string(),
+      getEmbedding: z.function().returns(z.array(z.number())),
       metadata: z.object({
-        pdf: z.object({
-          totalPages: z.number(),
-        }),
-        loc: z.object({
-          pageNumber: z.number(),
-        }),
-        article: z.object({
-          metadata_id: z.string(),
-        }),
+        metadata_id: z.string(),
       }),
     })
   ),

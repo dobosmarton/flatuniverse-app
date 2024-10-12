@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { researchArticleIndex } from '@/lib/pinecone';
 import { prismaClient } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { PineconeRecord, RecordMetadata } from '@pinecone-database/pinecone';
+import { researchArticleIndex } from '@/lib/vector-store';
 
 const BATCH_SIZE = 100;
 

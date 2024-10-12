@@ -1,7 +1,8 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
 import { MetadataIdPayload, metadataIdPayloadSchema } from '../schema';
-import { loadPdf } from './load-pdf';
-import { generateEmbedding } from './generate-embedding';
+import { addNewEmbeddings } from '@/lib/embeddings/embeddings.server';
+import { getArticlePdfLink } from '@/lib/article-metadata/metadata.server';
+import { loadPDF } from '@/lib/file-handlers';
 
 export const generateEmbeddingsFromPdf = task({
   id: 'generate-embedding-from-pdf',
@@ -9,22 +10,28 @@ export const generateEmbeddingsFromPdf = task({
     const payload = metadataIdPayloadSchema.parse(_payload);
     logger.info(`Generate Embedding from pdf - Id: ${payload.id}`, { time: new Date().toISOString() });
 
-    const pdfDocs = await loadPdf.triggerAndWait(payload.id, {
-      idempotencyKey: `load-pdf-${payload.jobId}-${payload.id}`,
-    });
+    const pdfLink = await getArticlePdfLink(payload.id);
 
-    if (!pdfDocs.ok || !pdfDocs.output) {
+    if (!pdfLink) {
+      logger.info(`PDF not found for metadata id: ${payload.id}`, {
+        time: new Date().toISOString(),
+      });
+      return;
+    }
+
+    logger.info(`Load PDF - Index: ${payload.id}`, { time: new Date().toISOString() });
+
+    const pdfNodes = await loadPDF(pdfLink, { metadata_id: payload.id });
+
+    if (!pdfNodes.length) {
       throw new Error(`PDF not found for metadata id: ${payload.id}`);
     }
 
-    logger.info(`PDF file loaded successfully! Length: ${pdfDocs.output.doc.length}, jobId: ${payload.jobId}`, {
+    logger.info(`PDF file loaded successfully! Length: ${pdfNodes.length}, jobId: ${payload.jobId}`, {
       time: new Date().toISOString(),
     });
 
-    await generateEmbedding.trigger(
-      { itemId: payload.id, doc: pdfDocs.output.doc, jobId: payload.jobId },
-      { idempotencyKey: `generate-metadata-embedding-${payload.jobId}-${payload.id}` }
-    );
+    await addNewEmbeddings(payload.id, pdfNodes);
 
     logger.info(`Add Embeddings - Done`, { time: new Date().toISOString() });
 

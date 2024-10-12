@@ -25,8 +25,13 @@ const handleMetadataChangeEvent = async (req: Request) => {
 
   if (metadataChangeEvent.data.action === 'insert') {
     const handle = await tasks.trigger<typeof generateAIContent>('generate-ai-content', {
-      jobId: metadataChangeEvent.data.record.external_id,
-      data: [{ externalId: metadataChangeEvent.data.record.external_id }],
+      jobId: metadataChangeEvent.data.record.id,
+      data: [
+        {
+          articleMetadataId: metadataChangeEvent.data.record.id,
+          externalId: metadataChangeEvent.data.record.external_id,
+        },
+      ],
     });
 
     logger.log(`Triggered generate-ai-content for ${metadataChangeEvent.data.record.external_id}`, {
