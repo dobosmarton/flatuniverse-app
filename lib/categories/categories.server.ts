@@ -7,20 +7,15 @@ type CategoryTree = {
   [groupName: string]: { key: string; value: string }[];
 };
 
-export const getCategories = async () => {
-  return prismaClient.category.findMany({
-    distinct: ['short_name'],
-  });
-};
-
 export const getCategoryGroups = async () => {
   return prismaClient.category.findMany({
     distinct: ['group_name'],
+    orderBy: [{ group_name: 'asc' }],
   });
 };
 
-export const getCategoryTree = async (groupNames: string[]): Promise<CategoryTree> => {
-  const categories = await prismaClient.category.findMany({
+export const getCategoriesByGroupNames = async (groupNames: string[]) => {
+  return prismaClient.category.findMany({
     distinct: ['short_name'],
     where: groupNames.length
       ? {
@@ -29,7 +24,12 @@ export const getCategoryTree = async (groupNames: string[]): Promise<CategoryTre
           },
         }
       : undefined,
+    orderBy: [{ group_name: 'asc' }, { short_name: 'asc' }],
   });
+};
+
+export const getCategoryTree = async (groupNames: string[]): Promise<CategoryTree> => {
+  const categories = await getCategoriesByGroupNames(groupNames);
 
   return categories.reduce<CategoryTree>((acc, category) => {
     if (!acc[category.group_name]) {
@@ -43,15 +43,6 @@ export const getCategoryTree = async (groupNames: string[]): Promise<CategoryTre
 
     return acc;
   }, {});
-};
-
-export const getCategoriesByGroupNames = async (groupName: string[]) => {
-  return prismaClient.category.findMany({
-    where: {
-      group_name: { in: groupName },
-    },
-    distinct: ['short_name'],
-  });
 };
 
 export const getCategoriesGroupedByNames = async (startDate = new Date(), page = 0, pageSize = 10) => {
@@ -74,6 +65,5 @@ export const getCategoriesGroupedByNames = async (startDate = new Date(), page =
   });
 };
 
-export type GetCategories = Prisma.PromiseReturnType<typeof getCategories>;
 export type GetCategoryGroups = Prisma.PromiseReturnType<typeof getCategoryGroups>;
 export type GetCategoriesByGroupNames = Prisma.PromiseReturnType<typeof getCategoriesByGroupNames>;

@@ -32,6 +32,7 @@ const searchAuthorsByNameFn = async ({ page, pageSize, search }: AuthorsByArticl
   const authors = await prismaClient.author.findMany({
     where: { id: { in: groupAuthors.map((group) => group.author_id) } },
     select: { id: true, name: true },
+    take: groupAuthors.length,
   });
 
   return groupAuthors
