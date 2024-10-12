@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   build: {
-    external: ['@xenova/transformers'],
+    external: ['@xenova/transformers', 'tiktoken'],
     extensions: [
       prismaExtension({
         schema: './prisma/schema.prisma',
