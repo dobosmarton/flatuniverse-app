@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { CalendarDaysIcon, NotebookTextIcon, User2Icon, UserIcon } from 'lucide-react';
+import { CalendarDaysIcon, NotebookTextIcon, User2Icon } from 'lucide-react';
 import { NewsletterSection } from '@/components/newsletter-section';
 import { ActionBar } from '@/components/article-metadata/action-bar';
 import { getArticleMetadataBySlug } from '@/lib/article-metadata/metadata.server';
