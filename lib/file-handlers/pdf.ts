@@ -1,5 +1,6 @@
 import { extractText, getDocumentProxy } from 'unpdf';
-import { Document, Metadata, SentenceSplitter, TextNode } from 'llamaindex';
+import { TextNode, Metadata, ObjectType } from '@llamaindex/edge';
+import { Document, SentenceSplitter } from 'llamaindex';
 
 const loadPDFData = async (buffer: Uint8Array): Promise<Document<Metadata>[]> => {
   const pdf = await getDocumentProxy(buffer);
@@ -46,12 +47,15 @@ export const loadPDF = async <T extends Metadata>(pdfPath: string, metadata: T):
 
   const nodes = splitter.getNodesFromDocuments(docs);
 
-  return nodes.map((node) => {
-    node.metadata = {
-      ...node.metadata,
-      ...metadata,
-    };
-
-    return node as TextNode<T>;
-  });
+  return nodes.map(
+    (node) =>
+      new TextNode({
+        ...node,
+        getType: () => ObjectType.DOCUMENT,
+        metadata: {
+          ...node.metadata,
+          ...metadata,
+        },
+      }) as TextNode<T>
+  );
 };
