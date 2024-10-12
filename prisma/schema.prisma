@@ -1,13 +1,12 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters", "postgresqlExtensions"]
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider   = "postgresql"
-  url        = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
-  extensions = [vector]
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model author {
@@ -49,7 +48,6 @@ model article_metadata {
   authors           article_metadata_to_author[]
   categories        article_metadata_to_category[]
   links             article_metadata_to_link[]
-  embeddings        research_article_embedding[]
 
   @@index([slug])
   @@index([updated])
@@ -84,16 +82,6 @@ model article_metadata_to_link {
   updated_at          DateTime         @default(now()) @updatedAt
   article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
   link                link             @relation(fields: [link_id], references: [id])
-}
-
-model research_article_embedding {
-  embedding         Unsupported("vector")?
-  created_at        DateTime               @default(now())
-  metadata_id       String
-  doucment_metadata Json                   @default("{}")
-  id                String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  updated_at        DateTime               @default(now()) @updatedAt
-  metadata          article_metadata       @relation(fields: [metadata_id], references: [id])
 }
 
 model email_subscription {
