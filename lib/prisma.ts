@@ -2,6 +2,7 @@
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
+import { withOptimize } from '@prisma/extension-optimize';
 import { WebSocket } from 'undici';
 
 neonConfig.webSocketConstructor = WebSocket;
@@ -29,7 +30,7 @@ export const prismaClient = new PrismaClient({
       level: 'warn',
     },
   ],
-});
+}).$extends(withOptimize({ apiKey: process.env.OPTIMIZE_API_KEY ?? '' }));
 
 /* prismaClient.$on('query', (e) => {
   console.log('Query: ' + e.query);
