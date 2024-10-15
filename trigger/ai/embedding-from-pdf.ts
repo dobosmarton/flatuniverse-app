@@ -6,6 +6,9 @@ import { loadPDF } from '@/lib/file-handlers';
 
 export const generateEmbeddingsFromPdf = task({
   id: 'generate-embedding-from-pdf',
+  machine: {
+    preset: 'small-2x',
+  },
   run: async (_payload: MetadataIdPayload) => {
     const payload = metadataIdPayloadSchema.parse(_payload);
     logger.info(`Generate Embedding from pdf - Id: ${payload.id}`, { time: new Date().toISOString() });
