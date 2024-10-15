@@ -35,7 +35,7 @@ export const addVectorsToIndex = async <T extends Metadata>(
   vectorStoreIndex.upsert(
     nodes.map((node, idx) => {
       return {
-        id: createPineconeId(node.metadata.article.metadata_id, idx),
+        id: createPineconeId(node.metadata.metadata_id, idx),
         values: node.getEmbedding(),
         metadata: node.metadata,
       };
