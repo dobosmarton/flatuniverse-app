@@ -130,6 +130,39 @@ model sequin_events {
   @@index([source_table_oid])
 }
 
+model chat_thread {
+  id         String   @id @default(uuid())
+  user_id    String?
+  slug       String   @unique
+  title      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  chat_message chat_message[]
+
+  @@index([slug])
+  @@index([created_at])
+}
+
+model chat_message {
+  id         String            @id @default(uuid())
+  role       chat_message_role
+  content    String
+  created_at DateTime          @default(now())
+  updated_at DateTime          @default(now()) @updatedAt
+
+  chat_thread_id String
+  chat_thread    chat_thread @relation(fields: [chat_thread_id], references: [id])
+
+  @@index([chat_thread_id])
+  @@index([created_at])
+}
+
+enum chat_message_role {
+  USER
+  ASSISTANT
+}
+
 enum email_list {
   WEEKLY_SUMMARY
 }
