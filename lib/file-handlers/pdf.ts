@@ -1,6 +1,17 @@
+'use server';
+
+import { SentenceSplitter } from '@llamaindex/core/node-parser';
+import { Metadata, Document, TextNode } from '@llamaindex/core/schema';
+import { OpenAIEmbedding } from '@llamaindex/edge/embeddings/OpenAIEmbedding';
+import { Settings } from '@llamaindex/edge/Settings';
+import { logger } from '@trigger.dev/sdk/v3';
 import { extractText, getDocumentProxy } from 'unpdf';
-import { TextNode, Metadata, ObjectType } from '@llamaindex/edge';
-import { Document, SentenceSplitter } from 'llamaindex';
+
+const openAIEmbeddings = new OpenAIEmbedding({
+  model: 'text-embedding-ada-002',
+});
+
+Settings.embedModel = openAIEmbeddings;
 
 const loadPDFData = async (buffer: Uint8Array): Promise<Document<Metadata>[]> => {
   const pdf = await getDocumentProxy(buffer);
@@ -37,7 +48,7 @@ export const getDocumentsFromPDF = async (fileUrl: string): Promise<Document<Met
   return documents;
 };
 
-export const loadPDF = async <T extends Metadata>(pdfPath: string, metadata: T): Promise<TextNode<T>[]> => {
+export const loadPDF = async (pdfPath: string, metadata: Metadata): Promise<TextNode<Metadata>[]> => {
   const splitter = new SentenceSplitter({
     chunkSize: 1000,
     chunkOverlap: 200,
@@ -47,15 +58,25 @@ export const loadPDF = async <T extends Metadata>(pdfPath: string, metadata: T):
 
   const nodes = splitter.getNodesFromDocuments(docs);
 
-  return nodes.map(
-    (node) =>
-      new TextNode({
+  return Promise.all(
+    nodes.map(async (node) => {
+      const embeddings = await openAIEmbeddings.getTextEmbeddingsBatch(splitter.splitText(node.text));
+
+      logger.info(
+        `Node - embedding: ${embeddings.length}, ${embeddings[0].length}, ${node.type}, ${node.text.length}`,
+        {
+          time: new Date().toISOString(),
+        }
+      );
+
+      return new TextNode({
         ...node,
-        getType: () => ObjectType.DOCUMENT,
+        embedding: embeddings[0],
         metadata: {
           ...node.metadata,
           ...metadata,
         },
-      }) as TextNode<T>
+      });
+    })
   );
 };

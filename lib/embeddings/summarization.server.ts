@@ -1,8 +1,8 @@
 'use server';
 
-import type { Metadata, TextNode } from '@llamaindex/edge';
-import { SummaryIndex, SummaryRetrieverMode } from '@llamaindex/edge/indices/summary/index';
 import * as logger from '../logger';
+import { SummaryIndex, SummaryRetrieverMode } from 'llamaindex/indices/summary/index';
+import type { Metadata, TextNode } from '@llamaindex/core/schema';
 
 export const getSummaryByDocuments = async <T extends Metadata>(nodes: TextNode<T>[]): Promise<string | null> => {
   try {

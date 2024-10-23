@@ -5,6 +5,9 @@ import { generateEmbeddingsFromPdf } from './embedding-from-pdf';
 
 export const generateAIContent = task({
   id: 'generate-ai-content',
+  machine: {
+    preset: 'small-2x',
+  },
   run: async (_payload: GenerateAiContentPayload) => {
     const payload = generateAiContentPayloadSchema.parse(_payload);
 

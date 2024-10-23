@@ -1,18 +1,10 @@
 'use server';
 
-import type { Metadata, TextNode } from '@llamaindex/edge';
-import { OpenAIEmbedding } from '@llamaindex/edge/embeddings/index';
-import { Settings } from '@llamaindex/edge/Settings';
+import type { Metadata, TextNode } from '@llamaindex/core/schema';
 import { Prisma } from '@prisma/client';
 import * as redis from '../redis';
 import * as logger from '../logger';
 import { addVectorsToIndex, listEmbeddings } from '../vector-store';
-
-const openAIEmbeddings = new OpenAIEmbedding({
-  model: 'text-embedding-ada-002',
-});
-
-Settings.embedModel = openAIEmbeddings;
 
 export const _hasEmbeddingsForArticle = async (articleMetadataId: string) => {
   const result = await listEmbeddings(articleMetadataId, 1);
