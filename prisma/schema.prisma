@@ -109,6 +109,27 @@ model email_subscription {
   @@index([email, email_list])
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sequin_events {
+  id                  Int      @id @default(autoincrement())
+  seq                 BigInt
+  source_database_id  String
+  source_table_oid    BigInt
+  source_table_schema String
+  source_table_name   String
+  record_pk           String
+  record              Json
+  changes             Json?
+  action              String
+  committed_at        DateTime
+  inserted_at         DateTime
+
+  @@unique([source_database_id, seq, record_pk], map: "sequin_events_source_database_id_seq_record_pk_idx")
+  @@index([committed_at])
+  @@index([seq])
+  @@index([source_table_oid])
+}
+
 enum email_list {
   WEEKLY_SUMMARY
 }
