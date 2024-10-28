@@ -55,6 +55,8 @@ model article_metadata {
   categories        article_metadata_to_category[]
   links             article_metadata_to_link[]
 
+  chat_thread_to_article_metadata chat_thread_to_article_metadata[]
+
   @@index([slug])
   @@index([updated])
   @@index([published])
@@ -130,6 +132,17 @@ model sequin_events {
   @@index([source_table_oid])
 }
 
+model chat_thread_to_article_metadata {
+  id                  String @id @default(uuid())
+  chat_thread_id      String
+  article_metadata_id String
+
+  chat_thread      chat_thread      @relation(fields: [chat_thread_id], references: [id])
+  article_metadata article_metadata @relation(fields: [article_metadata_id], references: [id])
+
+  @@index([chat_thread_id, article_metadata_id])
+}
+
 model chat_thread {
   id         String   @id @default(uuid())
   user_id    String?
@@ -137,6 +150,8 @@ model chat_thread {
   title      String?
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+
+  suggested_articles chat_thread_to_article_metadata[]
 
   chat_message chat_message[]
 
