@@ -15,3 +15,15 @@ export function slugify(str: string) {
     .replace(/\s+/g, '-') // replace spaces with hyphens
     .replace(/-+/g, '-'); // remove consecutive hyphens
 }
+
+export const escapeHtml = (text: string) => {
+  const map: Record<string, string> = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '&': '&amp;',
+    "'": '&#39;',
+    '"': '&quot;',
+    '/': '&#47;',
+  };
+  return text.replace(/[<>&'"\/]/g, (char: string): string => map[char]);
+};
