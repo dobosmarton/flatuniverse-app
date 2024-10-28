@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ChevronsDownUpIcon, ChevronsUpDownIcon, Settings2Icon } from 'lucide-react';
+import React, { startTransition, useEffect, useState } from 'react';
+import { ChevronsDownUpIcon, ChevronsUpDownIcon, MessageCircleIcon, Settings2Icon } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import posthog from 'posthog-js';
@@ -36,7 +36,7 @@ const isFiltered = (searchParams: ArticleMetadataSearch): boolean => {
 
 export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(isFiltered(searchParams));
-  const { isCompactMode, toggleCompactMode } = useBoundStore();
+  const { isCompactMode, toggleCompactMode, isContextChatOpen, toggleContextChat } = useBoundStore();
 
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -71,7 +71,9 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
       to: searchState.to,
     });
 
-    replace(`${pathname}?${queryParams}`);
+    startTransition(() => {
+      replace(`${pathname}?${queryParams}`);
+    });
   }, [queryParams]);
 
   const resetFilters = () =>
@@ -138,6 +140,13 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
           onClick={toggleCompactMode}>
           {isCompactMode ? <ChevronsUpDownIcon className="h-4 w-4" /> : <ChevronsDownUpIcon className="h-4 w-4" />}
         </Button>
+        <Button
+          variant={isContextChatOpen ? 'default' : 'outline'}
+          size="sm"
+          className="h-8 font-normal"
+          onClick={toggleContextChat}>
+          <MessageCircleIcon className="h-4 w-4" />
+        </Button>
       </div>
       {isFilterOpen ? (
         <div className="flex flex-col gap-2 md:flex-row md:gap-0 md:items-center md:justify-between">
@@ -179,9 +188,6 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
               </Button>
             )}
           </div>
-          {/* <div className="flex items-center space-x-2 gap-2">
-            <AIToggle />
-          </div> */}
         </div>
       ) : null}
     </div>

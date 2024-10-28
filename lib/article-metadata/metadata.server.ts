@@ -262,6 +262,19 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   return article;
 };
 
+export const getArticleMetadataByIds = async (ids: string[]) => {
+  const articles = await prismaClient.article_metadata.findMany({
+    where: { id: { in: ids } },
+    include: {
+      authors: { select: { author: { select: { name: true } } } },
+      categories: { select: { category: { select: { short_name: true, full_name: true, group_name: true } } } },
+      links: { select: { link: { select: { href: true, rel: true, type: true, title: true } } } },
+    },
+  });
+
+  return articles;
+};
+
 export const getArticlePdfLink = async (id: string): Promise<string | undefined> => {
   const article = await prismaClient.article_metadata.findUnique({
     where: { id },
