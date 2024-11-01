@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { CardSmall } from '@/components/article-metadata/card-small';
 import { Label } from '@/components/ui/label';
 import { MessageBubble } from '@/components/ui/message';
@@ -21,8 +22,17 @@ const generateFirstCompletion = async (
   return threadService.createMessageWithSuggestions(slug, message);
 };
 
+const getMessagesOrRedirect = async (slug: string) => {
+  try {
+    const messages = await threadService.getMessagesByThreadSlug(slug);
+    return messages;
+  } catch (error) {
+    redirect('/');
+  }
+};
+
 export const ThreadChat: React.FC<Props> = async ({ params }) => {
-  let thread = await threadService.getMessagesByThreadSlug(params.slug);
+  let thread = await getMessagesOrRedirect(params.slug);
 
   if (thread.chat_message.length === 1 && thread.chat_message[0].role === 'USER') {
     thread = await generateFirstCompletion(params.slug, thread);

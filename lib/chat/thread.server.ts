@@ -22,6 +22,29 @@ export const create = async (prompt: string) => {
   return thread;
 };
 
+export const deleteThread = async (slug: string) => {
+  const thread = await prismaClient.chat_thread.findUnique({
+    where: { slug },
+    select: { id: true },
+  });
+
+  if (!thread) {
+    throw new Error('Thread not found!');
+  }
+
+  await prismaClient.$transaction([
+    prismaClient.chat_thread_to_article_metadata.deleteMany({
+      where: { chat_thread_id: thread.id },
+    }),
+    prismaClient.chat_message.deleteMany({
+      where: { chat_thread_id: thread.id },
+    }),
+    prismaClient.chat_thread.delete({
+      where: { id: thread.id },
+    }),
+  ]);
+};
+
 export const getThreads = async () => {
   return prismaClient.chat_thread.findMany({
     orderBy: {
