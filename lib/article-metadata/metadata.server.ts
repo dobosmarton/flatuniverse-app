@@ -7,6 +7,7 @@ import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
 import { Metadata } from '../oai-pmh/schema';
 import { ArticleMetadataSearch } from './schema';
+import type { ExtendedArticleMetadata } from './metadata';
 
 export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => {
   logger.log('   ');
@@ -262,7 +263,7 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   return article;
 };
 
-export const getArticleMetadataByIds = async (ids: string[]) => {
+export const getArticleMetadataByIds = async (ids: string[]): Promise<ExtendedArticleMetadata[]> => {
   const articles = await prismaClient.article_metadata.findMany({
     where: { id: { in: ids } },
     include: {

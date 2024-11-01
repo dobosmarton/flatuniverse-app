@@ -1,7 +1,7 @@
 'use server';
 
 import { randomUUID } from 'crypto';
-import { article_metadata, chat_message } from '@prisma/client';
+import { article_metadata, chat_message_role } from '@prisma/client';
 import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
 
@@ -77,12 +77,26 @@ export const getMessagesByThreadSlug = async (slug: string) => {
   return thread;
 };
 
+export const createMessage = async (threadSlug: string, message: string, role: chat_message_role) => {
+  return prismaClient.chat_message.create({
+    data: {
+      chat_thread: { connect: { slug: threadSlug } },
+      content: message,
+      role,
+    },
+  });
+};
+
 export const createMessageWithSuggestions = async (
   threadSlug: string,
-  message: Pick<chat_message, 'role' | 'content'> & {
-    suggestions: article_metadata[];
-  }
+  message: string,
+  role: chat_message_role,
+  suggestions: Pick<article_metadata, 'id'>[]
 ) => {
+  console.log('suggestions', suggestions);
+  console.log('message', message);
+  console.log('role', role);
+
   await prismaClient.$transaction([
     prismaClient.chat_thread.update({
       where: { slug: threadSlug },
@@ -90,8 +104,8 @@ export const createMessageWithSuggestions = async (
         suggested_articles: { set: [] },
         chat_message: {
           create: {
-            content: message.content,
-            role: message.role,
+            content: message,
+            role: role,
           },
         },
       },
@@ -108,13 +122,11 @@ export const createMessageWithSuggestions = async (
       where: { slug: threadSlug },
       data: {
         suggested_articles: {
-          create: message.suggestions.map((suggestion) => ({
+          create: suggestions.map((suggestion) => ({
             article_metadata_id: suggestion.id,
           })),
         },
       },
     }),
   ]);
-
-  return getMessagesByThreadSlug(threadSlug);
 };

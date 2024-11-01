@@ -5,6 +5,8 @@ import { getMessagesByThreadSlug, getThreads } from './thread.server';
 import { article_metadata, chat_message, chat_message_role, chat_thread } from '@prisma/client';
 import { getIndexFromStore } from '../vector-store';
 import { getArticleMetadataByIds } from '../article-metadata/metadata.server';
+import { DocumentSuggestion, findRelevantDocuments } from './suggestion.server';
+import type { ExtendedArticleMetadata } from '../article-metadata/metadata';
 
 type ChatEngineProps = {
   chatHistory?: ChatMessage[];
@@ -33,7 +35,7 @@ const mapMessageRole = (role: chat_message_role): MessageType => {
   }
 };
 
-const mapChatResponseRole = (role: MessageType): chat_message_role => {
+/* const mapChatResponseRole = (role: MessageType): chat_message_role => {
   switch (role) {
     case 'user':
       return 'USER';
@@ -42,7 +44,7 @@ const mapChatResponseRole = (role: MessageType): chat_message_role => {
     default:
       throw new Error('Invalid message role');
   }
-};
+}; */
 
 const getChatHistoryMessages = (messages: chat_message[]): ChatMessage[] => {
   return messages.map<ChatMessage>((message) => ({
@@ -59,9 +61,9 @@ const getPromptTemplate = (prompt: string) => {
   `;
 };
 
-export const getMetadataIdsFromChatResponse = async (response: EngineResponse): Promise<string[]> => {
-  return (response.sourceNodes ?? [])
-    .map((node) => node.node.metadata.metadataId || node.node.metadata.metadata_id)
+export const getMetadataIdsFromChatResponse = async (response: DocumentSuggestion[]): Promise<string[]> => {
+  return response
+    .map((node) => node.metadata.metadataId || node.metadata.metadata_id)
     .filter((id) => typeof id === 'string');
 };
 
@@ -69,34 +71,28 @@ const getChatResponse = async (
   messages: chat_message[],
   prompt: string,
   withHistory: boolean = true
-): Promise<EngineResponse> => {
+): Promise<AsyncIterable<EngineResponse>> => {
   const chatEngine = await getChatEngine({
     chatHistory: withHistory ? getChatHistoryMessages(messages) : undefined,
   });
 
   const chatResponse = await chatEngine.chat({
     message: getPromptTemplate(prompt),
-    stream: false,
+    stream: true,
   });
 
   return chatResponse;
 };
 
 export const chatCompletion = async (
-  threadSlug: string,
+  messages: chat_message[],
   prompt: string,
   withHistory: boolean = true
-): Promise<EngineResponse> => {
-  const thread = await getMessagesByThreadSlug(threadSlug);
-
-  if (!thread) {
-    throw new Error('Thread not found');
-  }
-
-  return getChatResponse(thread.chat_message, prompt, withHistory);
+): Promise<AsyncIterable<EngineResponse>> => {
+  return getChatResponse(messages, prompt, withHistory);
 };
 
-export const chatResponseToMessage = async (
+/* export const chatResponseToMessage = async (
   response: EngineResponse
 ): Promise<
   Pick<chat_message, 'role' | 'content'> & {
@@ -111,6 +107,19 @@ export const chatResponseToMessage = async (
     content: response.message.content as string,
     suggestions: articleMetadataList,
   };
+}; */
+
+export const getDocumentSuggestions = async (
+  messages: chat_message[],
+  prompt: string
+): Promise<ExtendedArticleMetadata[]> => {
+  const documents = await findRelevantDocuments(messages, prompt);
+
+  const metadataIds = await getMetadataIdsFromChatResponse(documents);
+
+  const articleMetadataList = await getArticleMetadataByIds(metadataIds);
+
+  return articleMetadataList;
 };
 
 export const getChatHistory = async (): Promise<chat_thread[]> => {
