@@ -40,21 +40,20 @@ model category {
 }
 
 model article_metadata {
-  id                String                         @id @default(uuid())
-  updated           DateTime
-  published         DateTime
-  title             String
-  comment           String?
-  created_at        DateTime                       @default(now())
-  external_id       String                         @unique
-  generated_summary String?
-  slug              String                         @default("")
-  abstract          String
-  updated_at        DateTime                       @default(now()) @updatedAt
-  authors           article_metadata_to_author[]
-  categories        article_metadata_to_category[]
-  links             article_metadata_to_link[]
-
+  id                              String                            @id @default(uuid())
+  updated                         DateTime
+  published                       DateTime
+  title                           String
+  comment                         String?
+  created_at                      DateTime                          @default(now())
+  external_id                     String                            @unique
+  generated_summary               String?
+  slug                            String                            @default("")
+  abstract                        String
+  updated_at                      DateTime                          @default(now()) @updatedAt
+  authors                         article_metadata_to_author[]
+  categories                      article_metadata_to_category[]
+  links                           article_metadata_to_link[]
   chat_thread_to_article_metadata chat_thread_to_article_metadata[]
 
   @@index([slug])
@@ -126,48 +125,44 @@ model sequin_events {
   committed_at        DateTime
   inserted_at         DateTime
 
-  @@unique([source_database_id, seq, record_pk], map: "sequin_events_source_database_id_seq_record_pk_idx")
+  @@unique([source_database_id, committed_at, seq, record_pk], map: "sequin_events_source_database_id_committed_at_seq_record_pk_idx")
   @@index([committed_at])
   @@index([seq])
   @@index([source_table_oid])
 }
 
 model chat_thread_to_article_metadata {
-  id                  String @id @default(uuid())
+  id                  String           @id @default(uuid())
   chat_thread_id      String
   article_metadata_id String
-
-  chat_thread      chat_thread      @relation(fields: [chat_thread_id], references: [id])
-  article_metadata article_metadata @relation(fields: [article_metadata_id], references: [id])
+  article_metadata    article_metadata @relation(fields: [article_metadata_id], references: [id])
+  chat_thread         chat_thread      @relation(fields: [chat_thread_id], references: [id])
 
   @@index([chat_thread_id, article_metadata_id])
 }
 
 model chat_thread {
-  id         String   @id @default(uuid())
-  user_id    String?
-  slug       String   @unique
-  title      String?
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-
+  id                 String                            @id @default(uuid())
+  user_id            String?
+  slug               String                            @unique
+  title              String?
+  created_at         DateTime                          @default(now())
+  updated_at         DateTime                          @default(now()) @updatedAt
+  chat_message       chat_message[]
   suggested_articles chat_thread_to_article_metadata[]
-
-  chat_message chat_message[]
 
   @@index([slug])
   @@index([created_at])
 }
 
 model chat_message {
-  id         String            @id @default(uuid())
-  role       chat_message_role
-  content    String
-  created_at DateTime          @default(now())
-  updated_at DateTime          @default(now()) @updatedAt
-
+  id             String            @id @default(uuid())
+  role           chat_message_role
+  content        String
+  created_at     DateTime          @default(now())
+  updated_at     DateTime          @default(now()) @updatedAt
   chat_thread_id String
-  chat_thread    chat_thread @relation(fields: [chat_thread_id], references: [id])
+  chat_thread    chat_thread       @relation(fields: [chat_thread_id], references: [id])
 
   @@index([chat_thread_id])
   @@index([created_at])
