@@ -276,13 +276,23 @@ export const getArticleMetadataByIds = async (ids: string[]): Promise<ExtendedAr
   return articles;
 };
 
-export const getArticlePdfLink = async (id: string): Promise<string | undefined> => {
+export const getArticleWithPdfLink = async (
+  id: string
+): Promise<{ id: string; published: number; pdfLink: string | null } | undefined> => {
   const article = await prismaClient.article_metadata.findUnique({
     where: { id },
     include: { links: { select: { link: { select: { href: true, type: true } } } } },
   });
 
-  return article?.links.find((connection) => connection.link.type === 'application/pdf')?.link.href;
+  if (!article) {
+    return undefined;
+  }
+
+  return {
+    id: article.id,
+    published: article.published.getTime(),
+    pdfLink: article.links.find((connection) => connection.link.type === 'application/pdf')?.link.href ?? null,
+  };
 };
 
 /**
