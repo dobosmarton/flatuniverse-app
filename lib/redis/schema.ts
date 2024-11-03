@@ -9,6 +9,12 @@ export const embeddingCacheSchema = z.array(
 
 export const similarIdsCacheSchema = z.array(z.string());
 
+export const temporalAnalysisSchema = z.object({
+  isTemporalQuery: z.boolean().nullable(),
+  timeFrame: z.object({ start: z.date(), end: z.date() }).nullable(),
+  temporalWeight: z.number().nullable(),
+});
+
 export const asyncEmbeddingGenerationSchema = z.object({
   id: z.string(),
 });
