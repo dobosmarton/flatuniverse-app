@@ -1,14 +1,18 @@
 'use server';
 
+import { cosineSimilarity } from 'ai';
+import { extractText, getDocumentProxy } from 'unpdf';
 import { SentenceSplitter } from '@llamaindex/core/node-parser';
 import { Metadata, Document, TextNode } from '@llamaindex/core/schema';
 import { OpenAIEmbedding } from '@llamaindex/edge/embeddings/OpenAIEmbedding';
 import { Settings } from '@llamaindex/edge/Settings';
 import { logger } from '@trigger.dev/sdk/v3';
-import { extractText, getDocumentProxy } from 'unpdf';
 
 const openAIEmbeddings = new OpenAIEmbedding({
-  model: 'text-embedding-ada-002',
+  model: 'text-embedding-3-small',
+  similarity: (a, b) => {
+    return cosineSimilarity(a, b);
+  },
 });
 
 Settings.embedModel = openAIEmbeddings;

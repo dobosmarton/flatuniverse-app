@@ -1,25 +1,23 @@
 'use server';
 
-import { ChatMessage, ContextChatEngine, EngineResponse, MessageType } from 'llamaindex';
+import { ChatMessage, ContextChatEngine, EngineResponse, MessageType, OpenAI, SimpleChatEngine } from 'llamaindex';
 import { getMessagesByThreadSlug, getThreads } from './thread.server';
 import { article_metadata, chat_message, chat_message_role, chat_thread } from '@prisma/client';
 import { getIndexFromStore } from '../vector-store';
 import { getArticleMetadataByIds } from '../article-metadata/metadata.server';
 import { DocumentSuggestion, findRelevantDocuments } from './suggestion.server';
 import type { ExtendedArticleMetadata } from '../article-metadata/metadata';
+import { TemporalQueryAnalysis } from './query.server';
 
 type ChatEngineProps = {
   chatHistory?: ChatMessage[];
 };
 
-export const getChatEngine = async ({ chatHistory }: ChatEngineProps): Promise<ContextChatEngine> => {
-  const index = await getIndexFromStore();
-
-  const retriever = index.asRetriever({
-    similarityTopK: 5,
+export const getChatEngine = async ({ chatHistory }: ChatEngineProps): Promise<SimpleChatEngine> => {
+  const chatEngine = new SimpleChatEngine({
+    chatHistory,
+    llm: new OpenAI({ model: 'gpt-4o-mini', temperature: 0.2 }),
   });
-
-  const chatEngine = new ContextChatEngine({ retriever, chatHistory });
 
   return chatEngine;
 };
@@ -53,12 +51,24 @@ const getChatHistoryMessages = (messages: chat_message[]): ChatMessage[] => {
   }));
 };
 
-const getPromptTemplate = (prompt: string) => {
-  return `
-  You are a research assistant.
+const getPromptTemplate = (prompt: string, relevantDocs: ExtendedArticleMetadata[]) => {
+  const context = relevantDocs
+    .map((doc) => `Content: ${doc.abstract}\nDate: ${doc.updated_at.toISOString()}`)
+    .join('\n\n');
 
-  ${prompt}
-  `;
+  const _prompt = `Answer the following question based on the provided context. 
+    If the information in the context is not sufficient or relevant, say so.
+    Use specific references and dates from the documents when applicable.
+    Prioritize more recent information when available.
+    
+    Context:
+    ${context}
+    
+    Question: ${prompt}
+    
+    Answer:`;
+
+  return _prompt;
 };
 
 export const getMetadataIdsFromChatResponse = async (response: DocumentSuggestion[]): Promise<string[]> => {
@@ -70,14 +80,15 @@ export const getMetadataIdsFromChatResponse = async (response: DocumentSuggestio
 const getChatResponse = async (
   messages: chat_message[],
   prompt: string,
-  withHistory: boolean = true
+  withHistory: boolean = true,
+  relevantDocs: ExtendedArticleMetadata[] = []
 ): Promise<AsyncIterable<EngineResponse>> => {
   const chatEngine = await getChatEngine({
     chatHistory: withHistory ? getChatHistoryMessages(messages) : undefined,
   });
 
   const chatResponse = await chatEngine.chat({
-    message: getPromptTemplate(prompt),
+    message: getPromptTemplate(prompt, relevantDocs),
     stream: true,
   });
 
@@ -87,9 +98,10 @@ const getChatResponse = async (
 export const chatCompletion = async (
   messages: chat_message[],
   prompt: string,
-  withHistory: boolean = true
+  withHistory: boolean = true,
+  relevantDocs: ExtendedArticleMetadata[] = []
 ): Promise<AsyncIterable<EngineResponse>> => {
-  return getChatResponse(messages, prompt, withHistory);
+  return getChatResponse(messages, prompt, withHistory, relevantDocs);
 };
 
 /* export const chatResponseToMessage = async (
@@ -111,9 +123,10 @@ export const chatCompletion = async (
 
 export const getDocumentSuggestions = async (
   messages: chat_message[],
-  prompt: string
+  prompt: string,
+  temporalAnalysis: TemporalQueryAnalysis
 ): Promise<ExtendedArticleMetadata[]> => {
-  const documents = await findRelevantDocuments(messages, prompt);
+  const documents = await findRelevantDocuments(messages, prompt, temporalAnalysis);
 
   const metadataIds = await getMetadataIdsFromChatResponse(documents);
 
@@ -122,8 +135,8 @@ export const getDocumentSuggestions = async (
   return articleMetadataList;
 };
 
-export const getChatHistory = async (): Promise<chat_thread[]> => {
-  const history = await getThreads();
+export const getChatHistory = async ({ limit }: { limit?: number } = {}): Promise<chat_thread[]> => {
+  const history = await getThreads({ limit });
 
   return history ?? [];
 };

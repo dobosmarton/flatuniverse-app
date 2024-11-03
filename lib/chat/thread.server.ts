@@ -45,11 +45,12 @@ export const deleteThread = async (slug: string) => {
   ]);
 };
 
-export const getThreads = async () => {
+export const getThreads = async ({ limit }: { limit?: number } = {}) => {
   return prismaClient.chat_thread.findMany({
     orderBy: {
       created_at: 'desc',
     },
+    take: limit,
   });
 };
 
@@ -93,10 +94,6 @@ export const createMessageWithSuggestions = async (
   role: chat_message_role,
   suggestions: Pick<article_metadata, 'id'>[]
 ) => {
-  console.log('suggestions', suggestions);
-  console.log('message', message);
-  console.log('role', role);
-
   await prismaClient.$transaction([
     prismaClient.chat_thread.update({
       where: { slug: threadSlug },
