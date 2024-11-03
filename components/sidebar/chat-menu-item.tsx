@@ -20,7 +20,9 @@ export const ChatMenuItem = () => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const { toggleContextChat } = useBoundStore();
 
-  const { data: chatHistory, mutate } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>);
+  const { data: chatHistory, mutate } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>, {
+    keepPreviousData: true,
+  });
 
   const { trigger, isMutating } = useSWRMutation(`/api/chat/delete/${selectedChatForDeletion}`, del, {
     onSuccess: () => {
