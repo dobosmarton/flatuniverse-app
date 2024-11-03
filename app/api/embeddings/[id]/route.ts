@@ -1,5 +1,5 @@
 import { NextRouteFunction } from '@/lib/route-validator.server';
-import { getArticlePdfLink } from '@/lib/article-metadata/metadata.server';
+import { getArticleWithPdfLink } from '@/lib/article-metadata/metadata.server';
 import * as logger from '@/lib/logger';
 import { loadPDF } from '@/lib/file-handlers';
 import { addNewEmbeddings } from '@/lib/embeddings/embeddings.server';
@@ -7,13 +7,16 @@ import { addNewEmbeddings } from '@/lib/embeddings/embeddings.server';
 type Params = { params: { id: string } };
 
 const generateEmbeddings: NextRouteFunction<Params> = async (_, { params }) => {
-  const pdfLink = await getArticlePdfLink(params.id);
+  const metadata = await getArticleWithPdfLink(params.id);
 
-  if (!pdfLink) {
+  if (!metadata?.pdfLink) {
     return Response.json('Article not found', { status: 404 });
   }
 
-  const pdfNodes = await loadPDF(pdfLink, { metadata_id: params.id });
+  const pdfNodes = await loadPDF(metadata.pdfLink, {
+    metadata_id: params.id,
+    published: metadata.published,
+  });
 
   logger.log('PDF file loaded successfully!');
 

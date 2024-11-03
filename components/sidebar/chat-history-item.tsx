@@ -1,22 +1,23 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 
 import { SidebarMenuAction, SidebarMenuSubButton, SidebarMenuSubItem } from '../ui/sidebar';
 
 type Props = {
   thread: { slug: string };
+  isDeleting: boolean;
   onDelete: (slug: string) => void;
 };
 
-export const ChatHistoryItem: React.FC<Props> = ({ thread, onDelete }) => {
+export const ChatHistoryItem: React.FC<Props> = ({ thread, isDeleting, onDelete }) => {
   return (
-    <SidebarMenuSubItem>
+    <SidebarMenuSubItem className="relative">
       <SidebarMenuSubButton asChild>
         <a href={`/chat/${thread.slug}`}>{thread.slug.slice(0, 20)}...</a>
       </SidebarMenuSubButton>
-      <SidebarMenuAction onClick={() => onDelete(thread.slug)}>
-        <Trash2 /> <span className="sr-only">Delete Chat</span>
+      <SidebarMenuAction className="right-1" onClick={() => onDelete(thread.slug)}>
+        {isDeleting ? <Loader2 className="animate-spin" /> : <Trash2 />}
       </SidebarMenuAction>
     </SidebarMenuSubItem>
   );

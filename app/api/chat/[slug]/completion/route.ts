@@ -4,8 +4,8 @@ import * as logger from '@/lib/logger';
 import { chatCompletionSchema } from './schema';
 import * as threadService from '@/lib/chat/thread.server';
 import * as chatService from '@/lib/chat/chat.server';
+import * as queryService from '@/lib/chat/query.server';
 import { chat_message_role } from '@prisma/client';
-import { ExtendedArticleMetadata } from '@/lib/article-metadata/metadata';
 
 type Params = { params: { slug: string } };
 
@@ -14,23 +14,23 @@ const chatCompletion: NextRouteFunction<Params> = async (req, { params }) => {
 
   const parsedParams = chatCompletionSchema.parse(reqJson);
 
+  const temporalAnalysis = await queryService.analyzeTemporalQuery(parsedParams.prompt);
+
   const thread = await threadService.getMessagesByThreadSlug(params.slug);
 
-  const stream = await chatService.chatCompletion(thread.chat_message, parsedParams.prompt);
+  const suggestions = await chatService.getDocumentSuggestions(
+    thread.chat_message,
+    parsedParams.prompt,
+    temporalAnalysis
+  );
 
-  // const documents = await chatService.getDocumentSuggestions(thread.chat_message, parsedParams.prompt);
-
-  let suggestions: ExtendedArticleMetadata[] = [];
-
-  // Get document suggestions and append them as message annotations to the stream
-  chatService.getDocumentSuggestions(thread.chat_message, parsedParams.prompt).then((documents) => {
-    documents.forEach((document) => {
-      data.appendMessageAnnotation(JSON.stringify({ type: 'article_metadata', article_metadata: document }));
-    });
-    suggestions.push(...documents);
-  });
+  const stream = await chatService.chatCompletion(thread.chat_message, parsedParams.prompt, true, suggestions);
 
   const data = new StreamData();
+
+  suggestions.forEach((document) => {
+    data.appendMessageAnnotation(JSON.stringify({ type: 'article_metadata', article_metadata: document }));
+  });
 
   return LlamaIndexAdapter.toDataStreamResponse(stream, {
     data,

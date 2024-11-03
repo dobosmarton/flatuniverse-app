@@ -10,12 +10,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { getChatHistory } from '@/lib/chat/chat.server';
 import { ChatMenuItem } from './chat-menu-item';
 
 export const AppSidebar: React.FC = async () => {
-  const chatHistory = await getChatHistory();
-
   return (
     <Sidebar>
       <SidebarContent>
@@ -32,7 +29,7 @@ export const AppSidebar: React.FC = async () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              <ChatMenuItem chatHistory={chatHistory} />
+              <ChatMenuItem />
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
