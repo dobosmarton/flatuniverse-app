@@ -5,4 +5,5 @@ export const keys = {
   generateEmbeddingForItem: (metadataId: string) => `metadata:${metadataId}:generate-embedding`,
   authorsByArticles: (page: number, pageSize: number, search?: string) =>
     `authors:by-articles:${page}:${pageSize}${search?.length ? `:${search}` : ''}`,
+  analyzeTemporalQuery: (promptHash: string) => `analyze-temporal-query:${promptHash}`,
 };

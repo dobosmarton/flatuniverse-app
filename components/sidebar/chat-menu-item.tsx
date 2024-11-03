@@ -1,33 +1,33 @@
 'use client';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { MessageCircle, Plus } from 'lucide-react';
 import useSWRMutation from 'swr/mutation';
-import useSWR from 'swr';
 
+import { chat_thread } from '@prisma/client';
 import { useBoundStore } from '@/stores';
 import { del } from '@/lib/api-client/delete';
+import { useChat } from '@/lib/chat/useChat';
 
 import { SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub } from '../ui/sidebar';
 import { ChatHistoryItem } from './chat-history-item';
 import { ConfirmDialog } from '../confirm-dialog';
 
-import { fetcher } from '@/lib/api-client/fetch';
-import { chat_thread } from '@prisma/client';
+type Props = {
+  initialChatHistory: chat_thread[];
+};
 
-export const ChatMenuItem = () => {
+export const ChatMenuItem: React.FC<Props> = ({ initialChatHistory }) => {
   const [selectedChatForDeletion, setSelectedChatForDeletion] = useState<string | null>(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const { toggleContextChat } = useBoundStore();
 
-  const { data: chatHistory, mutate } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>, {
-    keepPreviousData: true,
-  });
+  const { chatHistory, mutateChatHistory } = useChat({ initialChatHistory });
 
   const { trigger, isMutating } = useSWRMutation(`/api/chat/delete/${selectedChatForDeletion}`, del, {
     onSuccess: () => {
       setSelectedChatForDeletion(null);
-      mutate();
+      mutateChatHistory();
     },
     onError: () => {
       setSelectedChatForDeletion(null);

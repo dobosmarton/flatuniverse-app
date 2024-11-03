@@ -1,6 +1,4 @@
 import { redirect } from 'next/navigation';
-import { CardSmall } from '@/components/article-metadata/card-small';
-import { Label } from '@/components/ui/label';
 import * as threadService from '@/lib/chat/thread.server';
 import { ChatCompletion } from './chat-completion';
 
@@ -22,22 +20,11 @@ export const ThreadChat: React.FC<Props> = async ({ params }) => {
 
   return (
     <div className="flex flex-row gap-4 justify-between">
-      <div className="flex flex-col gap-4 p-4">
-        <ChatCompletion slug={params.slug} messages={thread.chat_message} />
-      </div>
-      <div className="flex flex-col gap-4 p-4 max-w-[360px]">
-        <Label>Suggested Articles</Label>
-        {thread.suggested_articles.map((article) => (
-          <CardSmall
-            key={article.article_metadata.id}
-            id={article.article_metadata.id}
-            slug={article.article_metadata.slug}
-            title={article.article_metadata.title}
-            abstract={article.article_metadata.abstract}
-            published={article.article_metadata.published.toDateString()}
-          />
-        ))}
-      </div>
+      <ChatCompletion
+        slug={params.slug}
+        messages={thread.chat_message}
+        initialSuggestions={thread.suggested_articles.map((article) => article.article_metadata)}
+      />
     </div>
   );
 };

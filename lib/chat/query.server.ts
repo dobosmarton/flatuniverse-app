@@ -2,6 +2,8 @@
 
 import { SimpleChatEngine, OpenAI } from 'llamaindex';
 import { z } from 'zod';
+import crypto from 'crypto';
+import * as redis from '../redis';
 
 export type TemporalQueryAnalysis = {
   isTemporalQuery: boolean | null;
@@ -16,7 +18,7 @@ const temporalAnalysisSchema = z.object({
   temporalWeight: z.number().nullable(),
 });
 
-export const analyzeTemporalQuery = async (query: string): Promise<TemporalQueryAnalysis> => {
+export const _analyzeTemporalQuery = async (query: string): Promise<TemporalQueryAnalysis> => {
   const temporalAnalysisPrompt = `Analyze the following query for temporal aspects.
     Return a JSON object with:
     - isTemporalQuery (boolean): true if the query asks about time-specific information
@@ -65,3 +67,10 @@ export const analyzeTemporalQuery = async (query: string): Promise<TemporalQuery
     temporalWeight: parsedAnalysis.temporalWeight ?? 0,
   };
 };
+
+export const analyzeTemporalQuery = redis.cacheableFunction<string, TemporalQueryAnalysis>(
+  (query) => redis.keys.analyzeTemporalQuery(crypto.createHash('md5').update(query).digest('hex')),
+  redis.temporalAnalysisSchema,
+  // 1 hour
+  { ex: 60 * 60 }
+)(_analyzeTemporalQuery);

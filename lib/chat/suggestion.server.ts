@@ -1,5 +1,5 @@
 import { chat_message } from '@prisma/client';
-import { Metadata, MetadataMode } from 'llamaindex';
+import { Metadata, MetadataMode, VectorIndexRetrieverOptions } from 'llamaindex';
 import { FilterOperator, FilterCondition } from 'llamaindex/vector-store/types';
 import { getIndexFromStore } from '../vector-store';
 import type { TemporalQueryAnalysis } from './query.server';
@@ -51,29 +51,39 @@ export const findRelevantDocuments = async (
     // If the query is temporal, increase the topK to 2x the initial value
     const initialTopK = temporalAnalysis.isTemporalQuery ? topK * 2 : topK;
 
-    // Create retriever with custom configuration
-    const retriever = index.asRetriever({
+    let retrieverOptions: Pick<VectorIndexRetrieverOptions, 'filters'> & { similarityTopK: number } = {
       similarityTopK: initialTopK,
-      // If the query is temporal, add filters to the retriever
-      filters:
-        temporalAnalysis.isTemporalQuery && temporalAnalysis.timeFrame
-          ? {
-              filters: [
-                {
-                  key: 'timestamp',
-                  value: temporalAnalysis.timeFrame.start.getTime(),
-                  operator: FilterOperator.GTE,
-                },
-                {
-                  key: 'timestamp',
-                  value: temporalAnalysis.timeFrame.end.getTime(),
-                  operator: FilterOperator.LTE,
-                },
-              ],
-              condition: FilterCondition.AND,
-            }
-          : undefined,
-    });
+      filters: {
+        filters: [
+          {
+            key: 'timestamp',
+            value: new Date().getTime(),
+            operator: FilterOperator.LTE,
+          },
+        ],
+      },
+    };
+
+    if (temporalAnalysis.isTemporalQuery && temporalAnalysis.timeFrame) {
+      retrieverOptions.filters = {
+        filters: [
+          {
+            key: 'timestamp',
+            value: temporalAnalysis.timeFrame.start.getTime(),
+            operator: FilterOperator.GTE,
+          },
+          {
+            key: 'timestamp',
+            value: temporalAnalysis.timeFrame.end.getTime(),
+            operator: FilterOperator.LTE,
+          },
+        ],
+        condition: FilterCondition.AND,
+      };
+    }
+
+    // Create retriever with custom configuration
+    const retriever = index.asRetriever(retrieverOptions);
 
     // Retrieve nodes
     const retrievedNodes = await retriever.retrieve(hybridQuery);

@@ -1,8 +1,19 @@
 'use server';
 
+import { Metadata } from 'llamaindex';
 import { TemporalQueryAnalysis } from './query.server';
 import { DocumentSuggestion } from './suggestion.server';
 
+const getMetadataId = (metadata: Metadata) => metadata.metadataId || metadata.metadata_id;
+
+/**
+ * Ranks documents based on temporal relevance and similarity scores.
+ *
+ * @param documents - Array of document suggestions with similarity scores
+ * @param temporalAnalysis - Analysis of temporal aspects of the query
+ * @param topK - Maximum number of documents to return
+ * @returns Ranked and filtered array of documents
+ */
 export const rankTemporalDocuments = async (
   documents: DocumentSuggestion[],
   temporalAnalysis: TemporalQueryAnalysis,
@@ -26,5 +37,11 @@ export const rankTemporalDocuments = async (
       return { ...document, score: finalScore };
     })
     .sort((a, b) => b.score - a.score)
-    .slice(0, topK);
+    .reduce<DocumentSuggestion[]>((prev, acc) => {
+      if (prev.length < topK && !prev.some((doc) => getMetadataId(doc.metadata) === getMetadataId(acc.metadata))) {
+        return [...prev, acc];
+      }
+
+      return prev;
+    }, []);
 };

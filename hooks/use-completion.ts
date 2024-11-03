@@ -27,9 +27,9 @@ import { type ArticleMetadata, articleMetadataSchema } from '@/lib/article-metad
  * console.log(documents); // Current documents
  * ```
  */
-export const useCompletion = (url: string) => {
+export const useCompletion = (url: string, initialSuggestions?: ArticleMetadata[]) => {
   const [completion, setCompletion] = useState<string>('');
-  const [documents, setDocuments] = useState<ArticleMetadata[]>([]);
+  const [documents, setDocuments] = useState<ArticleMetadata[]>(initialSuggestions ?? []);
 
   const [abortController, setAbortController] = useState<AbortController | null>();
 
