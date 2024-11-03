@@ -1,7 +1,7 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
 import { MetadataIdPayload, metadataIdPayloadSchema } from '../schema';
 import { addNewEmbeddings } from '@/lib/embeddings/embeddings.server';
-import { getArticlePdfLink } from '@/lib/article-metadata/metadata.server';
+import { getArticleWithPdfLink } from '@/lib/article-metadata/metadata.server';
 import { loadPDF } from '@/lib/file-handlers';
 
 export const generateEmbeddingsFromPdf = task({
@@ -13,9 +13,9 @@ export const generateEmbeddingsFromPdf = task({
     const payload = metadataIdPayloadSchema.parse(_payload);
     logger.info(`Generate Embedding from pdf - Id: ${payload.id}`, { time: new Date().toISOString() });
 
-    const pdfLink = await getArticlePdfLink(payload.id);
+    const metadata = await getArticleWithPdfLink(payload.id);
 
-    if (!pdfLink) {
+    if (!metadata?.pdfLink) {
       logger.info(`PDF not found for metadata id: ${payload.id}`, {
         time: new Date().toISOString(),
       });
@@ -24,7 +24,10 @@ export const generateEmbeddingsFromPdf = task({
 
     logger.info(`Load PDF - Index: ${payload.id}`, { time: new Date().toISOString() });
 
-    const pdfNodes = await loadPDF(pdfLink, { metadata_id: payload.id });
+    const pdfNodes = await loadPDF(metadata.pdfLink, {
+      metadata_id: payload.id,
+      published: metadata.published,
+    });
 
     if (!pdfNodes.length) {
       throw new Error(`PDF not found for metadata id: ${payload.id}`);

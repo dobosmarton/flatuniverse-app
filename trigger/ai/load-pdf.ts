@@ -11,9 +11,9 @@ export const loadPdf = task({
   run: async (itemId: string) => {
     logger.info(`Load PDF - start: ${itemId}`, { time: new Date().toISOString() });
 
-    const pdfLink = await articleMetadataService.getArticlePdfLink(itemId);
+    const metadata = await articleMetadataService.getArticleWithPdfLink(itemId);
 
-    if (!pdfLink) {
+    if (!metadata?.pdfLink) {
       logger.info(`PDF not found for metadata id: ${itemId}`, {
         time: new Date().toISOString(),
       });
@@ -22,7 +22,10 @@ export const loadPdf = task({
 
     logger.info(`Load PDF - Index: ${itemId}`, { time: new Date().toISOString() });
 
-    const pdfNodes = await fileHandlers.loadPDF(pdfLink, { metadata_id: itemId });
+    const pdfNodes = await fileHandlers.loadPDF(metadata.pdfLink, {
+      metadata_id: itemId,
+      published: metadata.published,
+    });
 
     logger.info(`PDF file loaded successfully! Length: ${pdfNodes.length}`, {
       time: new Date().toISOString(),
