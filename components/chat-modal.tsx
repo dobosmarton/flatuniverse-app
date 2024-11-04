@@ -14,7 +14,7 @@ import { MessageBubble } from './ui/message';
 
 const DEFAULT_PROMPTS = [
   'What are the latest research topics in the field of LLMs?',
-  'What techniques are being developed to make transformer models more computationally efficient?',
+  'How effective are current methods for making language models more context-aware and memory-efficient?',
   'How are quantum computing platforms being used to simulate quantum materials?',
   'What new computational approaches are being developed for solving partial differential equations?',
   'What methods are being developed to assess and mitigate cryptocurrency market risks?',
