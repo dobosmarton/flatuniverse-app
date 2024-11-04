@@ -53,7 +53,12 @@ const getChatHistoryMessages = (messages: chat_message[]): ChatMessage[] => {
 
 const getPromptTemplate = (prompt: string, relevantDocs: ExtendedArticleMetadata[]) => {
   const context = relevantDocs
-    .map((doc) => `Content: ${doc.abstract}\nDate: ${doc.updated_at.toISOString()}`)
+    .map(
+      (doc) =>
+        `Title: ${doc.title}\nContent: ${doc.abstract}\nDate: ${doc.published.toISOString()}\nAuthors: ${doc.authors
+          .map((author) => `${author.author.name}`)
+          .join(', ')}`
+    )
     .join('\n\n');
 
   const _prompt = `Answer the following question based on the provided context. 
