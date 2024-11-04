@@ -4,7 +4,7 @@ import { Loader2Icon } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useNewsletter } from '@/hooks/use-newsletter';
+import { FormType, useNewsletter } from '@/hooks/use-newsletter';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
@@ -12,6 +12,11 @@ export const ChatDemo = () => {
   const { form, isSubscribing, onSubscribe } = useNewsletter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onSubmit = async (data: FormType) => {
+    await onSubscribe(data);
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -25,17 +30,19 @@ export const ChatDemo = () => {
       <Dialog open={isModalOpen} onOpenChange={() => setIsModalOpen((isOpen) => !isOpen)}>
         <DialogContent className="sm:max-w-[625px]" hasCloseButton={false}>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubscribe)} className="flex flex-col gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <DialogTitle>Full chat is coming soon!</DialogTitle>
 
               <div className="flex flex-col gap-8">
-                <DialogDescription className="flex flex-col gap-2">
-                  <p>
+                <div className="flex flex-col gap-2">
+                  <DialogDescription>
                     We&apos;re excited to announce that the full chat feature is in development and will be available
                     soon. Stay tuned for more updates!
-                  </p>
-                  <p>In the meantime, subscribe to our newsletter to get notified when it&apos;s ready!</p>
-                </DialogDescription>
+                  </DialogDescription>
+                  <DialogDescription>
+                    In the meantime, subscribe to our newsletter to get notified when it&apos;s ready!
+                  </DialogDescription>
+                </div>
 
                 <div className="flex gap-2">
                   <FormField
