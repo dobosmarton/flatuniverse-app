@@ -18,9 +18,7 @@ export const Articles: React.FC<Props> = async ({ searchParams }) => {
 
   return (
     <div className="flex flex-col px-8 py-12 sm:py-16 gap-4">
-      <Suspense>
-        <Toolbar categoryTree={categoryTree} authors={authorList} searchParams={parsedSearchParams} />
-      </Suspense>
+      <Toolbar categoryTree={categoryTree} authors={authorList} searchParams={parsedSearchParams} />
 
       <NewsletterSection closable />
 

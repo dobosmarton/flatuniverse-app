@@ -7,6 +7,7 @@ import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
 import { Metadata } from '../oai-pmh/schema';
 import { ArticleMetadataSearch } from './schema';
+import type { ExtendedArticleMetadata } from './metadata';
 
 export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => {
   logger.log('   ');
@@ -262,13 +263,36 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   return article;
 };
 
-export const getArticlePdfLink = async (id: string): Promise<string | undefined> => {
+export const getArticleMetadataByIds = async (ids: string[]): Promise<ExtendedArticleMetadata[]> => {
+  const articles = await prismaClient.article_metadata.findMany({
+    where: { id: { in: ids } },
+    include: {
+      authors: { select: { author: { select: { name: true } } } },
+      categories: { select: { category: { select: { short_name: true, full_name: true, group_name: true } } } },
+      links: { select: { link: { select: { href: true, rel: true, type: true, title: true } } } },
+    },
+  });
+
+  return articles;
+};
+
+export const getArticleWithPdfLink = async (
+  id: string
+): Promise<{ id: string; published: number; pdfLink: string | null } | undefined> => {
   const article = await prismaClient.article_metadata.findUnique({
     where: { id },
     include: { links: { select: { link: { select: { href: true, type: true } } } } },
   });
 
-  return article?.links.find((connection) => connection.link.type === 'application/pdf')?.link.href;
+  if (!article) {
+    return undefined;
+  }
+
+  return {
+    id: article.id,
+    published: article.published.getTime(),
+    pdfLink: article.links.find((connection) => connection.link.type === 'application/pdf')?.link.href ?? null,
+  };
 };
 
 /**

@@ -13,13 +13,16 @@ const getSummary: NextRouteFunction<Params> = async (_, { params }) => {
     return Response.json({ data: summary.generated_summary }, { status: 200 });
   }
 
-  const pdfLink = await articleService.getArticlePdfLink(params.id);
+  const metadata = await articleService.getArticleWithPdfLink(params.id);
 
-  if (!pdfLink) {
+  if (!metadata?.pdfLink) {
     return Response.json('Article not found', { status: 404 });
   }
 
-  const pdfNodes = await loadPDF(pdfLink, { metadata_id: params.id });
+  const pdfNodes = await loadPDF(metadata.pdfLink, {
+    metadata_id: params.id,
+    published: metadata.published,
+  });
 
   logger.log('PDF file loaded successfully!');
 

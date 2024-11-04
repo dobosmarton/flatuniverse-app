@@ -26,4 +26,14 @@ export const articleMetadataSearchSchema = articleMetadataSearchParamsSchema.tra
   };
 });
 
+export const articleMetadataSchema = z.object({
+  id: z.string(),
+  external_id: z.string(),
+  slug: z.string(),
+  title: z.string(),
+  abstract: z.string(),
+  published: z.string().datetime(),
+});
+
 export type ArticleMetadataSearch = z.infer<typeof articleMetadataSearchSchema>;
+export type ArticleMetadata = z.infer<typeof articleMetadataSchema>;

@@ -3,14 +3,7 @@
 import 'katex/dist/katex.min.css';
 import React, { useEffect, useState } from 'react';
 import Latex from 'react-latex-next';
-import {
-  CalendarDaysIcon,
-  ChevronDownIcon,
-  ChevronsDownUpIcon,
-  ChevronsUpDownIcon,
-  ChevronUpIcon,
-  User2Icon,
-} from 'lucide-react';
+import { CalendarDaysIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, User2Icon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useBoundStore } from '@/stores';
@@ -21,6 +14,7 @@ import { Badge } from '../ui/badge';
 import { SummaryPanel } from './summary-panel';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
+import { CollapsibleRichText } from './collapsible-text';
 
 type Props = {
   id: string;
@@ -47,7 +41,6 @@ export const ArticleMetadataCard: React.FC<Props> = ({
   links,
   toggleSimilarArticles,
 }) => {
-  const [isAbstractOpen, setIsAbstractOpen] = useState(false);
   const [isCardOpen, setIsCardOpen] = useState(false);
   const queryString = useSearchParams();
   const pathname = usePathname();
@@ -131,17 +124,6 @@ export const ArticleMetadataCard: React.FC<Props> = ({
     }
 
     replace(`${pathname}?${params}`);
-  };
-
-  const renderShowMoreButton = () => {
-    if (!isAbstractOpen && abstract.length <= shortCharacters) return;
-
-    return (
-      <Button variant={'link'} className="flex gap-2 px-0" onClick={() => setIsAbstractOpen((prev) => !prev)}>
-        {isAbstractOpen ? 'Read less' : 'Read full abstract'}
-        {isAbstractOpen ? <ChevronUpIcon className="h-4 w-4" /> : <ChevronDownIcon className="h-4 w-4" />}
-      </Button>
-    );
   };
 
   const pdfLink = links.find((link) => link.title === 'pdf')?.href;
@@ -231,10 +213,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
       </CardHeader>
       {isOpen ? (
         <CardContent className="flex flex-col gap-4">
-          <div>
-            <Latex>{isAbstractOpen ? abstract : `${abstract.slice(0, shortCharacters)}...`}</Latex>
-            <div>{renderShowMoreButton()}</div>
-          </div>
+          <CollapsibleRichText text={abstract} shortCharacterCount={shortCharacters} />
           {summaryEnabled ? <SummaryPanel isLoading={isSummaryLoading}>{generatedSummary}</SummaryPanel> : null}
         </CardContent>
       ) : null}

@@ -15,7 +15,7 @@ type Props = {
   params: { slug: string };
 };
 
-export default async function ArticleDetails({ params }: Props) {
+export default async function ArticleDetails({ params }: Readonly<Props>) {
   const article = await getArticleMetadataBySlug(params.slug);
 
   if (!article) {

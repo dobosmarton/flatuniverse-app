@@ -1,4 +1,4 @@
-import { NextRouteFunction, routeValidator } from '@/lib/route-validator.server';
+import { NextRouteFunction } from '@/lib/route-validator.server';
 import * as categoryService from '@/lib/categories/categories.server';
 
 const getCategoriesByGroup: NextRouteFunction<{}> = async (request) => {

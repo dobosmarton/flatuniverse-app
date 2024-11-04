@@ -3,11 +3,14 @@ import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
-import { Navbar } from '@/components/navbar';
+
 import { Toaster } from '@/components/ui/toaster';
 import { Footer } from '@/components/footer';
 import { CookieBanner } from '@/components/cookie-banner';
 import { AnalyticsProvider } from './analytics-provider';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/sidebar';
+import { ChatModal } from '@/components/chat-modal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,17 +31,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
-        <header className="flex gap-4 p-4 border-b border-black border-solid sm:px-8 border-opacity-20">
-          <Navbar />
-        </header>
-        <AnalyticsProvider>
-          {children}
-          <PostHogPageView />
-          <CookieBanner />
-        </AnalyticsProvider>
-        <Footer />
-        <Toaster />
+      <body>
+        <SidebarProvider>
+          <AppSidebar />
+          <main className={`${inter.className} min-h-screen flex flex-col w-full`}>
+            {/* <header className="flex gap-4 p-4 border-b border-black border-solid sm:px-8 border-opacity-20">
+              <Navbar />
+            </header> */}
+            <AnalyticsProvider>
+              {children}
+              <PostHogPageView />
+              <CookieBanner />
+            </AnalyticsProvider>
+            <Footer />
+            <Toaster />
+            <ChatModal />
+          </main>
+        </SidebarProvider>
       </body>
     </html>
   );
