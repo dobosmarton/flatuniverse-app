@@ -61,11 +61,10 @@ export const NewsletterSection: React.FC<Props> = ({ closable }) => {
           ) : null}
           <CardHeader className="gap-2 items-center">
             <CardTitle>Stay up-to-date on science!</CardTitle>
-            <div>
-              <CardDescription>
-                {"We'll send you an email every week with the latest research papers in your field."}
-              </CardDescription>
-            </div>
+
+            <CardDescription>
+              {"We'll send you an email every week with the latest research papers in your field."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
             <div className="flex max-w-md gap-2">

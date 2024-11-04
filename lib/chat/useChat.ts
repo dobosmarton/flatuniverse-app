@@ -1,43 +1,68 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import useSWR, { useSWRConfig } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
-import { chat_thread } from '@prisma/client';
+import { chat_message, chat_thread } from '@prisma/client';
 import { useBoundStore } from '@/stores';
 import { CreateNewThread } from '@/app/api/chat/create-thread/schema';
 
 import { post } from '../api-client/post';
-import { fetcher } from '../api-client/fetch';
+import { del } from '../api-client/delete';
 
-type Props = {
-  initialChatHistory?: chat_thread[];
-};
-
-export const useChat = ({ initialChatHistory }: Props) => {
+export const useChat = () => {
   const { push } = useRouter();
-  const { mutate } = useSWRConfig();
-  const { isContextChatOpen, setIsContextChatOpen, toggleContextChat } = useBoundStore();
 
-  const { data: chatHistory, mutate: mutateChatHistory } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>, {
+  const {
+    isContextChatOpen,
+    setIsContextChatOpen,
+    toggleContextChat,
+    chatHistory,
+    addToChatHistory,
+    deleteFromChatHistory,
+    addMessageToChat,
+  } = useBoundStore();
+
+  /* const { data: chatHistory, mutate: mutateChatHistory } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>, {
     keepPreviousData: true,
     fallbackData: initialChatHistory,
-  });
+  }); */
 
-  const { trigger, isMutating } = useSWRMutation(
+  const { trigger: deleteThread, isMutating: isDeleting } = useSWRMutation(
+    `/api/chat/delete`,
+    async (url: string, params: { arg: { slug: string | null } }) => {
+      if (!params.arg.slug) {
+        return;
+      }
+
+      await del(url, params.arg.slug);
+      deleteFromChatHistory(params.arg.slug);
+    },
+    {
+      /*  onSuccess: (data, key, config) => {
+        mutateChatHistory();
+      }, */
+    }
+  );
+
+  const { trigger: createThread, isMutating: isCreatingThread } = useSWRMutation(
     '/api/chat/create-thread',
     async (url: string, params: { arg: CreateNewThread }) =>
-      post<string, CreateNewThread, { slug: string }>(url, params),
+      post<string, CreateNewThread, chat_thread & { chat_message: chat_message[] }>(url, params),
     {
-      onSuccess: () => {
-        mutate('/api/chat?limit=10');
+      onSuccess: (data) => {
+        // mutateChatHistory();
+        addToChatHistory(data);
       },
     }
   );
 
+  const addMessageToThread = (slug: string, message: chat_message) => {
+    addMessageToChat(slug, message);
+  };
+
   const onChatSubmit = async (prompt: string) => {
-    const thread = await trigger({ prompt });
+    const thread = await createThread({ prompt });
     push(`/chat/${thread.slug}`);
     setIsContextChatOpen(false);
   };
@@ -45,10 +70,12 @@ export const useChat = ({ initialChatHistory }: Props) => {
   return {
     isContextChatOpen,
     toggleContextChat,
-    createThread: trigger,
-    isCreatingThread: isMutating,
+    createThread,
+    isCreatingThread,
+    addMessageToThread,
     onChatSubmit,
     chatHistory,
-    mutateChatHistory,
+    deleteThread,
+    isDeleting,
   };
 };

@@ -6,7 +6,7 @@ import { prismaClient } from '../prisma';
 import { slugify } from '../utils';
 
 export const create = async (prompt: string) => {
-  const slug = `${slugify(prompt.slice(0, 10))}-${randomUUID()}`;
+  const slug = `${slugify(prompt.slice(0, 16))}-${randomUUID()}`;
   const thread = await prismaClient.chat_thread.create({
     data: {
       slug,
@@ -16,6 +16,9 @@ export const create = async (prompt: string) => {
           content: prompt,
         },
       },
+    },
+    include: {
+      chat_message: true,
     },
   });
 

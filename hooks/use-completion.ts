@@ -1,42 +1,52 @@
+'use client';
+
 import { useState } from 'react';
 import { readDataStream } from 'ai';
 import useSWRMutation from 'swr/mutation';
-import { type ArticleMetadata, articleMetadataSchema } from '@/lib/article-metadata/schema';
+import { articleMetadataSchema } from '@/lib/article-metadata/schema';
+import { useBoundStore } from '@/stores';
 
 /**
  * Hook for handling streaming text completions from an API endpoint
  *
- * @param url - The API endpoint URL to send completion requests to
+ * @param slug - The slug of the chat thread to add suggested articles to
  * @returns A tuple containing:
  * - trigger: Function to start a completion request with a prompt
  * - state object containing:
- *   - completion: The current completion text
- *   - documents: The current documents
  *   - error: Any error that occurred
  *   - isLoading: Whether a request is in progress
  *
  * @example
  * ```tsx
- * const [trigger, { completion, documents, error, isLoading }] = useCompletion('/api/completion');
+ * const [trigger, { error, isLoading }] = useCompletion('/api/completion');
  *
  * // Start a completion
  * trigger({ prompt: 'Hello' });
- *
- * // Access the streaming response
- * console.log(completion); // Current completion text
- * console.log(documents); // Current documents
  * ```
  */
-export const useCompletion = (url: string, initialSuggestions?: ArticleMetadata[]) => {
-  const [completion, setCompletion] = useState<string>('');
-  const [documents, setDocuments] = useState<ArticleMetadata[]>(initialSuggestions ?? []);
+export const useCompletion = (slug: string) => {
+  const { getChatBySlug, addSuggestedArticleToChat, addMessageToChat, addCompletionToChat } = useBoundStore();
+
+  const chat = getChatBySlug(slug);
 
   const [abortController, setAbortController] = useState<AbortController | null>();
 
   const { trigger, isMutating, error } = useSWRMutation<void, unknown, string, { prompt: string }>(
-    url,
+    `/api/chat/${slug}/completion`,
     async (url, { arg: { prompt } }) => {
-      setCompletion('');
+      if (!chat) {
+        throw new Error('Chat not found');
+      }
+
+      addMessageToChat(slug, {
+        id: slug,
+        created_at: new Date(),
+        updated_at: new Date(),
+        role: 'ASSISTANT',
+        content: '',
+        chat_thread_id: chat.id,
+      });
+
       if (abortController) {
         abortController.abort();
       }
@@ -56,27 +66,27 @@ export const useCompletion = (url: string, initialSuggestions?: ArticleMetadata[
 
       const reader = res.body.getReader();
 
-      for await (const { type, value } of readDataStream(reader, { isAborted: () => abortController === null })) {
-        if (type === 'text') {
-          setCompletion((prev) => (prev ? prev + value : value));
-        } else if (type === 'message_annotations') {
-          if (value[0] && typeof value[0] === 'string') {
-            const parsed = JSON.parse(value[0]);
+      try {
+        for await (const { type, value } of readDataStream(reader, { isAborted: () => abortController === null })) {
+          if (type === 'text') {
+            addCompletionToChat(slug, slug, value);
+          } else if (type === 'message_annotations') {
+            if (value[0] && typeof value[0] === 'string') {
+              const parsed = JSON.parse(value[0]);
 
-            const metadata = articleMetadataSchema.parse(parsed.article_metadata);
+              const metadata = articleMetadataSchema.parse(parsed.article_metadata);
 
-            setDocuments((prev) => {
-              if (prev.some((doc) => doc.id === metadata.id)) {
-                return prev;
-              }
-              return [...prev, metadata];
-            });
+              addSuggestedArticleToChat(slug, metadata);
+            }
           }
         }
+      } catch (error) {
+        console.error('Error reading data stream:', error);
       }
+
       setAbortController(null);
     }
   );
 
-  return [trigger, { completion, documents, error, isLoading: isMutating }] as const;
+  return [trigger, { error, isLoading: isMutating }] as const;
 };

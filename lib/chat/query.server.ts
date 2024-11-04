@@ -5,11 +5,7 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import * as redis from '../redis';
 
-export type TemporalQueryAnalysis = {
-  isTemporalQuery: boolean | null;
-  timeFrame?: { start: Date; end: Date } | null;
-  temporalWeight: number;
-};
+export type TemporalQueryAnalysis = redis.TemporalAnalysis;
 
 const temporalAnalysisSchema = z.object({
   isTemporalQuery: z.boolean().nullable(),
@@ -68,7 +64,7 @@ export const _analyzeTemporalQuery = async (query: string): Promise<TemporalQuer
   };
 };
 
-export const analyzeTemporalQuery = redis.cacheableFunction<string, TemporalQueryAnalysis>(
+export const analyzeTemporalQuery = redis.cacheableFunction<string, redis.TemporalAnalysis>(
   (query) => redis.keys.analyzeTemporalQuery(crypto.createHash('md5').update(query).digest('hex')),
   redis.temporalAnalysisSchema,
   // 1 hour

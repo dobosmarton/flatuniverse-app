@@ -26,7 +26,7 @@ export const ChatModal: React.FC<Props> = () => {
     toggleContextChat: onClose,
     isCreatingThread: isLoading,
     onChatSubmit: onSubmit,
-  } = useChat({});
+  } = useChat();
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

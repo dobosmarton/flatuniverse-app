@@ -11,7 +11,7 @@ const createNewThread: NextRouteFunction<{}, Params> = async (req) => {
 
   const thread = await threadService.create(parsedParams.prompt);
 
-  return Response.json({ data: { slug: thread.slug } }, { status: 200 });
+  return Response.json({ data: thread }, { status: 200 });
 };
 
 export const POST = createNewThread;
