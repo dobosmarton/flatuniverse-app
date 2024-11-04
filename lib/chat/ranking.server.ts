@@ -19,7 +19,9 @@ export const rankTemporalDocuments = async (
   temporalAnalysis: TemporalQueryAnalysis,
   topK: number
 ) => {
-  if (!temporalAnalysis.isTemporalQuery) return documents;
+  if (!temporalAnalysis.isTemporalQuery) {
+    return documents;
+  }
 
   return documents
     .map((document) => {
@@ -29,10 +31,10 @@ export const rankTemporalDocuments = async (
 
       // Exponential decay for time relevance
       const timeScore = Math.exp(-ageInDays / 365);
+      const temporalWeight = temporalAnalysis.temporalWeight ?? 0;
 
       // Combine scores
-      const finalScore =
-        (1 - temporalAnalysis.temporalWeight) * document.score + temporalAnalysis.temporalWeight * timeScore;
+      const finalScore = (1 - temporalWeight) * document.score + temporalWeight * timeScore;
 
       return { ...document, score: finalScore };
     })
