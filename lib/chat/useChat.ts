@@ -16,7 +16,7 @@ export const useChat = () => {
 
   const { chatHistory, addToChatHistory, deleteFromChatHistory, addMessageToChat } = useBoundStore();
 
-  const chatHistoryAsc = useMemo(() => chatHistory.toReversed(), [chatHistory]);
+  const chatHistoryAsc = useMemo(() => chatHistory.slice().reverse(), [chatHistory]);
 
   /* const { data: chatHistory, mutate: mutateChatHistory } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>, {
     keepPreviousData: true,
