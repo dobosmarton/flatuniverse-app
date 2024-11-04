@@ -7,6 +7,9 @@ import * as chatService from '@/lib/chat/chat.server';
 import * as queryService from '@/lib/chat/query.server';
 import { chat_message_role } from '@prisma/client';
 
+// 60 seconds
+export const maxDuration = 60;
+
 type Params = { params: { slug: string } };
 
 const chatCompletion: NextRouteFunction<Params> = async (req, { params }) => {
