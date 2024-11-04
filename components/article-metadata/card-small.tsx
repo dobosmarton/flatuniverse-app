@@ -1,7 +1,10 @@
 import React from 'react';
+import Link from 'next/link';
 import Latex from 'react-latex-next';
-import { CalendarDaysIcon } from 'lucide-react';
+import { CalendarDaysIcon, ChevronRightSquareIcon, SquareArrowOutUpRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { CollapsibleRichText } from './collapsible-text';
+import { Button } from '../ui/button';
 
 type Props = {
   id: string;
@@ -13,15 +16,21 @@ type Props = {
 
 export const CardSmall: React.FC<Props> = ({ id, slug, title, abstract, published }) => {
   return (
-    <Card className="flex flex-col justify-between">
+    <Card className="relative flex flex-col justify-between">
+      <Button variant="link" size="sm" className="absolute top-0 right-0 font-normal">
+        <Link href={`/articles/${slug}`} target="_blank" rel="noopener noreferrer">
+          <SquareArrowOutUpRight className="h-4 w-4" />
+        </Link>
+      </Button>
+
       <CardHeader className="p-4 pb-2">
-        <CardTitle className="text-xs">
+        <CardTitle className="text-sm">
           <Latex>{title}</Latex>
         </CardTitle>
       </CardHeader>
       <CardContent className="px-4 pb-2">
-        <div className="text-xs">
-          <Latex>{abstract.slice(0, 120)}...</Latex>
+        <div className="text-sm">
+          <CollapsibleRichText text={abstract} shortCharacterCount={120} size="sm" />
         </div>
       </CardContent>
       <CardFooter className="px-4 pt-0">

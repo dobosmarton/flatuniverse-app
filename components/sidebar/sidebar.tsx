@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { ChatMenuItem } from './chat-menu-item';
+import Link from 'next/link';
 
 export const AppSidebar: React.FC = () => {
   return (
@@ -22,23 +23,14 @@ export const AppSidebar: React.FC = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/">
+                  <Link href="/">
                     <ScrollText />
                     <span>Home</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               <ChatMenuItem />
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <a href="/settings">
-                    <Settings />
-                    <span>Settings</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

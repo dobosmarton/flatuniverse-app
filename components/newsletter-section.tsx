@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Loader2Icon, XIcon } from 'lucide-react';
 import useSWRMutation from 'swr/mutation';
 import { useForm } from 'react-hook-form';
@@ -23,7 +24,7 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-export const NewsletterSection: React.FC<Props> = ({ closable }) => {
+const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
   const { isBannerVisible, setBannerVisible } = useBoundStore();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -94,3 +95,5 @@ export const NewsletterSection: React.FC<Props> = ({ closable }) => {
     </Card>
   );
 };
+
+export const NewsletterSection = dynamic(() => Promise.resolve(NewsletterSectionComp), { ssr: false });
