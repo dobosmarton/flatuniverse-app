@@ -8,6 +8,7 @@ import { chat_message } from '@prisma/client';
 import { useCompletion } from '@/hooks/use-completion';
 import { CardSmall } from '@/components/article-metadata/card-small';
 import { ChatThreadWithMessages } from '@/stores/chat-history';
+import { ChatDemo } from './chat-demo';
 
 type Props = {
   slug: string;
@@ -32,7 +33,7 @@ export const ChatCompletion: React.FC<Props> = ({ slug, thread }) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col p-4 justify-between min-h-screen">
         <div className="flex flex-col gap-4">
           {thread.chat_message.map((message, index) => (
             <MessageBubble variant={message.role === 'ASSISTANT' ? 'answer' : 'question'} key={message.id}>
@@ -40,6 +41,8 @@ export const ChatCompletion: React.FC<Props> = ({ slug, thread }) => {
             </MessageBubble>
           ))}
         </div>
+
+        <ChatDemo />
       </div>
       <div className="flex flex-col gap-4 p-4 max-w-[360px]">
         <Label>Suggested Articles</Label>

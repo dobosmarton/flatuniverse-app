@@ -3,45 +3,21 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { Loader2Icon, XIcon } from 'lucide-react';
-import useSWRMutation from 'swr/mutation';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useBoundStore } from '@/stores';
-import { post } from '@/lib/api-client/post';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
+import { useNewsletter } from '@/hooks/use-newsletter';
 
 type Props = {
   closable?: boolean;
 };
 
-const formSchema = z.object({
-  email: z.string().email('Please enter a valid email address.'),
-});
-
-type FormType = z.infer<typeof formSchema>;
-
 const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
   const { isBannerVisible, setBannerVisible } = useBoundStore();
-  const form = useForm<FormType>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-    },
-  });
 
-  const { trigger, isMutating } = useSWRMutation(
-    `/api/newsletter/subscribe`,
-    async (url: string, params: { arg: FormType }) => post(url, params)
-  );
-
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    await trigger({ email: data.email });
-    form.reset();
-  };
+  const { form, isSubscribing, onSubscribe } = useNewsletter();
 
   if (closable && !isBannerVisible) {
     return null;
@@ -50,7 +26,7 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
   return (
     <Card className="relative flex flex-col py-8">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubscribe)}>
           {closable ? (
             <Button
               variant="ghost"
@@ -81,7 +57,7 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
                   </FormItem>
                 )}
               />
-              {isMutating ? (
+              {isSubscribing ? (
                 <Button disabled className="min-w-[100px]">
                   <Loader2Icon width={18} height={18} className="animate-spin" />
                 </Button>

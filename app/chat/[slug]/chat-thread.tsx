@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { ChatCompletion } from './chat-completion';
 import { useBoundStore } from '@/stores';
 
@@ -8,7 +9,7 @@ type Props = {
   params: { slug: string };
 };
 
-export const ThreadChat: React.FC<Props> = ({ params }) => {
+export const ThreadChatComp: React.FC<Props> = ({ params }) => {
   const router = useRouter();
   const { getChatBySlug } = useBoundStore();
 
@@ -25,3 +26,7 @@ export const ThreadChat: React.FC<Props> = ({ params }) => {
     </div>
   );
 };
+
+export const ThreadChat = dynamic(() => Promise.resolve(ThreadChatComp), {
+  ssr: false,
+});

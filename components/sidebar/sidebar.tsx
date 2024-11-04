@@ -1,4 +1,4 @@
-import { ScrollText, Settings } from 'lucide-react';
+import { ScrollText } from 'lucide-react';
 
 import {
   Sidebar,

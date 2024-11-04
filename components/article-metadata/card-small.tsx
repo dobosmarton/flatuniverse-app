@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Latex from 'react-latex-next';
-import { CalendarDaysIcon, ChevronRightSquareIcon, SquareArrowOutUpRight } from 'lucide-react';
+import { CalendarDaysIcon, SquareArrowOutUpRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { CollapsibleRichText } from './collapsible-text';
 import { Button } from '../ui/button';
@@ -24,7 +24,7 @@ export const CardSmall: React.FC<Props> = ({ id, slug, title, abstract, publishe
       </Button>
 
       <CardHeader className="p-4 pb-2">
-        <CardTitle className="text-sm">
+        <CardTitle className="text-sm mr-4">
           <Latex>{title}</Latex>
         </CardTitle>
       </CardHeader>

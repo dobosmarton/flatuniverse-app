@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import useSWRMutation from 'swr/mutation';
 
@@ -13,15 +14,9 @@ import { del } from '../api-client/delete';
 export const useChat = () => {
   const { push } = useRouter();
 
-  const {
-    isContextChatOpen,
-    setIsContextChatOpen,
-    toggleContextChat,
-    chatHistory,
-    addToChatHistory,
-    deleteFromChatHistory,
-    addMessageToChat,
-  } = useBoundStore();
+  const { chatHistory, addToChatHistory, deleteFromChatHistory, addMessageToChat } = useBoundStore();
+
+  const chatHistoryAsc = useMemo(() => chatHistory.toReversed(), [chatHistory]);
 
   /* const { data: chatHistory, mutate: mutateChatHistory } = useSWR(`/api/chat?limit=10`, fetcher<chat_thread[]>, {
     keepPreviousData: true,
@@ -64,17 +59,14 @@ export const useChat = () => {
   const onChatSubmit = async (prompt: string) => {
     const thread = await createThread({ prompt });
     push(`/chat/${thread.slug}`);
-    setIsContextChatOpen(false);
   };
 
   return {
-    isContextChatOpen,
-    toggleContextChat,
     createThread,
     isCreatingThread,
     addMessageToThread,
     onChatSubmit,
-    chatHistory,
+    chatHistory: chatHistoryAsc,
     deleteThread,
     isDeleting,
   };
