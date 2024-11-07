@@ -55,7 +55,7 @@
     "luxon": "^3.4.4",
     "next": "14.2.15",
     "next-themes": "^0.3.0",
-    "posthog-js": "^1.140.1",
+    "posthog-js": "^1.181.0",
     "postmark": "^4.0.4",
     "react": "^18",
     "react-day-picker": "^8.10.1",

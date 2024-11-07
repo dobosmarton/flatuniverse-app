@@ -1,9 +1,8 @@
 'use server';
 
-import { ChatMessage, ContextChatEngine, EngineResponse, MessageType, OpenAI, SimpleChatEngine } from 'llamaindex';
-import { getMessagesByThreadSlug, getThreads } from './thread.server';
-import { article_metadata, chat_message, chat_message_role, chat_thread } from '@prisma/client';
-import { getIndexFromStore } from '../vector-store';
+import { ChatMessage, EngineResponse, MessageType, OpenAI, SimpleChatEngine } from 'llamaindex';
+import { getThreads } from './thread.server';
+import { chat_message, chat_message_role, chat_thread } from '@prisma/client';
 import { getArticleMetadataByIds } from '../article-metadata/metadata.server';
 import { DocumentSuggestion, findRelevantDocuments } from './suggestion.server';
 import type { ExtendedArticleMetadata } from '../article-metadata/metadata';

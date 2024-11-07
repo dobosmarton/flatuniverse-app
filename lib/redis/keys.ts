@@ -6,4 +6,7 @@ export const keys = {
   authorsByArticles: (page: number, pageSize: number, search?: string) =>
     `authors:by-articles:${page}:${pageSize}${search?.length ? `:${search}` : ''}`,
   analyzeTemporalQuery: (promptHash: string) => `analyze-temporal-query:${promptHash}`,
+  findLatestMetadataByExternalIds: (ids: string[]) => `metadata:find-latest-by-external-ids:${ids.join(':')}`,
+  getArticleMetadataBySlug: (slug: string) => `metadata:get-by-slug:${slug}`,
+  getArticleWithPdfLink: (id: string) => `metadata:get-with-pdf-link:${id}`,
 };

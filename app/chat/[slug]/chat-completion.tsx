@@ -42,7 +42,7 @@ export const ChatCompletion: React.FC<Props> = ({ slug, thread }) => {
           ))}
         </div>
 
-        <ChatDemo />
+        <ChatDemo slug={slug} />
       </div>
       <div className="flex flex-col gap-4 p-4 max-w-[360px]">
         <Label>Suggested Articles</Label>

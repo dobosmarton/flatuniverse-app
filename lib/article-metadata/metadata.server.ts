@@ -1,6 +1,7 @@
 'use server';
 
 import { randomUUID } from 'crypto';
+import * as redis from '@/lib/redis';
 import { Prisma } from '@prisma/client';
 import * as logger from '@/lib/logger';
 import { prismaClient } from '../prisma';
@@ -8,6 +9,7 @@ import { slugify } from '../utils';
 import { Metadata } from '../oai-pmh/schema';
 import { ArticleMetadataSearch } from './schema';
 import type { ExtendedArticleMetadata } from './metadata';
+import { GetArticleWithPdfLinkCache } from '@/lib/redis';
 
 export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => {
   logger.log('   ');
@@ -193,7 +195,7 @@ export const addArticleMetadata = async (entries: Metadata[]): Promise<void> => 
   logger.log('   ');
 };
 
-export const findLatestMetadataByExternalIds = async (params: { id: string; updated: Date }[]): Promise<string[]> => {
+export const _findLatestMetadataByExternalIds = async (params: { id: string; updated: Date }[]): Promise<string[]> => {
   const savedRecords = await prismaClient.article_metadata.findMany({
     where: { external_id: { in: params.map((param) => param.id) } },
     select: { external_id: true, updated: true },
@@ -206,6 +208,13 @@ export const findLatestMetadataByExternalIds = async (params: { id: string; upda
     })
     .map((item) => item.external_id);
 };
+
+export const findLatestMetadataByExternalIds = redis.cacheableFunction<{ id: string; updated: Date }[], string[]>(
+  (props) => redis.keys.findLatestMetadataByExternalIds(props.map((prop) => prop.id)),
+  redis.findLatestMetadataByExternalIdsCacheSchema,
+  // Cache for 30 minutes
+  { ex: 60 * 30 }
+)(_findLatestMetadataByExternalIds);
 
 export const addNewArticleMetadata = async (metadataEntries: Metadata[]): Promise<string[] | null> => {
   try {
@@ -248,7 +257,7 @@ export const getGeneratedSummary = async (id: string) => {
   return metadata;
 };
 
-export const getArticleMetadataBySlug = async (slug: string) => {
+export const _getArticleMetadataBySlug = async (slug: string): Promise<ExtendedArticleMetadata | null> => {
   const article = await prismaClient.article_metadata.findFirst({
     where: { slug },
     include: {
@@ -263,6 +272,13 @@ export const getArticleMetadataBySlug = async (slug: string) => {
   return article;
 };
 
+export const getArticleMetadataBySlug = redis.cacheableFunction<string, ExtendedArticleMetadata | null>(
+  redis.keys.getArticleMetadataBySlug,
+  redis.getArticleMetadataBySlugCacheSchema,
+  // Cache for 1 hour
+  { ex: 60 * 60 }
+)(_getArticleMetadataBySlug);
+
 export const getArticleMetadataByIds = async (ids: string[]): Promise<ExtendedArticleMetadata[]> => {
   const articles = await prismaClient.article_metadata.findMany({
     where: { id: { in: ids } },
@@ -271,12 +287,13 @@ export const getArticleMetadataByIds = async (ids: string[]): Promise<ExtendedAr
       categories: { select: { category: { select: { short_name: true, full_name: true, group_name: true } } } },
       links: { select: { link: { select: { href: true, rel: true, type: true, title: true } } } },
     },
+    take: ids.length,
   });
 
   return articles;
 };
 
-export const getArticleWithPdfLink = async (
+export const _getArticleWithPdfLink = async (
   id: string
 ): Promise<{ id: string; published: number; pdfLink: string | null } | undefined> => {
   const article = await prismaClient.article_metadata.findUnique({
@@ -294,6 +311,13 @@ export const getArticleWithPdfLink = async (
     pdfLink: article.links.find((connection) => connection.link.type === 'application/pdf')?.link.href ?? null,
   };
 };
+
+export const getArticleWithPdfLink = redis.cacheableFunction<string, GetArticleWithPdfLinkCache | undefined>(
+  redis.keys.getArticleWithPdfLink,
+  redis.getArticleWithPdfLinkCacheSchema,
+  // Cache for 1 hour
+  { ex: 60 * 60 }
+)(_getArticleWithPdfLink);
 
 /**
  * Searches for article metadata based on the provided parameters.
