@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader2Icon } from 'lucide-react';
+import posthog from 'posthog-js';
 
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -7,15 +8,28 @@ import { Button } from '@/components/ui/button';
 import { FormType, useNewsletter } from '@/hooks/use-newsletter';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { events } from '@/lib/analytics';
 
-export const ChatDemo = () => {
+export const ChatDemo = ({ slug }: { slug: string }) => {
   const { form, isSubscribing, onSubscribe } = useNewsletter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      posthog.capture(events.chatDemoOpen, {
+        slug,
+      });
+    }
+  }, [isModalOpen, slug]);
+
   const onSubmit = async (data: FormType) => {
     await onSubscribe(data);
     setIsModalOpen(false);
+
+    posthog.capture(events.chatDemoSubscribe, {
+      slug,
+    });
   };
 
   return (
