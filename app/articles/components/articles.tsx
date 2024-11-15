@@ -17,14 +17,15 @@ export const Articles: React.FC<Props> = async ({ searchParams }) => {
   const parsedSearchParams = articleMetadataSearchSchema.parse(searchParams);
 
   return (
-    <div className="flex flex-col px-8 py-12 sm:py-16 gap-4">
+    <div className="flex flex-col w-full">
       <Toolbar categoryTree={categoryTree} authors={authorList} searchParams={parsedSearchParams} />
+      <div className="flex flex-col px-8 py-8 gap-4">
+        <NewsletterSection closable />
 
-      <NewsletterSection closable />
-
-      <Suspense fallback={<FallbackLoader />}>
-        <ArticleList searchParams={parsedSearchParams} />
-      </Suspense>
+        <Suspense fallback={<FallbackLoader />}>
+          <ArticleList searchParams={parsedSearchParams} />
+        </Suspense>
+      </div>
     </div>
   );
 };

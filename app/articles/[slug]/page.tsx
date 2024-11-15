@@ -1,3 +1,5 @@
+import { cache } from 'react';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CalendarDaysIcon, NotebookTextIcon, User2Icon } from 'lucide-react';
 import { NewsletterSection } from '@/components/newsletter-section';
@@ -15,8 +17,25 @@ type Props = {
   params: { slug: string };
 };
 
+const getArticleMetadata = cache(async (slug: string) => {
+  const metadata = await getArticleMetadataBySlug(slug);
+  return metadata;
+});
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // optionally access and extend (rather than replace) parent metadata
+  const metadata = await getArticleMetadata(params.slug);
+
+  return {
+    title: metadata?.title ?? 'Flat universe',
+    description:
+      metadata?.abstract.slice(0, 120) ??
+      'The Earth is not flat, but the universe is still may be. Follow the latest research papers and articles on the flat universe.',
+  };
+}
+
 export default async function ArticleDetails({ params }: Readonly<Props>) {
-  const article = await getArticleMetadataBySlug(params.slug);
+  const article = await getArticleMetadata(params.slug);
 
   if (!article) {
     return notFound();

@@ -37,21 +37,21 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
             </Button>
           ) : null}
           <CardHeader className="gap-2 items-center">
-            <CardTitle>Stay up-to-date on science!</CardTitle>
+            <CardTitle>Start Exploring Research Today</CardTitle>
 
             <CardDescription>
-              {"We'll send you an email every week with the latest research papers in your field."}
+              {'Join our community of researchers and gain deeper insights into academic papers.'}
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <div className="flex max-w-md gap-2">
+          <CardContent className="flex justify-center items-center flex-col gap-4">
+            <div className="flex gap-2">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Email" {...field} className="w-64" />
+                      <Input placeholder="Email" {...field} className="w-72" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -65,6 +65,9 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
                 <Button type="submit">Subscribe</Button>
               )}
             </div>
+            <span className="text-xs text-muted-foreground">
+              {'By subscribing, you agree to our Terms of Service and Privacy Policy.'}
+            </span>
           </CardContent>
         </form>
       </Form>

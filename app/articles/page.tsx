@@ -4,7 +4,7 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default async function ArticlesPage({ searchParams }: Readonly<Props>) {
+export default function ArticlesPage({ searchParams }: Readonly<Props>) {
   return <Articles searchParams={searchParams} />;
 }
 

@@ -1,3 +1,10 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About the project',
+  description: 'Learn more about the project and the goal of the project.',
+};
+
 export default async function About() {
   return (
     <div className="flex flex-col px-8 py-12 sm:py-16  gap-4">

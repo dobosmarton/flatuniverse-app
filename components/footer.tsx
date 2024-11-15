@@ -1,16 +1,20 @@
+import Link from 'next/link';
 import { siGithub, siX } from 'simple-icons';
 
 export const Footer = () => {
   return (
-    <footer className="flex items-center h-20 gap-1 font-medium border-t px-8 py-12">
-      <div className="flex flex-col">
-        <div>
-          Flat universe
-          <span className="text-sm">© 2024</span>
-        </div>
-        <span className="text-sm font-normal">Thank you to arXiv for use of its open access interoperability. 🙏</span>
-      </div>
-      <nav className="flex justify-end grow sm:gap-2">
+    <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+      <p className="text-xs font-light text-gray-500 dark:text-gray-400">© 2024 Flatuniverse. All rights reserved.</p>
+      <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+        <Link className="text-xs hover:underline underline-offset-4" href="/terms">
+          Terms of Service
+        </Link>
+        <Link className="text-xs hover:underline underline-offset-4" href="#">
+          Privacy
+        </Link>
+        <Link className="text-xs hover:underline underline-offset-4" href="/cookie-policy">
+          Cookie Policy
+        </Link>
         {/*  <a
           className="flex gap-2 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-100 rounded-md hover:text-gray-800"
           href="https://github.com/devagrawal09/clerk-nextjs-template">

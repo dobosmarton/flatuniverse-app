@@ -3,7 +3,7 @@ import { Loader2Icon } from 'lucide-react';
 import posthog from 'posthog-js';
 
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { FormType, useNewsletter } from '@/hooks/use-newsletter';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -81,8 +81,6 @@ export const ChatDemo = ({ slug }: { slug: string }) => {
                   )}
                 </div>
               </div>
-
-              <DialogFooter></DialogFooter>
             </form>
           </Form>
         </DialogContent>
