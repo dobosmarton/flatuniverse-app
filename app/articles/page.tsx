@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { FallbackLoader } from '@/components/fallback-loader';
 import { Articles } from './components/articles';
 
 type Props = {
@@ -5,7 +7,16 @@ type Props = {
 };
 
 export default function ArticlesPage({ searchParams }: Readonly<Props>) {
-  return <Articles searchParams={searchParams} />;
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center h-screen w-full">
+          <FallbackLoader />
+        </div>
+      }>
+      <Articles searchParams={searchParams} />
+    </Suspense>
+  );
 }
 
 // revalidate every 24 hours
