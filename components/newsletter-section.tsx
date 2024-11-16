@@ -37,19 +37,19 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
             </Button>
           ) : null}
           <CardHeader className="gap-2 items-center">
-            <CardTitle>Start Exploring Research Today</CardTitle>
+            <CardTitle className="font-medium">Start Exploring Research Today</CardTitle>
 
             <CardDescription>
               {'Join our community of researchers and gain deeper insights into academic papers.'}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center items-center flex-col gap-4">
-            <div className="flex w-full gap-2">
+            <div className="flex w-full gap-2 justify-center">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem className="max-w-lg flex-1">
+                  <FormItem className="max-w-sm flex-1">
                     <FormControl>
                       <Input placeholder="Email" {...field} />
                     </FormControl>

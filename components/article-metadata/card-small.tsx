@@ -24,7 +24,7 @@ export const CardSmall: React.FC<Props> = ({ id, slug, title, abstract, publishe
       </Button>
 
       <CardHeader className="p-4 pb-2">
-        <CardTitle className="text-sm mr-4">
+        <CardTitle className="text-sm mr-4 font-medium">
           <Latex>{title}</Latex>
         </CardTitle>
       </CardHeader>

@@ -11,6 +11,11 @@ type Props = {
   searchParams?: { [key: string]: string | string[] | undefined };
 };
 
+const getAbstract = (abstract: string, shortCharacterCount: number = 200) => {
+  const sliced = abstract.slice(0, shortCharacterCount);
+  return abstract.length > shortCharacterCount ? `${sliced}...` : sliced;
+};
+
 export const PaperCarousel: React.FC<Props> = async ({ searchParams }) => {
   const parsedSearchParams = articleMetadataSearchSchema.parse(searchParams);
 
@@ -32,15 +37,15 @@ export const PaperCarousel: React.FC<Props> = async ({ searchParams }) => {
           <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/4">
             <Card className="relative flex flex-col justify-between h-96">
               <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-xl font-normal">
+                <CardTitle className="text-lg md:text-base font-normal">
                   <Latex>{article.title}</Latex>
                 </CardTitle>
               </CardHeader>
               <div>
                 <CardContent className="px-4 pb-2">
-                  <div className="text-sm font-light">
-                    <Latex>{`${article.abstract.slice(0, 120)}...`}</Latex>
-                    <Button variant={'link'} className="flex gap-2 px-0 text-xs" size={'sm'}>
+                  <div className="text-base md:text-sm font-light">
+                    <Latex>{getAbstract(article.abstract)}</Latex>
+                    <Button variant={'link'} className="flex gap-2 px-0 text-sm md:text-xs mt-2" size={'sm'}>
                       {'Read more'}
                       <ChevronRightIcon className="h-4 w-4" />
                     </Button>

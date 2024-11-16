@@ -144,7 +144,7 @@ export const ArticleMetadataCard: React.FC<Props> = ({
       ) : null}
 
       <CardHeader className={cn(' gap-2', { 'gap-1 p-4': !isOpen })}>
-        <CardTitle className={cn({ 'text-base': !isOpen })}>
+        <CardTitle className={cn('font-medium leading-7', { 'text-base': !isOpen })}>
           <Latex>{title}</Latex>
         </CardTitle>
 

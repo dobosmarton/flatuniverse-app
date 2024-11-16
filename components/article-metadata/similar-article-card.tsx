@@ -61,7 +61,7 @@ export const SimilarArticleCard: React.FC<Props> = ({
     <Card>
       <CardHeader className="relative gap-1 p-4">
         <div className="flex">
-          <CardTitle className="text-sm mr-6">
+          <CardTitle className="text-sm mr-6 font-medium">
             <Latex>{title}</Latex>
           </CardTitle>
           <Button variant={'ghost'} size={'icon'} className="absolute top-0 right-0 p-2" onClick={onCardSizeChange}>
