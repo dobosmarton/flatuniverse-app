@@ -16,7 +16,7 @@ type Props = {
 
 export const CardSmall: React.FC<Props> = ({ id, slug, title, abstract, published }) => {
   return (
-    <Card className="relative flex flex-col justify-between w-64">
+    <Card className="relative flex flex-col justify-between w-full md:w-64 min-h-64">
       <Button variant="link" size="sm" className="absolute top-0 right-0 font-normal">
         <Link href={`/articles/${slug}`} target="_blank" rel="noopener noreferrer">
           <SquareArrowOutUpRight className="h-4 w-4" />

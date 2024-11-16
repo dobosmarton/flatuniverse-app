@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronDown, HelpCircle, Home, ScrollText } from 'lucide-react';
 
 import {
@@ -11,6 +13,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { ChatMenuItem } from './chat-menu-item';
 import Link from 'next/link';
@@ -18,6 +21,15 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { SidebarTitle } from './sidebar-trigger';
 
 export const AppSidebar: React.FC = () => {
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const onNavClick = () => {
+    // Close the sidebar on mobile
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -27,7 +39,7 @@ export const AppSidebar: React.FC = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/">
+                  <Link href="/" onClick={onNavClick}>
                     <Home />
                     <span>Home</span>
                   </Link>
@@ -36,7 +48,7 @@ export const AppSidebar: React.FC = () => {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/articles">
+                  <Link href="/articles" onClick={onNavClick}>
                     <ScrollText />
                     <span>Articles</span>
                   </Link>
@@ -58,17 +70,21 @@ export const AppSidebar: React.FC = () => {
                     <SidebarMenuSub className="pr-0 mr-0">
                       <SidebarMenuSubItem className="relative">
                         <SidebarMenuSubButton asChild>
-                          <Link href="/terms">Terms of Service</Link>
+                          <Link href="/terms" onClick={onNavClick}>
+                            Terms of Service
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem className="relative">
                         <SidebarMenuSubButton asChild>
-                          <Link href="/cookie-policy">Cookie Policy</Link>
+                          <Link href="/cookie-policy" onClick={onNavClick}>
+                            Cookie Policy
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem className="relative">
                         <SidebarMenuSubButton asChild>
-                          <a href="/" className="termly-display-preferences">
+                          <a href="/" onClick={onNavClick} className="termly-display-preferences">
                             Consent Preferences
                           </a>
                         </SidebarMenuSubButton>

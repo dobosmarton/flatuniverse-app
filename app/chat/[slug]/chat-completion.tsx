@@ -9,6 +9,7 @@ import { useCompletion } from '@/hooks/use-completion';
 import { CardSmall } from '@/components/article-metadata/card-small';
 import { ChatThreadWithMessages } from '@/stores/chat-history';
 import { ChatDemo } from './chat-demo';
+import { SuggestionCarousel } from './suggestion-carousel';
 
 type Props = {
   slug: string;
@@ -42,24 +43,14 @@ export const ChatCompletion: React.FC<Props> = ({ slug, thread }) => {
           ))}
         </div>
 
+        {/* Mobile carousel */}
         <div className="flex flex-col gap-4 p-4 md:hidden">
-          <Label>Suggested Articles</Label>
-          <div className="flex flex-row md:flex-col overflow-x-auto gap-4 py-2">
-            {thread.suggested_articles?.map(({ article_metadata: article }) => (
-              <CardSmall
-                key={article.id}
-                id={article.id}
-                slug={article.slug}
-                title={article.title}
-                abstract={article.abstract}
-                published={new Date(article.published).toDateString()}
-              />
-            ))}
-          </div>
+          <SuggestionCarousel articles={thread.suggested_articles ?? []} />
         </div>
 
         <ChatDemo slug={slug} />
       </div>
+      {/* Desktop carousel */}
       <div className="hidden md:flex flex-col gap-4 p-4 max-w-[360px]">
         <Label>Suggested Articles</Label>
         <div className="flex flex-col gap-4 py-2">
