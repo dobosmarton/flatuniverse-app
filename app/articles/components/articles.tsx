@@ -19,7 +19,7 @@ export const Articles: React.FC<Props> = async ({ searchParams }) => {
   return (
     <div className="flex flex-col w-full">
       <Toolbar categoryTree={categoryTree} authors={authorList} searchParams={parsedSearchParams} />
-      <div className="flex flex-col px-8 py-8 gap-4">
+      <div className="flex flex-col px-2 md:px-8 py-2 md:py-8 gap-4">
         <NewsletterSection closable />
 
         <Suspense fallback={<FallbackLoader />}>

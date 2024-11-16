@@ -5,7 +5,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,13 +15,14 @@ import {
 import { ChatMenuItem } from './chat-menu-item';
 import Link from 'next/link';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { SidebarTitle } from './sidebar-trigger';
 
 export const AppSidebar: React.FC = () => {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
+        <SidebarTitle />
         <SidebarGroup>
-          <SidebarGroupLabel>Flat universe</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>

@@ -24,7 +24,7 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
   }
 
   return (
-    <Card className="relative flex flex-col py-8">
+    <Card className="relative flex flex-col  py-4 md:py-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubscribe)}>
           {closable ? (
@@ -44,14 +44,14 @@ const NewsletterSectionComp: React.FC<Props> = ({ closable }) => {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center items-center flex-col gap-4">
-            <div className="flex gap-2">
+            <div className="flex w-full gap-2">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="max-w-lg flex-1">
                     <FormControl>
-                      <Input placeholder="Email" {...field} className="w-72" />
+                      <Input placeholder="Email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

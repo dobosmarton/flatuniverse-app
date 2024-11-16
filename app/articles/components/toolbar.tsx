@@ -16,6 +16,7 @@ import { DatePickerWithRange } from '@/components/date-range-picker';
 import { ArticleMetadataSearch } from '@/lib/article-metadata/schema';
 import { constructQueryParams } from '@/lib/query-params';
 import { events } from '@/lib/analytics';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 type Props = {
   categoryTree: {
@@ -118,8 +119,11 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
   };
 
   return (
-    <div className="flex flex-col gap-2 sticky top-0 z-10 bg-background py-4 px-8 border-b drop-shadow-sm">
+    <div className="flex flex-col gap-2 sticky top-0 z-10 bg-background py-4 px-2 md:px-8 border-b drop-shadow-sm">
       <div className="flex items-center gap-2">
+        <div className="flex px-2 md:hidden">
+          <SidebarTrigger className="w-4 h-4" />
+        </div>
         <Input
           placeholder="Filter articles..."
           value={searchState.search}

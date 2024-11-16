@@ -42,9 +42,9 @@ export const ChatDemo = ({ slug }: { slug: string }) => {
         />
       </div>
       <Dialog open={isModalOpen} onOpenChange={() => setIsModalOpen((isOpen) => !isOpen)}>
-        <DialogContent className="sm:max-w-[625px]" hasCloseButton={false}>
+        <DialogContent className="flex" hasCloseButton={false}>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-4">
               <DialogTitle>Full chat is coming soon!</DialogTitle>
 
               <div className="flex flex-col gap-8">
@@ -58,14 +58,14 @@ export const ChatDemo = ({ slug }: { slug: string }) => {
                   </DialogDescription>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex w-full gap-2">
                   <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="max-w-lg md:max-w-full flex-1">
                         <FormControl>
-                          <Input placeholder="Email" {...field} autoFocus className="w-80" />
+                          <Input placeholder="Email" {...field} autoFocus />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
