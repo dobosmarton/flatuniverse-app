@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 import { AskAIButton } from './components/ask-ai-button';
 import { PaperCarousel } from './components/paper-carousel';
@@ -10,8 +9,8 @@ import { Footer } from '@/components/footer';
 import { NewsletterSection } from './components/newsletter-section';
 
 export const metadata: Metadata = {
-  title: 'Home',
-  description: 'Discover and understand research papers with our powerful search engine.',
+  title: 'Flatuniverse landing page',
+  description: 'Discover and understand research papers with our powerful search engine and AI assistant.',
   keywords: 'research papers, search engine, AI assistant, academic research',
   robots: 'index, follow',
 };
