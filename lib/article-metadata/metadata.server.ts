@@ -346,53 +346,64 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
 
   const groupNamesWithCategories = groupWithCategories.map((group) => group.group_name);
 
-  const articles = await prismaClient.article_metadata.findMany({
-    where: {
-      AND: [
-        search
-          ? {
-              OR: [
-                { title: { contains: search, mode: 'insensitive' } },
-                { abstract: { contains: search, mode: 'insensitive' } },
-                { authors: { some: { author: { name: { contains: search, mode: 'insensitive' } } } } },
-                { categories: { some: { category: { short_name: { contains: search, mode: 'insensitive' } } } } },
-              ],
-            }
-          : {},
-        categoryGroups || categories
-          ? {
-              categories: {
-                some: {
-                  category: {
-                    OR: [
-                      { group_name: { notIn: groupNamesWithCategories, in: categoryGroups, mode: 'insensitive' } },
-                      {
-                        group_name: { in: groupNamesWithCategories, mode: 'insensitive' },
-                        short_name: { in: categories, mode: 'insensitive' },
-                      },
-                    ],
-                  },
-                },
-              },
-            }
-          : {},
-        authors ? { authors: { some: { author: { name: { in: authors, mode: 'insensitive' } } } } } : {},
-        from || to ? { published: { gte: from, lte: to } } : {},
-      ],
-    },
-    take: pageSize,
-    skip: page && pageSize ? page * pageSize : undefined,
-    orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
-    include: {
-      authors: { select: { author: { select: { name: true } } } },
-      categories: {
-        select: { category: { select: { short_name: true, full_name: true, group_name: true } } },
-      },
-      links: { select: { link: { select: { href: true, rel: true, type: true, title: true } } } },
-    },
-  });
+  const searchQuery: Prisma.article_metadataWhereInput = search
+    ? {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { abstract: { contains: search, mode: 'insensitive' } },
+          { authors: { some: { author: { name: { contains: search, mode: 'insensitive' } } } } },
+          { categories: { some: { category: { short_name: { contains: search, mode: 'insensitive' } } } } },
+        ],
+      }
+    : {};
 
-  return articles;
+  const categoryQuery: Prisma.article_metadataWhereInput =
+    categoryGroups || categories
+      ? {
+          categories: {
+            some: {
+              category: {
+                OR: [
+                  { group_name: { notIn: groupNamesWithCategories, in: categoryGroups, mode: 'insensitive' } },
+                  {
+                    group_name: { in: groupNamesWithCategories, mode: 'insensitive' },
+                    short_name: { in: categories, mode: 'insensitive' },
+                  },
+                ],
+              },
+            },
+          },
+        }
+      : {};
+
+  const authorQuery: Prisma.article_metadataWhereInput = authors
+    ? { authors: { some: { author: { name: { in: authors, mode: 'insensitive' } } } } }
+    : {};
+
+  const dateQuery: Prisma.article_metadataWhereInput = from || to ? { published: { gte: from, lte: to } } : {};
+
+  const [totalCount, articles] = await prismaClient.$transaction([
+    prismaClient.article_metadata.count({
+      where: { AND: [searchQuery, categoryQuery, authorQuery, dateQuery] },
+    }),
+    prismaClient.article_metadata.findMany({
+      where: {
+        AND: [searchQuery, categoryQuery, authorQuery, dateQuery],
+      },
+      take: pageSize,
+      skip: page && pageSize ? page * pageSize : undefined,
+      orderBy: [{ published: 'desc' }, { external_id: 'desc' }],
+      include: {
+        authors: { select: { author: { select: { name: true } } } },
+        categories: {
+          select: { category: { select: { short_name: true, full_name: true, group_name: true } } },
+        },
+        links: { select: { link: { select: { href: true, rel: true, type: true, title: true } } } },
+      },
+    }),
+  ]);
+
+  return { articles, totalCount };
 };
 
 export type CreatedArticleMetadata = Prisma.PromiseReturnType<typeof addArticleMetadata>;

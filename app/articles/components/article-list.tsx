@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const ArticleList: React.FC<Props> = async ({ searchParams }) => {
-  const articles = await articleMetadataService.searchArticleMetadata({
+  const { articles, totalCount } = await articleMetadataService.searchArticleMetadata({
     ...searchParams,
     // Next.js pages are 1-indexed, but the API is 0-indexed
     page: searchParams.page - 1,
@@ -26,7 +26,7 @@ export const ArticleList: React.FC<Props> = async ({ searchParams }) => {
         ))}
 
         <div className="flex pt-6 self-end">
-          <ArticleListPagination searchParams={searchParams} hasNextPage={Boolean(articles.length)} />
+          <ArticleListPagination searchParams={searchParams} totalCount={totalCount} pageSize={searchParams.pageSize} />
         </div>
       </div>
     </TooltipProvider>
