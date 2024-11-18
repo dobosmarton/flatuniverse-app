@@ -31,7 +31,7 @@ export const AppSidebar: React.FC = () => {
   };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="z-20">
       <SidebarContent>
         <SidebarTitle />
         <SidebarGroup>

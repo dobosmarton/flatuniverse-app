@@ -1,7 +1,7 @@
 'use client';
 
 import React, { startTransition, useEffect, useState } from 'react';
-import { ChevronsDownUpIcon, ChevronsUpDownIcon, MessageCircleIcon, Settings2Icon } from 'lucide-react';
+import { ChevronsDownUpIcon, ChevronsUpDownIcon, Loader2Icon, MessageCircleIcon, Settings2Icon } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import posthog from 'posthog-js';
@@ -40,8 +40,9 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
   const { isCompactMode, toggleCompactMode, isContextChatOpen, toggleContextChat } = useBoundStore();
 
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
   const [searchState, setSearchState] = useState<ArticleMetadataSearch>(searchParams);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
 
   const [queryParams] = useDebounce(
     constructQueryParams({
@@ -57,6 +58,7 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
 
   useEffect(() => {
     setSearchState(searchParams);
+    setIsSearchLoading(false);
     if (!isFilterOpen && isFiltered(searchParams)) {
       setIsFilterOpen(true);
     }
@@ -73,9 +75,14 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
     });
 
     startTransition(() => {
-      replace(`${pathname}?${queryParams}`);
+      push(`${pathname}?${queryParams}`);
     });
   }, [queryParams]);
+
+  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsSearchLoading(true);
+    setSearchState((state) => ({ ...state, search: event.target.value }));
+  };
 
   const resetFilters = () =>
     setSearchState((state) => ({
@@ -127,20 +134,31 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
         <Input
           placeholder="Filter articles..."
           value={searchState.search}
-          onChange={(event) => setSearchState((state) => ({ ...state, search: event.target.value }))}
+          onChange={onSearchChange}
           className="h-8 w-full md:w-[360px]"
         />
-        <Button
-          variant={isFilterOpen ? 'default' : 'outline'}
-          size="sm"
-          className="h-8 font-normal"
-          onClick={() => setIsFilterOpen((open) => !open)}>
-          <Settings2Icon className="h-4 w-4" />
-        </Button>
+
+        {isSearchLoading ? (
+          <Button variant="default" size="sm" className="h-8 font-normal">
+            <Loader2Icon className="h-4 w-4 animate-spin" />
+          </Button>
+        ) : null}
+
+        {!isSearchLoading ? (
+          <Button
+            variant={isFilterOpen ? 'default' : 'outline'}
+            size="sm"
+            className="h-8 font-normal"
+            onClick={() => setIsFilterOpen((open) => !open)}>
+            <Settings2Icon className="h-4 w-4" />
+          </Button>
+        ) : null}
+
         <Button
           variant={isCompactMode ? 'default' : 'outline'}
           size="sm"
           className="h-8 font-normal"
+          disabled={isSearchLoading}
           onClick={toggleCompactMode}>
           {isCompactMode ? <ChevronsUpDownIcon className="h-4 w-4" /> : <ChevronsDownUpIcon className="h-4 w-4" />}
         </Button>
@@ -148,6 +166,7 @@ export const Toolbar: React.FC<Props> = ({ categoryTree, authors, searchParams }
           variant={isContextChatOpen ? 'default' : 'outline'}
           size="sm"
           className="h-8 font-normal"
+          disabled={isSearchLoading}
           onClick={toggleContextChat}>
           <MessageCircleIcon className="h-4 w-4" />
         </Button>

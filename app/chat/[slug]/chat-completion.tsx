@@ -16,6 +16,14 @@ type Props = {
   thread: ChatThreadWithMessages;
 };
 
+const TypingAnimation = () => (
+  <div className="flex space-x-1 items-center ">
+    <div className="h-1 w-1 bg-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+    <div className="h-1 w-1 bg-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+    <div className="h-1 w-1 bg-foreground rounded-full animate-bounce"></div>
+  </div>
+);
+
 export const ChatCompletion: React.FC<Props> = ({ slug, thread }) => {
   const [trigger, { isLoading }] = useCompletion(slug);
 
@@ -27,7 +35,7 @@ export const ChatCompletion: React.FC<Props> = ({ slug, thread }) => {
 
   const getMessageContent = (message: chat_message, isLast: boolean, isLoading: boolean) => {
     if (message.role === 'ASSISTANT') {
-      return isLoading && isLast && !message.content ? '...' : message.content;
+      return isLoading && isLast && !message.content ? <TypingAnimation /> : message.content;
     }
     return message.content;
   };

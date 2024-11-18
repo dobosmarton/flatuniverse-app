@@ -22,11 +22,16 @@ const messageVariants = cva(
 );
 
 const MessageBubble: React.FC<
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof messageVariants> & { children: string }
-> = ({ className, children, variant, ...props }) => (
-  <Markdown className={cn(messageVariants({ variant }), className)} {...props}>
-    {children}
-  </Markdown>
-);
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof messageVariants> & { children: string | React.ReactNode }
+> = ({ className, children, variant, ...props }) =>
+  typeof children === 'string' ? (
+    <Markdown className={cn(messageVariants({ variant }), className)} {...props}>
+      {children}
+    </Markdown>
+  ) : (
+    <div className={cn(messageVariants({ variant }), className)} {...props}>
+      {children}
+    </div>
+  );
 
 export { MessageBubble };
