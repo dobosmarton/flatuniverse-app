@@ -64,6 +64,7 @@
     "react-hook-form": "^7.52.0",
     "react-latex-next": "^3.0.0",
     "react-markdown": "^9.0.1",
+    "react-turnstile": "^1.1.4",
     "simple-icons": "^12.4.0",
     "sonner": "^1.5.0",
     "swr": "^2.2.5",

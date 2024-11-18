@@ -26,11 +26,11 @@ export const useNewsletter = (): UseNewsletterReturnType => {
 
   const { trigger, isMutating } = useSWRMutation(
     `/api/newsletter/subscribe`,
-    async (url: string, params: { arg: FormType }) => post(url, params)
+    async (url: string, params: { arg: { data: FormType } }) => post(url, params)
   );
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    await trigger({ email: data.email });
+    await trigger({ data: { email: data.email } });
     form.reset();
   };
 

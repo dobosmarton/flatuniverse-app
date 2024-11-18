@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
+import Turnstile from 'react-turnstile';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from '@/components/ui/dialog';
 import { useChat } from '@/lib/chat/useChat';
@@ -24,8 +25,22 @@ type Props = {};
 
 export const ChatModal: React.FC<Props> = () => {
   const [prompt, setPrompt] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const { isContextChatOpen: open, toggleContextChat: onClose } = useBoundStore();
-  const { isCreatingThread: isLoading, onChatSubmit: onSubmit } = useChat();
+  const {
+    isCreatingThread: isLoading,
+    onChatSubmit: onSubmit,
+    createThreadErrorMessage: onSubmitError,
+    resetCreateThreadError,
+  } = useChat();
+
+  useEffect(() => {
+    if (onSubmitError) {
+      resetCreateThreadError();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, prompt]);
 
   const onCloseChat = () => {
     setPrompt('');
@@ -33,7 +48,7 @@ export const ChatModal: React.FC<Props> = () => {
   };
 
   const onPromptSubmit = async (prompt: string) => {
-    await onSubmit(prompt);
+    await onSubmit(prompt, turnstileToken);
     onCloseChat();
   };
 
@@ -54,18 +69,36 @@ export const ChatModal: React.FC<Props> = () => {
           ))}
         </div>
         <DialogFooter>
-          {isLoading ? (
-            <LoadingButton />
-          ) : (
-            <Button
-              type="submit"
-              variant="outline"
-              size="icon"
-              disabled={!prompt.length || isLoading}
-              onClick={() => onPromptSubmit(prompt)}>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          )}
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-2">
+              <Turnstile
+                sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ''}
+                onVerify={(token) => setTurnstileToken(token)}
+                onError={() => setTurnstileToken(null)}
+                onLoad={() => setTurnstileToken(null)}
+              />
+
+              {isLoading ? (
+                <LoadingButton />
+              ) : (
+                <Button
+                  type="submit"
+                  variant="outline"
+                  size="icon"
+                  disabled={!prompt.length || isLoading || !turnstileToken}
+                  onClick={() => onPromptSubmit(prompt)}>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+
+            {onSubmitError && (
+              <div className="flex flex-row items-center gap-2 text-red-500">
+                <AlertCircle className="h-4 w-4" />
+                <span className="text-sm">{onSubmitError}</span>
+              </div>
+            )}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
