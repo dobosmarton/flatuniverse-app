@@ -19,7 +19,7 @@ const getAbstract = (abstract: string, shortCharacterCount: number = 200) => {
 export const PaperCarousel: React.FC<Props> = async ({ searchParams }) => {
   const parsedSearchParams = articleMetadataSearchSchema.parse(searchParams);
 
-  const articles = await articleMetadataService.searchArticleMetadata({
+  const { articles } = await articleMetadataService.searchArticleMetadata({
     ...parsedSearchParams,
     // Next.js pages are 1-indexed, but the API is 0-indexed
     page: parsedSearchParams.page - 1,

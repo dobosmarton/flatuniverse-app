@@ -27,9 +27,9 @@ const searchArticles: NextRouteFunction<{}> = async (request) => {
 
   logger.log('New search request', parsedParams);
 
-  const products = await articleMetadataService.searchArticleMetadata(parsedParams);
+  const { articles } = await articleMetadataService.searchArticleMetadata(parsedParams);
 
-  return Response.json({ data: products });
+  return Response.json({ data: articles });
 };
 
 export const GET = searchArticles;
