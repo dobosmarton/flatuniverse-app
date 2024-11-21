@@ -392,7 +392,7 @@ export const searchArticleMetadata = async (params: ArticleMetadataSearch) => {
       },
       take: pageSize,
       skip: page && pageSize ? page * pageSize : undefined,
-      orderBy: [{ published: 'desc' }, { updated: 'desc' }, { external_id: 'desc' }],
+      orderBy: [{ published: 'desc' }, { updated_at: 'desc' }, { external_id: 'desc' }],
       include: {
         authors: { select: { author: { select: { name: true } } } },
         categories: {
