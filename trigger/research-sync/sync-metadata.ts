@@ -10,6 +10,11 @@ const retryDefault = 10; // wait 10 seconds by default
 const retryMin = 5; // wait at least 5 seconds
 const retryMax = 600; // wait at maximum 600 seconds
 
+/**
+ * This function is used to get the retry seconds for a 503 error.
+ * @param retryAfter - The retry after header from the OAI-PMH server
+ * @returns The retry seconds
+ */
 const getRetrySeconds = (retryAfter: string | null | undefined) => {
   if (!retryAfter) {
     return retryDefault;
@@ -40,6 +45,20 @@ const getRetrySeconds = (retryAfter: string | null | undefined) => {
   return retrySeconds;
 };
 
+/**
+ * This task is used to sync the article metadata from the OAI-PMH server.
+ * It is triggered by the `metadata-sync` event.
+ *
+ * Input: ResearchSyncPayload - The payload contains the start date, until date and resumption token
+ * Output: void
+ *
+ * 1. Get the request URL from the payload - start date, until date and resumption token
+ * 2. Fetch the response from the OAI-PMH server - retry 3 times
+ * 3. Parse the response and get the records and resumption token by calling the `parseMetadata` task
+ * 4. Split the records into batches of 100
+ * 5. Add the article metadata to the database by calling the `addArticleMetadaBatch` task
+ * 6. If there is a resumption token, trigger the same event with the resumption token by calling the `syncMetadata` task
+ */
 export const syncMetadata = task({
   id: 'metadata-sync',
   run: async (_payload: ResearchSyncPayload) => {

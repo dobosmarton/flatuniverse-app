@@ -4,6 +4,16 @@ import * as articleMetadataService from '@/lib/article-metadata/metadata.server'
 import { AddArticleMetadaBatchPayload, addArticleMetadaBatchPayloadSchema } from '../schema';
 // import { generateAIContent } from '../ai/generate-ai-content';
 
+/**
+ * This task is used to add a batch of article metadata to the database.
+ * It is triggered by the `add-article-metadata-batch` event.
+ *
+ * Input: AddArticleMetadaBatchPayload - The payload contains the batch of article metadata and the batch index
+ * Output: void
+ *
+ * 1. Parse the payload - validate the payload
+ * 2. Add the article metadata to the database by calling the `addNewArticleMetadata` function
+ */
 export const addArticleMetadaBatch = task({
   id: 'add-article-metadata-batch',
   run: async (_payload: AddArticleMetadaBatchPayload) => {

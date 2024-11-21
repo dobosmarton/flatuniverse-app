@@ -3,6 +3,16 @@ import * as embeddingService from '@/lib/embeddings/embeddings.server';
 import { GenerateAiContentPayload, generateAiContentPayloadSchema } from '../schema';
 import { generateEmbeddingsFromPdf } from './embedding-from-pdf';
 
+/**
+ * This task is used to generate AI content for a list of article metadata.
+ * It is triggered by the `generate-ai-content` event.
+ *
+ * Input: GenerateAiContentPayload - The payload contains the list of article metadata ids and external ids
+ * Output: void
+ *
+ * 1. Check if the article metadata has embeddings by calling the `hasEmbeddingsForArticle` function
+ * 2. If not, trigger the `generate-embedding-from-pdf` task for each article metadata in batch
+ */
 export const generateAIContent = task({
   id: 'generate-ai-content',
   machine: {

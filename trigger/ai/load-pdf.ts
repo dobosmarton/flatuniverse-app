@@ -3,6 +3,17 @@ import { logger, task } from '@trigger.dev/sdk/v3';
 import * as articleMetadataService from '@/lib/article-metadata/metadata.server';
 import * as fileHandlers from '@/lib/file-handlers';
 
+/**
+ * This task is used to load a PDF file from an article metadata.
+ * It is triggered by the `load-pdf` event.
+ *
+ * Input: string - The id of the article metadata
+ * Output: { nodes: TextNode[] } - The nodes of the PDF file
+ *
+ * 1. Get the PDF link from the article metadata
+ * 2. Load the PDF file
+ * 3. Return the nodes of the PDF file
+ */
 export const loadPdf = task({
   id: 'load-pdf',
   retry: {

@@ -4,6 +4,19 @@ import { addNewEmbeddings } from '@/lib/embeddings/embeddings.server';
 import { getArticleWithPdfLink } from '@/lib/article-metadata/metadata.server';
 import { loadPDF } from '@/lib/file-handlers';
 
+/**
+ * This task is used to generate embeddings from a PDF file.
+ * It is triggered by the `generate-embedding-from-pdf` event.
+ *
+ * Input: MetadataIdPayload - The payload contains the id of the article metadata
+ * Output: { id: string } - The id of the article metadata
+ *
+ * 1. Get the PDF link from the article metadata
+ * 2. Load the PDF file
+ * 3. Generate embeddings
+ * 4. Add the embeddings to the database
+ */
+
 export const generateEmbeddingsFromPdf = task({
   id: 'generate-embedding-from-pdf',
   machine: {
