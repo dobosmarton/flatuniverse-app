@@ -8,6 +8,19 @@ import { OpenAIEmbedding } from '@llamaindex/edge/embeddings/OpenAIEmbedding';
 import { Settings } from '@llamaindex/edge/Settings';
 import { logger } from '@trigger.dev/sdk/v3';
 
+/**
+ * OpenAI embeddings instance configured with text-embedding-3-small model
+ * and cosine similarity comparison function.
+ *
+ * Cosine similarity measures the similarity between two vectors by calculating
+ * the cosine of the angle between them. The result ranges from -1 to 1, where:
+ * - 1 means the vectors are identical
+ * - 0 means they are perpendicular (completely different)
+ * - -1 means they are opposite
+ *
+ * Used to generate embeddings for PDF text chunks and compare their semantic
+ * similarity by measuring the cosine angle between their vector representations.
+ */
 const openAIEmbeddings = new OpenAIEmbedding({
   model: 'text-embedding-3-small',
   similarity: (a, b) => {
@@ -52,6 +65,20 @@ export const getDocumentsFromPDF = async (fileUrl: string): Promise<Document<Met
   return documents;
 };
 
+/**
+ * Loads a PDF file from a URL, splits it into text chunks, and generates embeddings.
+ *
+ * @param pdfPath - The URL path to the PDF file to load
+ * @param metadata - Additional metadata to attach to each text node
+ * @returns An array of TextNodes containing the chunked text and embeddings
+ *
+ * The function:
+ * 1. Creates a sentence splitter to chunk the text
+ * 2. Loads and extracts text from the PDF
+ * 3. Splits the text into nodes
+ * 4. Generates embeddings for each node
+ * 5. Returns TextNodes with the text, embeddings and metadata
+ */
 export const loadPDF = async (pdfPath: string, metadata: Metadata): Promise<TextNode<Metadata>[]> => {
   const splitter = new SentenceSplitter({
     chunkSize: 1000,

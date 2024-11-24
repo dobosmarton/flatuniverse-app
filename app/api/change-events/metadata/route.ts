@@ -5,6 +5,22 @@ import * as logger from '@/lib/logger';
 
 import { metadataChangeEventSchema } from './schema';
 
+/**
+ * Handles webhook events for metadata changes from Sequin.
+ * This endpoint is called when article metadata is inserted or updated in the database.
+ *
+ * @param req - The incoming HTTP request
+ * @returns NextResponse with success/error status
+ *
+ * Flow:
+ * 1. Validate the webhook secret in Authorization header
+ * 2. Parse and validate the payload using metadataChangeEventSchema
+ * 3. For insert actions:
+ *    - Trigger the generate-ai-content task to create embeddings and AI content
+ *    - Return success response
+ * 4. For other actions:
+ *    - Return 304 Not Modified
+ */
 const handleMetadataChangeEvent = async (req: Request) => {
   const authHeader = req.headers.get('Authorization');
 
