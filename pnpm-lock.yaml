@@ -81,17 +81,17 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trigger.dev/build':
-        specifier: ^3.1.1
-        version: 3.1.1(typescript@5.6.3)
+        specifier: ^3.2.1
+        version: 3.2.1(typescript@5.6.3)
       '@trigger.dev/nextjs':
-        specifier: 3.1.1
-        version: 3.1.1(@trigger.dev/sdk@3.1.1)(next@14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: 3.2.1
+        version: 3.2.1(@trigger.dev/sdk@3.2.1(zod@3.23.8))(next@14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@trigger.dev/react':
-        specifier: 3.1.1
-        version: 3.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 3.2.1
+        version: 3.2.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trigger.dev/sdk':
-        specifier: 3.1.1
-        version: 3.1.1
+        specifier: 3.2.1
+        version: 3.2.1(zod@3.23.8)
       '@upstash/redis':
         specifier: ^1.31.6
         version: 1.34.3
@@ -819,6 +819,9 @@ packages:
 
   '@electric-sql/client@0.6.3':
     resolution: {integrity: sha512-/AYkRrEASKIGcjtNp8IVJ3sAUm+IQ2l0NrGgDvvAG/n1+ifOl7kD1E4dRyg1qdY/b+HdKhGNYlNgsPuwMKO2Mg==}
+
+  '@electric-sql/client@0.7.1':
+    resolution: {integrity: sha512-NpKEn5hDSy+NaAdG9Ql8kIGfjrj/XfakJOOHTTutb99db3Dza0uUfnkqycFpyUAarFMQ4hYSKgx8AbOm1PCeFQ==}
 
   '@esbuild/aix-ppc64@0.23.1':
     resolution: {integrity: sha512-6VhYk1diRqrhBAqpJEdjASR/+WVRtfjpqKuNw11cLiaWpAT/Uu+nokB+UJnevzy/P9C/ty6AOe0dwueMrGh/iQ==}
@@ -2491,33 +2494,35 @@ packages:
       react-native:
         optional: true
 
-  '@trigger.dev/build@3.1.1':
-    resolution: {integrity: sha512-Dt6KnZXq9C0Dna5KeUCJWraPVVBAok/UAZoMkwleOEvDItXMo5G9l8ZXKkUbywZ/j5MmqWw5a7WdbKN5ji/q4w==}
-    engines: {node: '>=18.20.0'}
-
-  '@trigger.dev/core@3.0.13':
-    resolution: {integrity: sha512-BK4Yd+LrxA5cxAsO66yOm8UvBGdSplzfSqFGo6OpxhWZqZBsUMADAYBXhjb7ujl/F/BrN47qhLSuyaaybBiHcw==}
+  '@trigger.dev/build@3.2.1':
+    resolution: {integrity: sha512-XK/ixe1MbaOQKDKYLxg4pict6kl3H9JFgqzK5UkbalbWH5T7RREZYDE/rctw6z3YSUK+tehQtl79dg7xfUkhfw==}
     engines: {node: '>=18.20.0'}
 
   '@trigger.dev/core@3.1.1':
     resolution: {integrity: sha512-xmJtPNNZHkdSQBfKAtwttj78vzdsVuxaUcE0knoeVllZcejMB8Xh8Lo0ZvdcvQ8jWsQzN82h5D555Tp0BioZig==}
     engines: {node: '>=18.20.0'}
 
-  '@trigger.dev/nextjs@3.1.1':
-    resolution: {integrity: sha512-9BHRuejBv0bRAlU+0oHKZlaB9BWSvBxfpe6zzR4af6k1+C1klA6Rd/TkXe51pBIdaey7cJv2vjgTW/w4OKCeEg==}
+  '@trigger.dev/core@3.2.1':
+    resolution: {integrity: sha512-7M4QILckaCXVwLmbLiTLWjy+y812ITwbSAF/Xj/WdMBIQwMipVuPvznq9VyQt5dQzvPrOpNOiQxE94hgdCReIg==}
+    engines: {node: '>=18.20.0'}
+
+  '@trigger.dev/nextjs@3.2.1':
+    resolution: {integrity: sha512-OVwh0IiDv/ziiN5X4CxCU5QJgLg3wYMZlwLi5ZdvpqALpQX3wuPSGoSJ3qZJ9usKZ7nrc+/6EgyzEPczH59yvw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@trigger.dev/sdk': ~2.3.0 || ^3.0.0
       next: '>=12.0.0'
 
-  '@trigger.dev/react@3.1.1':
-    resolution: {integrity: sha512-jXQBw/t75v2fsPMsK7LgRINFvhShdJo1yDus9L1GSLGIFtJ/46HLmmYjdE2slbVu4fjePa4tbWbWLBCdJyO35g==}
+  '@trigger.dev/react@3.2.1':
+    resolution: {integrity: sha512-MDtqnGt0WDYQcW5nkundv1TuDuY+lpr6esigz0gqYzS0melIy6tU2c9mSWvQArPWwH3SQI/yWI0BTlPVJLaa5A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18
 
-  '@trigger.dev/sdk@3.1.1':
-    resolution: {integrity: sha512-80hGrI9KtghwYKFgVWN0z8hQNDNLkRs7ZzIWnhgQc/aKJbtjopeJYfT61Q4G/KdY67W1J5kpN8JTc9kBEOBxmw==}
+  '@trigger.dev/sdk@3.2.1':
+    resolution: {integrity: sha512-KOHkp6M0zxWAgeRtN2/LPS64HtRTuP219ADeqkoNPRY9CgQjnXGeXT+5sEbSOU8w5+AkbRq+wTjcA9tqMTQsBQ==}
     engines: {node: '>=18.20.0'}
+    peerDependencies:
+      zod: ^3.0.0
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -3745,6 +3750,10 @@ packages:
   eventsource-parser@1.1.2:
     resolution: {integrity: sha512-v0eOBUbiaFojBu2s2NPBfYUoRR9GjcDNvCXVaqEf5vVfpIAh9f8RCo4vXTP8c63QRKCFwoLpMpTdPwwhEKVgzA==}
     engines: {node: '>=14.18'}
+
+  eventsource-parser@3.0.0:
+    resolution: {integrity: sha512-T1C0XCUimhxVQzW4zFipdx0SficT651NnkR0ZSH3yQwh+mFMdLfgjABVi4YtMTtaL4s168593DaoaRLMqryavA==}
+    engines: {node: '>=18.0.0'}
 
   evt@2.5.7:
     resolution: {integrity: sha512-dr7Wd16ry5F8WNU1xXLKpFpO3HsoAGg8zC48e08vDdzMzGWCP9/QFGt1PQptEEDh8SwYP3EL8M+d/Gb0kgUp6g==}
@@ -7856,6 +7865,10 @@ snapshots:
     optionalDependencies:
       '@rollup/rollup-darwin-arm64': 4.24.3
 
+  '@electric-sql/client@0.7.1':
+    optionalDependencies:
+      '@rollup/rollup-darwin-arm64': 4.24.3
+
   '@esbuild/aix-ppc64@0.23.1':
     optional: true
 
@@ -9882,9 +9895,9 @@ snapshots:
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
 
-  '@trigger.dev/build@3.1.1(typescript@5.6.3)':
+  '@trigger.dev/build@3.2.1(typescript@5.6.3)':
     dependencies:
-      '@trigger.dev/core': 3.1.1
+      '@trigger.dev/core': 3.2.1
       pkg-types: 1.2.1
       tinyglobby: 0.2.9
       tsconfck: 3.1.3(typescript@5.6.3)
@@ -9892,33 +9905,6 @@ snapshots:
       - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-
-  '@trigger.dev/core@3.0.13':
-    dependencies:
-      '@google-cloud/precise-date': 4.0.0
-      '@opentelemetry/api': 1.9.0
-      '@opentelemetry/api-logs': 0.52.1
-      '@opentelemetry/exporter-logs-otlp-http': 0.52.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/exporter-trace-otlp-http': 0.52.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation': 0.52.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources': 1.25.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-logs': 0.52.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-node': 0.52.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-node': 1.25.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.25.1
-      execa: 8.0.1
-      humanize-duration: 3.32.1
-      nanoid: 3.3.7
-      socket.io-client: 4.7.5
-      superjson: 2.2.1
-      zod: 3.22.3
-      zod-error: 1.5.0
-      zod-validation-error: 1.5.0(zod@3.22.3)
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
       - utf-8-validate
 
   '@trigger.dev/core@3.1.1':
@@ -9952,18 +9938,50 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/nextjs@3.1.1(@trigger.dev/sdk@3.1.1)(next@14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@trigger.dev/core@3.2.1':
     dependencies:
-      '@trigger.dev/sdk': 3.1.1
+      '@electric-sql/client': 0.7.1
+      '@google-cloud/precise-date': 4.0.0
+      '@jsonhero/path': 1.0.21
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.52.1
+      '@opentelemetry/exporter-logs-otlp-http': 0.52.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/exporter-trace-otlp-http': 0.52.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation': 0.52.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs': 0.52.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-node': 0.52.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.25.1
+      dequal: 2.0.3
+      eventsource-parser: 3.0.0
+      execa: 8.0.1
+      humanize-duration: 3.32.1
+      jose: 5.9.6
+      nanoid: 3.3.7
+      socket.io-client: 4.7.5
+      superjson: 2.2.1
+      zod: 3.23.8
+      zod-error: 1.5.0
+      zod-validation-error: 1.5.0(zod@3.23.8)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@trigger.dev/nextjs@3.2.1(@trigger.dev/sdk@3.2.1(zod@3.23.8))(next@14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@trigger.dev/sdk': 3.2.1(zod@3.23.8)
       debug: 4.3.7
       next: 14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@trigger.dev/react@3.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@trigger.dev/react@3.2.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/react-query': 5.0.0-beta.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@trigger.dev/core': 3.0.13
+      '@trigger.dev/core': 3.1.1
       debug: 4.3.7
       react: 18.3.1
       zod: 3.22.3
@@ -9974,12 +9992,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/sdk@3.1.1':
+  '@trigger.dev/sdk@3.2.1(zod@3.23.8)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.52.1
       '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.1.1
+      '@trigger.dev/core': 3.2.1
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.7
@@ -9989,7 +10007,7 @@ snapshots:
       ulid: 2.3.0
       uuid: 9.0.1
       ws: 8.18.0
-      zod: 3.22.3
+      zod: 3.23.8
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -11333,7 +11351,7 @@ snapshots:
       '@typescript-eslint/parser': 8.9.0(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.0(eslint@8.57.1)
       eslint-plugin-react: 7.37.1(eslint@8.57.1)
@@ -11353,7 +11371,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.3.7
@@ -11379,7 +11397,7 @@ snapshots:
       '@typescript-eslint/parser': 8.9.0(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.9.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -11544,6 +11562,8 @@ snapshots:
   events@3.3.0: {}
 
   eventsource-parser@1.1.2: {}
+
+  eventsource-parser@3.0.0: {}
 
   evt@2.5.7:
     dependencies:
@@ -14975,6 +14995,10 @@ snapshots:
   zod-validation-error@1.5.0(zod@3.22.3):
     dependencies:
       zod: 3.22.3
+
+  zod-validation-error@1.5.0(zod@3.23.8):
+    dependencies:
+      zod: 3.23.8
 
   zod@3.22.3: {}
 
