@@ -7,7 +7,7 @@ export const researchSync = schedules.task({
   id: 'research-sync-scheduler',
   run: async (payload) => {
     const startDate = new Date();
-    startDate.setDate(startDate.getDate());
+    startDate.setDate(startDate.getDate() - 1);
 
     await syncMetadata.trigger({
       jobId: payload.externalId ?? randomUUID(),
