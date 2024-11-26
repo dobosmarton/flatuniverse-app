@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
@@ -30,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TermlyCMP websiteUUID={process.env.TERMLY_WEBSITE_UUID ?? ''} autoBlock={true} />
+        <Suspense>
+          <TermlyCMP websiteUUID={process.env.TERMLY_WEBSITE_UUID ?? ''} autoBlock={true} />
+        </Suspense>
         <SidebarProvider>
           <main className={`${inter.className} min-h-screen flex flex-col w-full`}>
             <AnalyticsProvider>
