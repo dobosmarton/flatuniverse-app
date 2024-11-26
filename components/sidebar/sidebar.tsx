@@ -84,7 +84,7 @@ export const AppSidebar: React.FC = () => {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem className="relative">
                         <SidebarMenuSubButton asChild>
-                          <a href="/" onClick={onNavClick} className="termly-display-preferences">
+                          <a href="#" onClick={onNavClick} className="termly-display-preferences">
                             Consent Preferences
                           </a>
                         </SidebarMenuSubButton>

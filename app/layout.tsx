@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import Script from 'next/script';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
@@ -9,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AnalyticsProvider } from './analytics-provider';
 import { ChatModal } from '@/components/chat-modal';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { TermlyCMP } from '@/components/termly-cmp';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,10 +29,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Script
-        type="text/javascript"
-        src="https://app.termly.io/resource-blocker/614674d1-e55f-498e-9a9f-8f157df2ac96?autoBlock=on"></Script>
       <body>
+        <TermlyCMP websiteUUID={process.env.TERMLY_WEBSITE_UUID ?? ''} autoBlock={true} />
         <SidebarProvider>
           <main className={`${inter.className} min-h-screen flex flex-col w-full`}>
             <AnalyticsProvider>
