@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { ChevronRightIcon } from 'lucide-react';
 import Latex from 'react-latex-next';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -45,10 +46,12 @@ export const PaperCarousel: React.FC<Props> = async ({ searchParams }) => {
                 <CardContent className="px-4 pb-2">
                   <div className="text-base md:text-sm font-light">
                     <Latex>{getAbstract(article.abstract)}</Latex>
-                    <Button variant={'link'} className="flex gap-2 px-0 text-sm md:text-xs mt-2" size={'sm'}>
-                      {'Read more'}
-                      <ChevronRightIcon className="h-4 w-4" />
-                    </Button>
+                    <Link href={`/articles/${article.slug}`}>
+                      <Button variant="link" className="flex gap-2 px-0 text-sm md:text-xs mt-2" size={'sm'}>
+                        <span>Read more</span>
+                        <ChevronRightIcon className="h-4 w-4" />
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </div>
