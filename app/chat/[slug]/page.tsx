@@ -16,7 +16,7 @@ export default function Chat({ params }: Readonly<Props>) {
   const thread = getChatBySlug(params.slug);
 
   if (!thread) {
-    router.replace('/');
+    router.replace('/articles');
     return null;
   }
 
