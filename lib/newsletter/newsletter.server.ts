@@ -48,10 +48,18 @@ export const sendWeeklySummaryEmail = async () => {
     readMoreUrl: `https://www.flatuniverse.app?${constructQueryParams({
       categoryGroups: [group.group_name],
     })}`,
-    articles: group.article_metadata_list.flatMap((metadata) => ({
-      title: metadata.article_metadata.title,
-      url: `https://www.flatuniverse.app/articles/${metadata.article_metadata.slug}`,
-    })),
+    articles: group.article_metadata_list
+      .flatMap((metadata) => ({
+        title: metadata.article_metadata.title,
+        url: `https://www.flatuniverse.app/articles/${metadata.article_metadata.slug}`,
+      }))
+      .reduce<{ title: string; url: string }[]>((prev, curr) => {
+        if (!prev.find((p) => p.title === curr.title)) {
+          prev.push(curr);
+        }
+
+        return prev;
+      }, []),
   }));
 
   await templates.sendWeeklySummaryEmail({
