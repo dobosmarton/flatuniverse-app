@@ -50,6 +50,14 @@ const getChatHistoryMessages = (messages: chat_message[]): ChatMessage[] => {
   }));
 };
 
+/**
+ * Generates a prompt template for the chat engine by combining the user's question
+ * with relevant document context.
+ *
+ * @param prompt - The user's question or prompt
+ * @param relevantDocs - Array of relevant article metadata to use as context
+ * @returns Formatted prompt string with context and instructions
+ */
 const getPromptTemplate = (prompt: string, relevantDocs: ExtendedArticleMetadata[]) => {
   const context = relevantDocs
     .map(
@@ -63,7 +71,7 @@ const getPromptTemplate = (prompt: string, relevantDocs: ExtendedArticleMetadata
   const _prompt = `Answer the following question based on the provided context. 
     If the information in the context is not sufficient or relevant, say so.
     Use specific references and dates from the documents when applicable.
-    Prioritize more recent information when available.
+    Prioritize more recent information when available. The current date is ${new Date().toISOString()}.
     
     Context:
     ${context}
@@ -81,6 +89,15 @@ export const getMetadataIdsFromChatResponse = async (response: DocumentSuggestio
     .filter((id) => typeof id === 'string');
 };
 
+/**
+ * Gets a chat response from the LLM engine using the provided messages, prompt and relevant documents.
+ *
+ * @param messages - Array of previous chat messages in the conversation
+ * @param prompt - The user's current question or prompt
+ * @param withHistory - Whether to include chat history context, defaults to true
+ * @param relevantDocs - Array of relevant article metadata to use as context, defaults to empty array
+ * @returns Async iterable stream of engine responses
+ */
 const getChatResponse = async (
   messages: chat_message[],
   prompt: string,

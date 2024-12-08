@@ -1,6 +1,5 @@
 import { LlamaIndexAdapter, StreamData } from 'ai';
 import { NextRouteFunction } from '@/lib/route-validator.server';
-import * as logger from '@/lib/logger';
 import { chatCompletionSchema } from './schema';
 import * as threadService from '@/lib/chat/thread.server';
 import * as chatService from '@/lib/chat/chat.server';
