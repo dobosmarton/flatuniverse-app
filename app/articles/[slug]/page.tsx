@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { format } from 'date-fns';
 import { CalendarDaysIcon, NotebookTextIcon, User2Icon } from 'lucide-react';
 import { NewsletterSection } from '@/components/newsletter-section';
 import { ActionBar } from '@/components/article-metadata/action-bar';
@@ -26,11 +27,48 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // optionally access and extend (rather than replace) parent metadata
   const metadata = await getArticleMetadata(params.slug);
 
+  if (!metadata) {
+    return {
+      title: 'Flat universe',
+      description:
+        'The Earth is not flat, but the universe is still may be. Follow the latest research papers and articles on the flat universe.',
+    };
+  }
+
+  const authors = metadata.authors.map(({ author }) => author);
+  const keywords = metadata.categories.map(({ category }) => category.full_name);
+
   return {
-    title: metadata?.title ?? 'Flat universe',
-    description:
-      metadata?.abstract.slice(0, 120) ??
-      'The Earth is not flat, but the universe is still may be. Follow the latest research papers and articles on the flat universe.',
+    title: metadata.title,
+    abstract: metadata.abstract,
+    authors,
+    robots: 'index, follow',
+    keywords,
+    openGraph: {
+      title: metadata.title,
+      description: metadata.abstract,
+      authors: authors.map(({ name }) => name),
+      publishedTime: format(metadata.published, 'yyyy-MM-dd'),
+      tags: keywords,
+      images: [
+        {
+          url: `/api/og?slug=${params.slug}`,
+          width: 1200,
+          height: 630,
+          alt: `Preview image for ${metadata.title}`,
+        },
+      ],
+      type: 'article',
+      url: `/articles/${params.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [`/api/og?slug=${params.slug}`],
+      title: metadata.title,
+      description: metadata.abstract,
+      creator: '@flatuniverse',
+      site: '@flatuniverse',
+    },
   };
 }
 

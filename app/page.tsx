@@ -9,10 +9,25 @@ import { Footer } from '@/components/footer';
 import { NewsletterSection } from './components/newsletter-section';
 
 export const metadata: Metadata = {
-  title: 'Flatuniverse landing page',
+  title: 'Flatuniverse, discover and understand research papers',
   description: 'Discover and understand research papers with our powerful search engine and AI assistant.',
-  keywords: 'research papers, search engine, AI assistant, academic research',
+  keywords: ['research papers', 'search engine', 'AI assistant', 'academic research'],
   robots: 'index, follow',
+  category: 'research',
+  classification: 'research',
+  openGraph: {
+    title: 'Flatuniverse, discover and understand research papers',
+    description: 'Discover and understand research papers with our powerful search engine and AI assistant.',
+    type: 'website',
+    url: 'https://flatuniverse.com',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Flatuniverse, discover and understand research papers',
+    description: 'Discover and understand research papers with our powerful search engine and AI assistant.',
+    creator: '@flatuniverse',
+    site: '@flatuniverse',
+  },
 };
 
 export default function Home() {
