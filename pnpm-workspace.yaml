@@ -1,0 +1,15 @@
+# `apps/legacy` is deliberately NOT a workspace member. It is the Next.js app
+# being decommissioned in Phase 7, and pulling its ~60 dependencies into every
+# install would cost a gigabyte for code that is on its way out. Install it
+# separately if you need to run it: `cd apps/legacy && pnpm install`.
+#
+# `apps/*` joins the workspace in Phase 6, when the replacement frontend lands.
+packages:
+  - 'packages/*'
+
+# esbuild ships prebuilt binaries and needs its postinstall to select one.
+# msgpackr-extract is Effect 4's optional native msgpack accelerator.
+allowBuilds:
+  dprint: true
+  esbuild: true
+  msgpackr-extract: true

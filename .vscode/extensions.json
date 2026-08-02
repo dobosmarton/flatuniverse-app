@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dprint.dprint",
+    "oxc.oxc-vscode"
+  ],
+  "unwantedRecommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ]
+}
