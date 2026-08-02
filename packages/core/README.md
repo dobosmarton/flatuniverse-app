@@ -19,12 +19,15 @@ Done:
 - arXiv taxonomy: 8 groups, 155 categories, ported from the legacy app
 - OAI-PMH `ListRecords` parsing and mapping to `Article`
 - Day-window harvest planning and URL construction
-- 38 tests, strict `tsc` clean
+- `ArxivClient` service: `fetch` with `Retry-After` handling, exponential jittered
+  retry, timeout, and a three-second spacing between requests
+- `harvest(from, until)`: a `Stream` of pages that walks day windows in order and
+  follows resumption tokens within each
+- 48 tests, strict `tsc` clean, verified against the live endpoint
 
 Not yet done (rest of Phase 1):
 
-- The harvester service that walks windows and follows resumption tokens
-- NDJSON output to disk / R2
+- NDJSON output to disk / R2, with a per-day checkpoint for resume
 - The storage adapter, deferred until the platform is chosen
 
 ## Commands
@@ -64,31 +67,43 @@ into one-day windows: independently retryable, checkpointable as a single date,
 and resumable after an interruption. Tokens are still followed _within_ a window,
 since a busy day exceeds the ~1,300-record page.
 
-**3. Page size is ~1,300 records regardless of window width**, at roughly 40s per
-request. A one-month window returned the same page size as a one-day window, just
-with more token pages behind it.
+**3. A page caps at ~1,300 records regardless of window width.** A one-month
+window returned the same page size as a two-day one, just with more token pages
+behind it. Widening the window buys nothing; it only moves work behind more
+tokens. Most single days fall under the cap and need no token at all.
+
+**4. arXiv announces nothing at the weekend.** A live harvest of 2024-01-01 →
+2024-01-07 returned 466, 752, 484, 544 and 602 articles on the weekdays and
+**zero** on both Saturday and Sunday. Weekend windows still cost a request, and
+are still worth making — metadata revisions could in principle land then — but
+they contribute nothing to the corpus.
 
 ## Measured sizing
 
-Parsing one full live page (1,218 records) end to end:
+A live seven-day harvest, end to end through `harvest()`:
 
-|                            |                           |
-| -------------------------- | ------------------------- |
-| Mapped / skipped           | 1,218 / 0                 |
-| Slug collisions            | 0                         |
-| Legacy identifiers handled | 3                         |
-| Average article as JSON    | 1,571 bytes               |
-| Average embeddable text    | 1,186 chars (~300 tokens) |
-| Slug length, median / max  | 83 / 92                   |
+|                                |                           |
+| ------------------------------ | ------------------------- |
+| Days / articles                | 7 / 2,848                 |
+| Mapped / skipped               | 2,848 / 0                 |
+| Duplicate ids or slugs         | 0                         |
+| Mean articles per calendar day | 407                       |
+| Average article as JSON        | 1,582 bytes               |
+| Average embeddable text        | 1,192 chars (~300 tokens) |
 
-Extrapolated to a 2024-01-01 → today harvest (~945 days at ~1,200 records/day,
-so roughly 1.15M articles):
+**This corrects an earlier estimate.** A first probe suggested ~1,200 articles a
+day, giving ~1.15M for the full range. That probe used a _two-day_ window and
+ignored empty weekends. The real figure is **407 a day averaged across the week**.
 
-- ~1.8 GB of article JSON
-- ~345M embedding tokens ≈ **$6.90**, or **$3.45** via the Batch API
-- Harvest wall time ≈ **10 hours**, resumable by day
+Extrapolated to a 2024-01-01 → today harvest (~945 days):
 
-That is ~5.5× the legacy dump's 206k articles, because the old sync only ever ran
-for part of the period. It stays inside both D1's 10 GB ceiling and DynamoDB's
-25 GB free tier, but D1 is no longer roomy once the FTS index is added — worth
-confirming before committing to the Cloudflare track.
+- **~385,000 articles** — not 1.15M
+- **~610 MB** of article JSON — not 1.8 GB
+- ~115M embedding tokens ≈ **$2.31**, or **$1.16** via the Batch API
+- Harvest wall time **12–16 hours**, resumable by day (per-request latency varied
+  between 4s and 60s across the sample, so treat this as a range)
+
+The practical consequence: **D1's hard 10 GB ceiling is no longer a concern.**
+At ~610 MB of source JSON the Cloudflare track has comfortable headroom even
+after an FTS index, which removes the main technical argument that was pushing
+this toward AWS.

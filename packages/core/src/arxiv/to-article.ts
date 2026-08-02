@@ -116,15 +116,10 @@ export type MappedPage = {
 };
 
 export const toArticles = (records: readonly OaiRecord[]): MappedPage => {
-  const articles: Article[] = [];
-  const skipped: UnmappableRecord[] = [];
+  const mapped = records.map(toArticle);
 
-  for (const record of records) {
-    const mapped = toArticle(record);
-
-    if (Result.isSuccess(mapped)) articles.push(mapped.success);
-    else skipped.push(mapped.failure);
-  }
-
-  return { articles, skipped };
+  return {
+    articles: mapped.filter(Result.isSuccess).map((result) => result.success),
+    skipped: mapped.filter(Result.isFailure).map((result) => result.failure),
+  };
 };

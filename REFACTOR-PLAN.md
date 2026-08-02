@@ -174,15 +174,21 @@ still points at the deprecated `export.arxiv.org/oai2` (currently 302s, don't re
 **Embedding.** `title + "\n\n" + abstract` → `text-embedding-3-small` (1536 dims) via
 `embedMany`, batched 512 at a time, through AI Gateway.
 
-Measured: the average article's embeddable text is 1,186 chars ≈ 300 tokens, and a
-2024-01-01 → today harvest is ~1.15M articles (5.5× the legacy dump, which only ever covered
-part of the period).
+Measured over a live seven-day harvest: **407 articles per calendar day** (weekdays run
+466–752; arXiv announces nothing at the weekend), averaging 1,582 bytes of JSON and 1,192
+chars ≈ 300 tokens of embeddable text. A 2024-01-01 → today harvest is therefore
+**~385,000 articles / ~610 MB**.
 
 |                                 | Tokens    | Cost                               |
 | ------------------------------- | --------- | ---------------------------------- |
-| Backfill, ~1.15M abstracts      | ~345M     | **$6.90** ($3.45 on the Batch API) |
-| Ongoing, ~2,500/day             | ~750k/day | **~$0.45/month**                   |
+| Backfill, ~385k abstracts       | ~115M     | **$2.31** ($1.16 on the Batch API) |
+| Ongoing, ~400/day               | ~120k/day | **~$0.07/month**                   |
 | _(old: full PDFs, 206k papers)_ | _~8.2B_   | _~$165 + 10M vectors_              |
+
+An earlier draft of this plan said 1.15M articles and 1.8 GB. That came from a probe using a
+_two-day_ window, which double-counted, and it ignored empty weekends. **D1's 10 GB ceiling is
+consequently not a concern** — at ~610 MB there is comfortable headroom even with an FTS
+index, which removes the main technical argument that was pushing this toward AWS.
 
 If full text is ever genuinely needed, do it **on demand for an allow-listed handful**,
 cache the extraction in R2, and never for the whole corpus.
