@@ -14,9 +14,9 @@ import { syncMetadata } from './sync-metadata';
  * 1. Gets yesterday's date as the start date
  * 2. Triggers the syncMetadata task to fetch and process research metadata
  */
-export const researchSync = schedules.task({
+/* export const researchSync = schedules.task({
   id: 'research-sync-scheduler',
-  cron: '0 */6 * * *', // At minute 0 past every 6th hour
+  cron: '0 *6 * * *', // At minute 0 past every 6th hour
   run: async (payload) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
@@ -30,4 +30,4 @@ export const researchSync = schedules.task({
       payload,
     };
   },
-});
+}); */

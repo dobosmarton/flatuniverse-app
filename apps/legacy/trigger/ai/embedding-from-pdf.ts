@@ -20,6 +20,7 @@ import { loadPDF } from '@/lib/file-handlers';
 export const generateEmbeddingsFromPdf = task({
   id: 'generate-embedding-from-pdf',
   machine: {
+    // increase machine if we have more traffic
     preset: 'small-2x',
   },
   run: async (_payload: MetadataIdPayload) => {

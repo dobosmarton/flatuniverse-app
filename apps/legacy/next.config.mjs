@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import withLlamaIndex from 'llamaindex/next';
+
 const nextConfig = {
   async rewrites() {
     return [
@@ -15,10 +17,9 @@ const nextConfig = {
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
   experimental: {
-    legacyBrowsers: false,
-    outputFileTracingIgnores: ['**canvas**'],
     outputFileTracingExcludes: {
       '*': [
+        '**canvas**',
         'node_modules/@swc/**/*',
         'node_modules/@esbuild/**/*',
         'node_modules/terser/**/*',
@@ -31,4 +32,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withLlamaIndex(nextConfig);
