@@ -24,6 +24,7 @@
     "**/*-lock.yaml",
     "**/*.min.*",
     "apps/legacy",
+    "repos",
     "flatuniverse_data",
     "packages/core/src/domain/categories.ts",
     "packages/core/test/fixtures"

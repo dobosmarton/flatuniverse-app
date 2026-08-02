@@ -39,6 +39,7 @@
     "dist",
     "coverage",
     "apps/legacy",
+    "repos",
     "flatuniverse_data",
     "packages/core/src/domain/categories.ts"
   ]
