@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/">
+<responseDate>2026-08-02T00:00:00Z</responseDate>
+<request verb="ListRecords">https://oaipmh.arxiv.org/oai</request>
+<ListRecords>
+<record>
+                <header>
+        <identifier>oai:arXiv.org:math/0609045</identifier>
+        <datestamp>2024-01-01</datestamp>
+            <setSpec>math:math:DS</setSpec>
+    </header>
+
+            <metadata>
+                        <arXiv xmlns="http://arxiv.org/OAI/arXiv/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://arxiv.org/OAI/arXiv/ https://oaipmh.arxiv.org/OAI/arXiv.xsd">
+        <id>math/0609045</id>
+        <created>2023-12-28</created>
+            <updated>2024-01-01</updated>
+        <authors>
+                <author>
+                    <keyname>Kahn</keyname>
+                        <forenames>Jeremy</forenames>
+                </author>
+        </authors>
+        <title>A priori bounds for some infinitely renormalizable quadratics: I. Bounded primitive combinatorics</title>
+            <categories>math.DS</categories>
+            <comments>LaTeX, 63 pages, 5 figures</comments>
+            <proxy>ims</proxy>
+            <report-no>Stony Brook IMS #2006/5</report-no>
+            <msc-class>37F25, 37F45</msc-class>
+            <license>http://arxiv.org/licenses/nonexclusive-distrib/1.0/</license>
+            <abstract>We prove the a priori bounds for infinitely renormalizable quadratic polynomials for which we can find an infinite sequence of primitive renormalizations such that the ratios of the periods of successive renormalizations is bounded. This implies the local connectivity of the Mandelbrot set at the corresponding points.</abstract>
+    </arXiv>
+
+            </metadata>
+        </record>
+<record>
+                <header>
+        <identifier>oai:arXiv.org:0803.0966</identifier>
+        <datestamp>2024-01-01</datestamp>
+            <setSpec>cs:cs:DB</setSpec>
+            <setSpec>stat:stat:ML</setSpec>
+    </header>
+
+            <metadata>
+                        <arXiv xmlns="http://arxiv.org/OAI/arXiv/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://arxiv.org/OAI/arXiv/ https://oaipmh.arxiv.org/OAI/arXiv.xsd">
+        <id>0803.0966</id>
+        <created>2008-03-06</created>
+            <updated>2024-01-01</updated>
+        <authors>
+                <author>
+                    <keyname>Hahsler</keyname>
+                        <forenames>Michael</forenames>
+                </author>
+                <author>
+                    <keyname>Hornik</keyname>
+                        <forenames>Kurt</forenames>
+                </author>
+        </authors>
+        <title>New probabilistic interest measures for association rules</title>
+            <categories>cs.DB stat.ML</categories>
+            <journal-ref>Intelligent Data Analysis, 11(5):437-455, 2007</journal-ref>
+            <doi>10.3233/IDA-2007-11502</doi>
+            <license>http://arxiv.org/licenses/nonexclusive-distrib/1.0/</license>
+            <abstract>  Mining association rules is an important technique for discovering meaningful patterns in transaction databases. Many different measures of interestingness have been proposed for association rules. However, these measures fail to take the probabilistic properties of the mined data into account. In this paper, we start with presenting a simple probabilistic framework for transaction data which can be used to simulate transaction data when no associations are present. We use such data and a real-world database from a grocery outlet to explore the behavior of confidence and lift, two popular interest measures used for rule mining. The results show that confidence is systematically influenced by the frequency of the items in the left hand side of rules and that lift performs poorly to filter random noise in transaction data. Based on the probabilistic framework we develop two new interest measures, hyper-lift and hyper-confidence, which can be used to filter or order mined association rules. The new measures show significantly better performance than lift for applications where spurious rules are problematic.</abstract>
+    </arXiv>
+
+            </metadata>
+        </record>
+<record>
+                <header>
+        <identifier>oai:arXiv.org:1503.07177</identifier>
+        <datestamp>2024-01-01</datestamp>
+            <setSpec>math:math:CV</setSpec>
+            <setSpec>math:math:DG</setSpec>
+    </header>
+
+            <metadata>
+                        <arXiv xmlns="http://arxiv.org/OAI/arXiv/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://arxiv.org/OAI/arXiv/ https://oaipmh.arxiv.org/OAI/arXiv.xsd">
+        <id>1503.07177</id>
+        <created>2023-12-29</created>
+            <updated>2024-01-01</updated>
+        <authors>
+                <author>
+                    <keyname>Burcea</keyname>
+                        <forenames>Valentin</forenames>
+                </author>
+        </authors>
+        <title>Real Submanifolds in Complex Spaces: Upgrades</title>
+            <categories>math.CV math.DG</categories>
+            <comments>I will submit this paper at Sinica when it will be in its final form. I want them to see what happened to me. I will add more details, but with calm. The starting paper is essenitally a failure, but it is also a very inspirational failure. This paper is an important engine for my research program</comments>
+            <license>http://arxiv.org/licenses/nonexclusive-distrib/1.0/</license>
+            <abstract>It is proven a new analogue of the Theorem of Moser in a generalized context defined by Shilov Boundaries of Bounded and Symmetric Domains.</abstract>
+    </arXiv>
+
+            </metadata>
+        </record>
+<resumptionToken expirationDate='2026-08-03T00:00:00Z' cursor='0' completeListSize='1218'>TOKEN-ABC</resumptionToken>
+</ListRecords>
+</OAI-PMH>

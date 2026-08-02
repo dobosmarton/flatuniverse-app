@@ -1,0 +1,27 @@
+{
+  "name": "@flatuniverse/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./domain": "./src/domain/index.ts",
+    "./arxiv": "./src/arxiv/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "effect": "4.0.0-beta.102",
+    "fast-xml-parser": "^4.5.0"
+  },
+  "devDependencies": {
+    "@effect/vitest": "4.0.0-beta.102",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2",
+    "vitest": "^2.1.8"
+  }
+}
